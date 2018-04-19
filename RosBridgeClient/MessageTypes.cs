@@ -43,7 +43,24 @@ namespace RosSharp.RosBridgeClient
             { "sensor_msgs/CompressedImage", typeof(SensorCompressedImage) },
             { "std_msgs/Time", typeof(StandardTime)    },
             { "nav_msgs/MapMetaData", typeof(NavigationMapMetaData) },
-            { "nav_msgs/OccupancyGrid", typeof(NavigationOccupancyGrid)}
+            { "nav_msgs/OccupancyGrid", typeof(NavigationOccupancyGrid)},
+            { "moveit_msgs/DisplayTrajectory", typeof(MoveItDisplayTrajectory)},
+            { "moveit_msgs/RobotTrajectory", typeof(MoveItRobotTrajectory)},
+            { "trajectory_msgs/JointTrajectory", typeof(TrajectoryJointTrajectory)},
+            { "trajectory_msgs/JointTrajectoryPoint",typeof(TrajectoryJointTrajectoryPoint)},
+            { "trajectory_msgs/MultiDOFJointTrajectory", typeof(TrajectoryMultiDOFJointTrajectory)},
+            { "trajectory_msgs/MultiDOFJointTrajectoryPoint", typeof(TrajectoryMulitDOFJointTrajectoryPoint)},
+            { "geometry_msgs/Transform", typeof(GeometryTransform)},
+            { "moveit_msgs/RobotState", typeof(MoveItRobotState)},
+            { "sensor_msgs/MultiDOFJointState", typeof(SensorMultiDOFJointState)},
+            { "geometry_msgs/Wrench", typeof(GeometryWrench)},
+            { "moveit_msgs/AttachedCollisionObject", typeof(MoveItAttachedCollisionObject)},
+            { "moveit_msgs/CollisionObject", typeof(MoveItCollisionObject)},
+            { "object_recognition_msgs/ObjectType", typeof(ObjectRecognitionObjectType)},
+            { "shape_msgs/SolidPrimitive", typeof(ShapeSolidPrivitive)},
+            { "shape_msgs/Mesh", typeof(ShapeMesh)},
+            { "shape_msgs/MeshTriangle", typeof(ShapeMeshTriangle)},
+            { "shape_msgs/Plane", typeof(ShapePlane)}
         };
         public static string RosMessageType(Type messageType)
         {

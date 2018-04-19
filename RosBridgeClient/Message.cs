@@ -23,35 +23,49 @@ namespace RosSharp.RosBridgeClient {
         }
     }
 
-    public class DisplayTrajectory : Message {
+    public class MoveItDisplayTrajectory : Message
+    {
         public string model_id;
-        public RobotTrajectory[] trajectory;
-        public RobotState trajectory_start;
-        public DisplayTrajectory() {
+        public MoveItRobotTrajectory[] trajectory;
+        public MoveItRobotState trajectory_start;
+        public MoveItDisplayTrajectory() {
             model_id = "";
+            trajectory = new MoveItRobotTrajectory[0];
+
         }
     }
 
-    public class RobotTrajectory : Message {
-        public JointTrajectory joint_trajectory;
-        public MultiDOFJointTrajectory multi_dof_joint_trajectory;
-        public RobotTrajectory() { }
+    public class MoveItRobotTrajectory : Message
+    {
+        public TrajectoryJointTrajectory joint_trajectory;
+        public TrajectoryMultiDOFJointTrajectory multi_dof_joint_trajectory;
+        public MoveItRobotTrajectory()
+        {
+            joint_trajectory = new TrajectoryJointTrajectory();
+            multi_dof_joint_trajectory = new TrajectoryMultiDOFJointTrajectory();
+        }
     }
 
-    public class JointTrajectory : Message {
+    public class TrajectoryJointTrajectory : Message
+    {
         public StandardHeader header;
         public string[] joint_names;
-        public JointTrajectoryPoint[] points;
-        public JointTrajectory() { }
+        public TrajectoryJointTrajectoryPoint[] points;
+        public TrajectoryJointTrajectory() 
+        {
+            header = new StandardHeader();
+            joint_names = new string[0];
+            points = new TrajectoryJointTrajectoryPoint[0];
+        }
     }
 
-    public class JointTrajectoryPoint : Message {
+    public class TrajectoryJointTrajectoryPoint : Message {
         float[] positions;
         float[] velocities;
         float[] accelerations;
         float[] effort;
         StandardTime time_from_start;
-        public JointTrajectoryPoint() {
+        public TrajectoryJointTrajectoryPoint() {
             positions = new float[0];
             velocities = new float[0];
             accelerations = new float[0];
@@ -60,9 +74,160 @@ namespace RosSharp.RosBridgeClient {
         }
     }
 
-    public class RobotState : Message
+    public class TrajectoryMultiDOFJointTrajectory : Message 
     {
+        public StandardHeader header;
+        public string joint_names;
+        public TrajectoryMulitDOFJointTrajectoryPoint[] points;
+        public TrajectoryMultiDOFJointTrajectory()
+        {
+            header = new StandardHeader();
+            joint_names = "";
+            points = new TrajectoryMulitDOFJointTrajectoryPoint[0];
+        }
+    }
 
+    public class TrajectoryMulitDOFJointTrajectoryPoint : Message
+    {
+        public GeometryTransform[] transforms;
+        public GeometryTwist[] velocities;
+        public GeometryTwist[] accelerations;
+        public StandardTime time_from_start;
+        public TrajectoryMulitDOFJointTrajectoryPoint()
+        {
+            transforms = new GeometryTransform[0];
+            velocities = new GeometryTwist[0];
+            accelerations = new GeometryTwist[0];
+            time_from_start = new StandardTime();
+        }
+    }
+
+    public class MoveItRobotState : Message
+    {
+        public SensorJointStates joint_state;
+        public SensorMultiDOFJointState attached_dof_joint_state;
+        public MoveItAttachedCollisionObject[] attached_collision_objects;
+        public bool is_diff;
+    }
+
+    public class MoveItAttachedCollisionObject : Message
+    {
+        public string link_name;
+        public MoveItCollisionObject obj;
+        public string[] touch_links;
+        public TrajectoryJointTrajectory detach_posture;
+        public float weight;
+        public MoveItAttachedCollisionObject()
+        {
+            link_name = "";
+            obj = new MoveItCollisionObject();
+            touch_links = new string[0];
+            detach_posture = new TrajectoryJointTrajectory();
+            weight = 0f;
+        }
+    }
+
+    public class MoveItCollisionObject : Message
+    {
+        public StandardHeader header;
+        public string id;
+        public ObjectRecognitionObjectType type;
+        public ShapeSolidPrivitive[] primitives;
+        public GeometryPose[] primitive_poses;
+        public ShapeMesh[] meshes;
+        public GeometryPose[] mesh_poses;
+        public ShapePlane[] planes;
+        public GeometryPose[] plane_poses;
+        public byte ADD = 0;
+        public byte REMOVE = 1;
+        public byte APPEND = 2;
+        public byte MOVE = 3;
+        public MoveItCollisionObject()
+        {
+            header = new StandardHeader();
+            id = "";
+            type = new ObjectRecognitionObjectType();
+            primitives = new ShapeSolidPrivitive[0];
+            primitive_poses = new GeometryPose[0];
+            meshes = new ShapeMesh[0];
+            mesh_poses = new GeometryPose[0];
+            planes = new ShapePlane[0];
+            plane_poses = new GeometryPose[0];
+        }
+    }
+
+    public class ObjectRecognitionObjectType : Message 
+    {
+        public string key;
+        public string db;
+        public ObjectRecognitionObjectType() 
+        {
+            key = "";
+            db = "";
+        }
+    }
+
+    public class ShapeSolidPrivitive : Message 
+    {
+        public byte BOX = 1;
+        public byte SPHERE = 2;
+        public byte CYLINDER = 3;
+        public byte CONE = 4;
+        public byte BOX_X = 0;
+        public byte BOX_Y = 1;
+        public byte BOX_Z = 2;
+        public byte SPHERE_RADIUS = 0;
+        public byte CYLINDER_HEIGHT = 0;
+        public byte CYLINDER_RADIUS = 1;
+        public byte CONE_HEIGHT = 0;
+        public byte CONE_RADIUS = 1;
+        public byte type;
+        float[] dimensions;
+        public ShapeSolidPrivitive() 
+        {
+            type = 0;
+            dimensions = new float[0];
+        }
+    }
+
+    public class ShapeMesh : Message 
+    {
+        public ShapeMeshTriangle[] triangles;
+        public GeometryPoint[] verticies;
+        public ShapeMesh()
+        {
+            triangles = new ShapeMeshTriangle[0];
+            verticies = new GeometryPoint[0];
+        }
+    }
+
+    public class ShapeMeshTriangle : Message 
+    {
+        public uint[] vertex_indicies;
+        public ShapeMeshTriangle() 
+        {
+            vertex_indicies = new uint[3];
+        }
+    }
+
+    public class ShapePlane : Message 
+    {
+        public float[] coef;
+        public ShapePlane() 
+        {
+            coef = new float[4];
+        }
+    }
+
+    public class GeometryTransform : Message
+    {
+        public GeometryVector3 translation;
+        public GeometryQuaternion rotation;
+        public GeometryTransform()
+        {
+            translation = new GeometryVector3();
+            rotation = new GeometryQuaternion();
+        }
     }
 
     public class GeometryTwist : Message
@@ -109,6 +274,34 @@ namespace RosSharp.RosBridgeClient {
             position = new float[0];
             velocity = new float[0];
             effort = new float[0];
+        }
+    }
+
+    public class SensorMultiDOFJointState : Message
+    {
+        public StandardHeader header;
+        public string[] joint_names;
+        public GeometryTransform[] transforms;
+        public GeometryTwist[] twist;
+        public GeometryWrench[] wrench;
+        public SensorMultiDOFJointState()
+        {
+            header = new StandardHeader();
+            joint_names = new string[0];
+            transforms = new GeometryTransform[0];
+            twist = new GeometryTwist[0];
+            wrench = new GeometryWrench[0];
+        }
+    }
+
+    public class GeometryWrench : Message
+    {
+        public GeometryVector3 force;
+        public GeometryVector3 torque;
+        public GeometryWrench()
+        {
+            force = new GeometryVector3();
+            torque = new GeometryVector3();
         }
     }
     public class GeometryVector3 : Message
