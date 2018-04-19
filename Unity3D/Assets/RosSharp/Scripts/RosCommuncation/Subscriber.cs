@@ -36,7 +36,7 @@ namespace RosSharp.RosBridgeClient
         }
                
         private void Receive(Message message)
-        {            
+        {
             MessageReceiver.RaiseMessageReception(new MessageEventArgs(message));
         }
     }

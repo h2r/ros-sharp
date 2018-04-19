@@ -15,15 +15,54 @@ limitations under the License.
 
 using Newtonsoft.Json;
 
-namespace RosSharp.RosBridgeClient
-{
-    public class Message
-    {
+namespace RosSharp.RosBridgeClient {
+    public class Message {
         [JsonIgnore]
-        public string RosMessageType
-        {
+        public string RosMessageType {
             get { return MessageTypes.RosMessageType(GetType()); }
         }
+    }
+
+    public class DisplayTrajectory : Message {
+        public string model_id;
+        public RobotTrajectory[] trajectory;
+        public RobotState trajectory_start;
+        public DisplayTrajectory() {
+            model_id = "";
+        }
+    }
+
+    public class RobotTrajectory : Message {
+        public JointTrajectory joint_trajectory;
+        public MultiDOFJointTrajectory multi_dof_joint_trajectory;
+        public RobotTrajectory() { }
+    }
+
+    public class JointTrajectory : Message {
+        public StandardHeader header;
+        public string[] joint_names;
+        public JointTrajectoryPoint[] points;
+        public JointTrajectory() { }
+    }
+
+    public class JointTrajectoryPoint : Message {
+        float[] positions;
+        float[] velocities;
+        float[] accelerations;
+        float[] effort;
+        StandardTime time_from_start;
+        public JointTrajectoryPoint() {
+            positions = new float[0];
+            velocities = new float[0];
+            accelerations = new float[0];
+            effort = new float[0];
+            time_from_start = new StandardTime();
+        }
+    }
+
+    public class RobotState : Message
+    {
+
     }
 
     public class GeometryTwist : Message
