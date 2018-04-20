@@ -39,7 +39,7 @@ namespace RosSharp.RosBridgeClient
                 isNewStateReceived = false;
             }
         }
-        private void WriteUpdate()
+        public void WriteUpdate()
         {
             if (JointType == JointTypes.continuous || JointType == JointTypes.revolute)
                 WriteHingeJointUpdate();

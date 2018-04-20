@@ -31,7 +31,7 @@ namespace RosSharp.RosBridgeClient {
         public MoveItDisplayTrajectory() {
             model_id = "";
             trajectory = new MoveItRobotTrajectory[0];
-
+            trajectory_start = new MoveItRobotState();
         }
     }
 
@@ -60,11 +60,11 @@ namespace RosSharp.RosBridgeClient {
     }
 
     public class TrajectoryJointTrajectoryPoint : Message {
-        float[] positions;
-        float[] velocities;
-        float[] accelerations;
-        float[] effort;
-        StandardTime time_from_start;
+        public float[] positions;
+        public float[] velocities;
+        public float[] accelerations;
+        public float[] effort;
+        public StandardTime time_from_start;
         public TrajectoryJointTrajectoryPoint() {
             positions = new float[0];
             velocities = new float[0];
@@ -77,12 +77,12 @@ namespace RosSharp.RosBridgeClient {
     public class TrajectoryMultiDOFJointTrajectory : Message 
     {
         public StandardHeader header;
-        public string joint_names;
+        public string[] joint_names;
         public TrajectoryMulitDOFJointTrajectoryPoint[] points;
         public TrajectoryMultiDOFJointTrajectory()
         {
             header = new StandardHeader();
-            joint_names = "";
+            joint_names = new string[0];
             points = new TrajectoryMulitDOFJointTrajectoryPoint[0];
         }
     }
@@ -108,6 +108,11 @@ namespace RosSharp.RosBridgeClient {
         public SensorMultiDOFJointState attached_dof_joint_state;
         public MoveItAttachedCollisionObject[] attached_collision_objects;
         public bool is_diff;
+        public MoveItRobotState() {
+            joint_state = new SensorJointStates();
+            attached_dof_joint_state = new SensorMultiDOFJointState();
+            attached_collision_objects = new MoveItAttachedCollisionObject[0];
+        }
     }
 
     public class MoveItAttachedCollisionObject : Message
@@ -138,6 +143,7 @@ namespace RosSharp.RosBridgeClient {
         public GeometryPose[] mesh_poses;
         public ShapePlane[] planes;
         public GeometryPose[] plane_poses;
+        public byte operation;
         public byte ADD = 0;
         public byte REMOVE = 1;
         public byte APPEND = 2;
@@ -153,6 +159,7 @@ namespace RosSharp.RosBridgeClient {
             mesh_poses = new GeometryPose[0];
             planes = new ShapePlane[0];
             plane_poses = new GeometryPose[0];
+            operation = 0;
         }
     }
 
@@ -182,7 +189,7 @@ namespace RosSharp.RosBridgeClient {
         public byte CONE_HEIGHT = 0;
         public byte CONE_RADIUS = 1;
         public byte type;
-        float[] dimensions;
+        public float[] dimensions;
         public ShapeSolidPrivitive() 
         {
             type = 0;
