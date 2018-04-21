@@ -10,13 +10,22 @@ namespace RosSharp.RosBridgeClient {
 
         public override Type MessageType { get { return (typeof(MoveItDisplayTrajectory)); } }
 
+        public GameObject UrdfModel;
+
         public JointStateWriter[] JointStateWriters;
         public Dictionary<string, JointStateWriter> JointDict = new Dictionary<string, JointStateWriter>();
+        private List<GameObject> TrailPoints;
+        
 
         public Boolean loop = false;
         public Boolean trail = false;
+
+
         public Boolean color = false;
-        public Color trail_color = Color.magenta;
+        private Boolean prev_color;
+
+
+        public Color TrailColor = Color.magenta;
 
         public MoveItDisplayTrajectory message;
 
@@ -30,23 +39,39 @@ namespace RosSharp.RosBridgeClient {
                 name = name.Substring(1, name.Length - 2);
                 JointDict.Add(name, jsw);
             }
+            TrailPoints = new List<GameObject>();
+            prev_color = color;
         }
 
         private void Update() {
+            
             if (Input.GetKeyDown("f")) {
                 StopCoroutine("Animate");
                 StartCoroutine("Animate");
             }
         }
 
+        private void DestroyTrail() {
+            foreach(GameObject trailPoint in TrailPoints) {
+                Destroy(trailPoint);
+            }
+            TrailPoints.Clear();
+        }
+
         private void ReceiveMessage(object sender, MessageEventArgs e) {
             message = (MoveItDisplayTrajectory)e.Message;
+            DestroyTrail();
         }
 
         IEnumerator Animate() {
             do {
-                foreach (GameObject clone in GameObject.FindGameObjectsWithTag("clone")) {
-                    Destroy(clone);
+                if (prev_color != color) {
+                    prev_color = color;
+                    DestroyTrail();
+                }
+
+                for (int i = 0; i < TrailPoints.Count; i++) {
+                    TrailPoints[i].SetActive(false);
                 }
 
                 string[] start_names = message.trajectory_start.joint_state.name;
@@ -61,29 +86,47 @@ namespace RosSharp.RosBridgeClient {
 
                 string[] joint_names = message.trajectory[0].joint_trajectory.joint_names;
                 TrajectoryJointTrajectoryPoint[] points = message.trajectory[0].joint_trajectory.points;
-                foreach (TrajectoryJointTrajectoryPoint point in points) {
-                    for (int i = 0; i < joint_names.Length; i++) {
-                        if (JointDict.ContainsKey(joint_names[i])) {
-                            JointDict[joint_names[i]].Write(point.positions[i]);
-                            JointDict[joint_names[i]].WriteUpdate();
-                            if (trail) {
-                                GameObject original = JointDict[joint_names[i]].gameObject;
-                                GameObject clone = Instantiate(original, original.transform.position, original.transform.rotation);
-                                clone.tag = "clone";
-                                if (color) {
-                                    foreach (MeshRenderer mr in clone.GetComponentsInChildren<MeshRenderer>()) {
-                                        foreach (Material mat in mr.materials) {
-                                            mat.color = trail_color;
-                                        }
-                                    }
-                                }
-                            }
+
+                if (TrailPoints.Count < points.Length) {
+                    DestroyTrail();
+                }
+
+                for (int i = 0; i < points.Length; i++) {
+                    for (int j = 0; j < joint_names.Length; j++) {
+                        if (JointDict.ContainsKey(joint_names[j])) {
+                            JointDict[joint_names[j]].Write(points[i].positions[j]);
+                            JointDict[joint_names[j]].WriteUpdate();
                         }
+                    }
+                    if (trail) {
+                        AddTrailPoint(i);
+                    }
+                    if (trail && color) {
+                        ColorTrailPoint(i);
                     }
                     yield return new WaitForSeconds(.1f);
                 }
             } while (loop);
         }
-    }
+
+        void AddTrailPoint(int point_index) {
+            if (point_index < TrailPoints.Count) {
+                TrailPoints[point_index].SetActive(true);
+            } else {
+                GameObject clone = Instantiate(UrdfModel, UrdfModel.transform.position, UrdfModel.transform.rotation);
+                clone.transform.localScale = new Vector3(1.01f, 1.01f, 1.01f);
+                TrailPoints.Add(clone);
+            }
+        }
+
+
+        void ColorTrailPoint(int point_index) {
+            foreach (MeshRenderer mr in TrailPoints[point_index].GetComponentsInChildren<MeshRenderer>()) {
+                foreach (Material mat in mr.materials) {
+                    mat.color = TrailColor;
+                }
+            }
+        }
+        }
 
 }

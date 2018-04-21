@@ -60,6 +60,7 @@ namespace RosSharp.RosBridgeClient
                 jointStateProvider.JointStateReaders = PatchJoints<JointStateReader>();
 
             if (AddJointStateWriters)
+                displayTrajectoryReceiver.UrdfModel = UrdfModel;
                 displayTrajectoryReceiver.JointStateWriters = PatchJoints<JointStateWriter>();
         }
 
