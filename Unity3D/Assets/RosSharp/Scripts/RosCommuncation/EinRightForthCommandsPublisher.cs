@@ -15,7 +15,8 @@ public class EinRightForthCommandsPublisher : Publisher {
         rosSocket = GetComponent<RosConnector>().RosSocket;
 
         // Get the controller component of this gameobject
-        controller = GetComponent<VRTK.VRTK_ControllerEvents>();
+        GameObject vrtk = GameObject.Find("left");
+        controller = vrtk.GetComponent<VRTK.VRTK_ControllerEvents>();
 
         publicationId = rosSocket.Advertise("ein/right/forth_commands", "std_msgs/String");
         message = new StandardString();
