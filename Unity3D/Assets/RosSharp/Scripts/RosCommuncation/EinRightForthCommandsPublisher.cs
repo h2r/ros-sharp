@@ -7,7 +7,7 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     public string Topic = "ein/right/forth_commands";
     private StandardString message;
-    private VRTK.VRTK_ControllerEvents controller;
+
 
 
     // Use this for initialization
@@ -15,8 +15,6 @@ public class EinRightForthCommandsPublisher : Publisher {
         rosSocket = GetComponent<RosConnector>().RosSocket;
 
         // Get the controller component of this gameobject
-        GameObject vrtk = GameObject.Find("left");
-        controller = vrtk.GetComponent<VRTK.VRTK_ControllerEvents>();
 
         publicationId = rosSocket.Advertise("ein/right/forth_commands", "std_msgs/String");
         message = new StandardString();
@@ -24,14 +22,12 @@ public class EinRightForthCommandsPublisher : Publisher {
 	
 	// Update is called once per frame
 	void Update () {
-        if (controller.gripPressed) {
-            message.data = "dogSummonSpot";
+        if (Input.GetKeyDown("joystick button 2") || Input.GetAxis("left grip button") > 0.5f) {
+            message.data = "\"aibo\" import\ndogSummonSpot";
             rosSocket.Publish(publicationId, message);
             Debug.Log("button press");
         }
 
-        message.data = "dogSummonSpot";
-        rosSocket.Publish(publicationId, message);
 
 
     }
