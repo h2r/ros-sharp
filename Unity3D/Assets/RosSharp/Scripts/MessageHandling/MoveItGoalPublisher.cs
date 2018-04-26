@@ -27,16 +27,21 @@ namespace RosSharp.RosBridgeClient {
 
         // Update is called once per frame
         void Update() {
-            if (Input.GetKeyDown("p")) {
+            if (Input.GetKeyDown("p") || Input.GetKeyDown("joystick button 2")){
                 UpdateMessageContents();
-                Debug.Log(TargetPose);
+                Debug.Log("Sending plan request");
                 rosSocket.Publish(publicationId, TargetPose);
+                //rosSocket.CallService("plan_path", typeof(GeometryPose), new RosSocket.ServiceHandler(PlanHandler), TargetPose);
             }
+        }
+
+        void PlanHandler(object args) {
+            return;
         }
 
         void UpdateMessageContents() {
             Vector3 position = TargetModel.transform.position - UrdfModel.transform.position;
-            Quaternion rotation = TargetModel.transform.rotation;
+            Quaternion rotation = UrdfModel.transform.rotation * TargetModel.transform.rotation;
             TargetPose.position = GetGeometryPoint(position.Unity2Ros());
             TargetPose.orientation = GetGeometryQuaternion(rotation.Unity2Ros());
             

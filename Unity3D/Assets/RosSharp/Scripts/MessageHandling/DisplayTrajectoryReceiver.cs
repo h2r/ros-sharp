@@ -24,6 +24,7 @@ namespace RosSharp.RosBridgeClient {
         public Boolean color = false;
         private Boolean prev_color;
 
+        private Boolean new_trajectory = false;
 
         public Color TrailColor = Color.magenta;
 
@@ -45,7 +46,9 @@ namespace RosSharp.RosBridgeClient {
 
         private void Update() {
             
-            if (Input.GetKeyDown("f")) {
+            if (Input.GetKeyDown("f") || new_trajectory) {
+                new_trajectory = false;
+                DestroyTrail();
                 StopCoroutine("Animate");
                 StartCoroutine("Animate");
             }
@@ -60,7 +63,7 @@ namespace RosSharp.RosBridgeClient {
 
         private void ReceiveMessage(object sender, MessageEventArgs e) {
             message = (MoveItDisplayTrajectory)e.Message;
-            DestroyTrail();
+            new_trajectory = true;
         }
 
         IEnumerator Animate() {
