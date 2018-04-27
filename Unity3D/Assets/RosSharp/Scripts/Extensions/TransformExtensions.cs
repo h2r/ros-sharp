@@ -74,8 +74,8 @@ namespace RosSharp
 
         public static Quaternion Unity2Ros(this Quaternion quaternion)
         {
-            return new Quaternion(-quaternion.x, quaternion.z, quaternion.y, quaternion.w);
-            //return (new Quaternion(quaternion.x, quaternion.z, -quaternion.y, quaternion.w)) * new Quaternion(0, 1, 0, 0);
+            //return new Quaternion(-quaternion.x, quaternion.z, quaternion.y, quaternion.w);
+            return new Quaternion(-quaternion.z, quaternion.x, -quaternion.y, quaternion.w);
         }
     }
 }

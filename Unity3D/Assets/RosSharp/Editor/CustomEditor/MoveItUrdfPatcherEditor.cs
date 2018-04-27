@@ -32,6 +32,8 @@ namespace RosSharp.RosBridgeClient {
             moveitUrdfPatcher.SetRigidbodiesKinematic = GUILayout.Toggle(moveitUrdfPatcher.SetRigidbodiesKinematic, "Set Rigidbodies Kinematic");
             moveitUrdfPatcher.SetMeshCollidersConvex = GUILayout.Toggle(moveitUrdfPatcher.SetMeshCollidersConvex, "Set Mesh Colliders Convex");
             GUILayout.Space(10);
+            moveitUrdfPatcher.EnableGPUInstancing = GUILayout.Toggle(moveitUrdfPatcher.EnableGPUInstancing, "Enable GPU Instancing");
+            GUILayout.Space(10);
             moveitUrdfPatcher.AddPoseProvider = GUILayout.Toggle(moveitUrdfPatcher.AddPoseProvider, "Publish Pose (Add Pose Provider)");
             moveitUrdfPatcher.AddPoseReceiver = GUILayout.Toggle(moveitUrdfPatcher.AddPoseReceiver, "Subscribe Pose (Add Pose Receiver)");
 

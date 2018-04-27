@@ -29,6 +29,7 @@ namespace RosSharp.RosBridgeClient
         public bool EnableRigidbodiesGravity;
         public bool SetRigidbodiesKinematic;
         public bool SetMeshCollidersConvex;
+        public bool EnableGPUInstancing;
 
         public bool AddPoseProvider;
         public bool AddPoseReceiver;
@@ -53,6 +54,9 @@ namespace RosSharp.RosBridgeClient
             if (AddPoseReceiver)
                 UrdfModel.AddComponent<PoseReceiver>();
 
+            if (EnableGPUInstancing)
+                SetGPUInstancing();
+
             if (AddJointStateReaders || AddJointStateWriters)
                 GetSingleDimensionalJoints();
 
@@ -62,6 +66,14 @@ namespace RosSharp.RosBridgeClient
             if (AddJointStateWriters)
                 displayTrajectoryReceiver.UrdfModel = UrdfModel;
                 displayTrajectoryReceiver.JointStateWriters = PatchJoints<JointStateWriter>();
+        }
+
+        private void SetGPUInstancing() {
+            foreach (MeshRenderer mr in UrdfModel.GetComponentsInChildren<MeshRenderer>()) {
+                foreach (Material mat in mr.sharedMaterials) {
+                    mat.enableInstancing = true;
+                }
+            }
         }
 
         private void GetSingleDimensionalJoints() {
