@@ -52,7 +52,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             prevLftGrpButtonState = true;
         }
         if(!currLftGrpButtonState && prevLftGrpButtonState) {
-            message.data = "dogSummon" + dogList[currDog];
+            message.data = "dogSummon" + dogList[currDog] + "\n" + "dogGetSensoryMotorStatesInfinite";
             rosSocket.Publish(publicationId, message);
             Debug.Log(dogList[currDog] + " was summoned");
             prevLftGrpButtonState = false;
