@@ -6,10 +6,19 @@ using System;
 
 public class EinRightForthCommandsPublisher : Publisher {
 
-    public string Topic = "ein/right/forth_commands";
+    public GameObject leftController;
+    public GameObject rightController;
+
+    // 0 means lying down, 1 means sitting down, 2 means standing up
+    // Originally, we assume all dogs start in the standing position
+    private static int[] dogHeightList = { 2, 2, 2, 2 };
+
+    private float currRightControlHeight = 0f;
+    private float prevRightControlHeight = 0f;
+    private bool rightTriggerPressed = false;
+
     private StandardString message;
 
-    //@TODO: Use this list to summon different dogs with the left controller and thus switch
     private static string[] dogList = { "Spot", "Crystal", "Peanut", "Pluto"};
     private int currDog = 0;
     private static int totalDogs = dogList.Length - 1;
@@ -20,7 +29,6 @@ public class EinRightForthCommandsPublisher : Publisher {
     private bool prevLftTrackLeftState = false;
     private bool currLftTrackRightState = false;
     private bool prevLftTrackRightState = false;
-
 
     private bool currRgtTrackUpState = false;
     private bool prevRgtTrackUpState = false;
@@ -33,16 +41,18 @@ public class EinRightForthCommandsPublisher : Publisher {
 
 
     // Use this for initialization
-    void Start () {
+    protected override void Start ()  {
+        //base.Start();
+
         rosSocket = GetComponent<RosConnector>().RosSocket;
 
-        publicationId = rosSocket.Advertise("ein/right/forth_commands", "std_msgs/String");
+        publicationId = rosSocket.Advertise(Topic, "std_msgs/String");
         message = new StandardString();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        
+
+    // Update is called once per frame
+    void Update() {
+
         if (Input.GetAxis("left grip button") > 0.8f) {
             prevLftGrpButtonState = false;
             currLftGrpButtonState = true;
@@ -51,7 +61,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             currLftGrpButtonState = false;
             prevLftGrpButtonState = true;
         }
-        if(!currLftGrpButtonState && prevLftGrpButtonState) {
+        if (!currLftGrpButtonState && prevLftGrpButtonState) {
             message.data = "dogSummon" + dogList[currDog] + "\n" + "dogGetSensoryMotorStatesInfinite";
             rosSocket.Publish(publicationId, message);
             Debug.Log(dogList[currDog] + " was summoned");
@@ -59,15 +69,15 @@ public class EinRightForthCommandsPublisher : Publisher {
         }
 
         // Walking forward and back with right track pad
-        if(Input.GetAxis("Right Vertical Pad") < -0.8f) {
+        if (Input.GetAxis("Right Vertical Pad") < -0.8f) {
             currRgtTrackUpState = true;
             prevRgtTrackUpState = false;
         }
-        if(Math.Abs(Input.GetAxis("Right Vertical Pad")) <= 0.1f && currRgtTrackUpState && !prevRgtTrackUpState) {
+        if (Math.Abs(Input.GetAxis("Right Vertical Pad")) <= 0.1f && currRgtTrackUpState && !prevRgtTrackUpState) {
             currRgtTrackUpState = false;
             prevRgtTrackUpState = true;
         }
-        if(!currRgtTrackUpState && prevRgtTrackUpState) {
+        if (!currRgtTrackUpState && prevRgtTrackUpState) {
             message.data = "2 dogWalkForwardSeconds";
             rosSocket.Publish(publicationId, message);
             Debug.Log("The dog was told to walk forwards!");
@@ -121,6 +131,8 @@ public class EinRightForthCommandsPublisher : Publisher {
             prevRgtTrackLeftState = false;
         }
 
+        // Switching between dogs with the left controller's horizontal pad
+
         if (Input.GetAxis("Left Horizontal Pad") > 0.8f) {
             currLftTrackLeftState = true;
             prevLftTrackLeftState = false;
@@ -131,13 +143,79 @@ public class EinRightForthCommandsPublisher : Publisher {
         }
         if (!currLftTrackLeftState && prevLftTrackLeftState) {
             currDog += 1;
-            if(currDog > totalDogs) {
+            if (currDog > totalDogs) {
                 currDog = 0;
             }
             prevLftTrackLeftState = false;
             Debug.Log("The current dog is " + dogList[currDog]);
-
         }
 
+        if (Input.GetAxis("Left Horizontal Pad") < -0.8f) {
+            currLftTrackRightState = true;
+            prevLftTrackRightState = false;
+        }
+        if (Math.Abs(Input.GetAxis("Left Horizontal Pad")) <= 0.1f && currLftTrackRightState && !prevLftTrackRightState) {
+            currLftTrackRightState = false;
+            prevLftTrackRightState = true;
+        }
+        if (!currLftTrackRightState && prevLftTrackRightState) {
+            currDog -= 1;
+            if (currDog < 0) {
+                currDog = totalDogs;
+            }
+            prevLftTrackRightState = false;
+            Debug.Log("The current dog is " + dogList[currDog]);
+        }
+
+        // Sitting and standing up for the dog
+        if ((Input.GetAxis("Right Trigger") > 0.5) && !rightTriggerPressed) {
+            currRightControlHeight = rightController.transform.position[1];
+            prevRightControlHeight = rightController.transform.position[1];
+            rightTriggerPressed = true;
+            Debug.Log(currRightControlHeight);
+        }
+        if ((Input.GetAxis("Right Trigger") < 0.5) && rightTriggerPressed) {
+            currRightControlHeight = rightController.transform.position[1];
+            Debug.Log(currRightControlHeight);
+            if (currRightControlHeight - prevRightControlHeight > 0.3f) {
+                int currDogHeight = dogHeightList[currDog];
+                if (currDogHeight == 0) {
+                    message.data = "demoDogSit";
+                    dogHeightList[currDog] = 1;
+                }
+                else if (currDogHeight == 1) {
+                    message.data = "demoDogStandUp";
+                    dogHeightList[currDog] = 2;
+                }
+                else {
+                    message.data = "";
+                }
+                rosSocket.Publish(publicationId, message);
+                Debug.Log("The dog was told to" + message.data);
+                prevRightControlHeight = currRightControlHeight;
+            }
+            else if (currRightControlHeight - prevRightControlHeight < -0.3f) {
+                int currDogHeight = dogHeightList[currDog];
+                if (currDogHeight == 2) {
+                    message.data = "demoDogSit";
+                    dogHeightList[currDog] = 1;
+                }
+                else if (currDogHeight == 1) {
+                    message.data = "demoDogLieDown";
+                    dogHeightList[currDog] = 0;
+                }
+                else {
+                    message.data = "";
+                }
+                rosSocket.Publish(publicationId, message);
+                Debug.Log("The dog was told to" + message.data);
+                prevRightControlHeight = currRightControlHeight;
+            }
+            else if (Math.Abs(currRightControlHeight - prevRightControlHeight) < 0.3) {
+                prevRightControlHeight = currRightControlHeight;
+            }
+            rightTriggerPressed = false;
+
+        }
     }
 }
