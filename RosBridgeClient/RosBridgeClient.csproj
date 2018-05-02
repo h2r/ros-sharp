@@ -58,6 +58,7 @@
     <Compile Include="RosSocket.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="UrdfImporter.cs" />
+    <Compile Include="WebSocketSharp_UWP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

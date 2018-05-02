@@ -19,7 +19,9 @@ limitations under the License.
 using System;
 using System.Linq;
 using System.Collections.Generic;
+#if !WINDOWS_UWP
 using WebSocketSharp;
+#endif
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
