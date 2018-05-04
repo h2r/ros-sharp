@@ -1,7 +1,4 @@
 ﻿#if WINDOWS_UWP
-#define CUSTOM_WEBSOCKET
-#endif
-#if CUSTOM_WEBSOCKET
 
 using System.Collections;
 using System.Collections.Generic;
@@ -165,7 +162,9 @@ public class WebSocket {
 
 
     public void ConnectAsync() {
+        Debug.Log("beginning ConnectAsync");
         StartAsync();
+        Debug.Log("ending of ConnectAsync");
     }
 
     public void Close() {
@@ -200,7 +199,7 @@ public class WebSocket {
         // comparison.
         if ((webSocketUri.Scheme != "ws") && (webSocketUri.Scheme != "wss"))
             throw new System.Exception("Error: WebSockets only support ws:// and wss:// schemes.");
-
+        Debug.Log(webSocketUri.AbsoluteUri);
         return webSocketUri;
     }
 
@@ -234,7 +233,9 @@ public class WebSocket {
         */
 
         try {
+            Debug.Log("start of StartAsync");
             await socket.ConnectAsync(url);
+            Debug.Log("middle of StartAsync");
         }
         catch (Exception ex) // For debugging
         {
@@ -246,6 +247,7 @@ public class WebSocket {
             return;
         }
         OnOpen.Invoke(this, null);
+        Debug.Log("end of StartAsync");
     }
     /*
 // Continuously read incoming data. For reading data we'll show how to use activeSocket.InputStream.AsStream()

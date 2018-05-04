@@ -72,9 +72,9 @@ namespace RosSharp.RosBridgeClient
 
         private void SetGPUInstancing() {
             foreach (MeshRenderer mr in UrdfModel.GetComponentsInChildren<MeshRenderer>()) {
-                foreach (Material mat in mr.sharedMaterials) {
-                    mat.enableInstancing = true;
-                }
+                    foreach (Material mat in mr.sharedMaterials) {
+                        mat.enableInstancing = true;
+                    }
             }
         }
 
