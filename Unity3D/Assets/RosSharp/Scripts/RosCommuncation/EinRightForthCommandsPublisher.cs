@@ -25,6 +25,8 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     private bool currLftGrpButtonState = false;
     private bool prevLftGrpButtonState = false;
+    private bool currLftTriggerState = false;
+    private bool prevLftTriggerState = false;
     private bool currLftTrackLeftState = false;
     private bool prevLftTrackLeftState = false;
     private bool currLftTrackRightState = false;
@@ -77,7 +79,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             currRgtTrackUpState = false;
             prevRgtTrackUpState = true;
         }
-        if (!currRgtTrackUpState && prevRgtTrackUpState) {
+        if (!currRgtTrackUpState && prevRgtTrackUpState && dogHeightList[currDog] == 2) {
             message.data = "2 dogWalkForwardSeconds";
             rosSocket.Publish(publicationId, message);
             Debug.Log("The dog was told to walk forwards!");
@@ -92,7 +94,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             currRgtTrackDownState = false;
             prevRgtTrackDownState = true;
         }
-        if (!currRgtTrackDownState && prevRgtTrackDownState) {
+        if (!currRgtTrackDownState && prevRgtTrackDownState && dogHeightList[currDog] == 2) {
             message.data = "2 dogWalkBackwardSeconds";
             rosSocket.Publish(publicationId, message);
             Debug.Log("The dog was told to walk backwards!");
@@ -100,7 +102,7 @@ public class EinRightForthCommandsPublisher : Publisher {
         }
 
         // Turning right and left with right track pad
-        if (Input.GetAxis("Right Horizontal Pad") < -0.8f) {
+        if (Input.GetAxis("Right Horizontal Pad") > 0.8f) {
             Debug.Log("The right button was pressed");
             currRgtTrackRightState = true;
             prevRgtTrackRightState = false;
@@ -109,14 +111,14 @@ public class EinRightForthCommandsPublisher : Publisher {
             currRgtTrackRightState = false;
             prevRgtTrackRightState = true;
         }
-        if (!currRgtTrackRightState && prevRgtTrackRightState) {
+        if (!currRgtTrackRightState && prevRgtTrackRightState && dogHeightList[currDog] == 2) {
             message.data = "2 dogTurnRightSeconds";
             rosSocket.Publish(publicationId, message);
             Debug.Log("The dog was told to turn right!");
             prevRgtTrackRightState = false;
         }
 
-        if (Input.GetAxis("Right Horizontal Pad") > 0.8f) {
+        if (Input.GetAxis("Right Horizontal Pad") < -0.8f) {
             currRgtTrackLeftState = true;
             prevRgtTrackLeftState = false;
         }
@@ -124,7 +126,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             currRgtTrackLeftState = false;
             prevRgtTrackLeftState = true;
         }
-        if (!currRgtTrackLeftState && prevRgtTrackLeftState) {
+        if (!currRgtTrackLeftState && prevRgtTrackLeftState && dogHeightList[currDog] == 2) {
             message.data = "2 dogTurnLeftSeconds";
             rosSocket.Publish(publicationId, message);
             Debug.Log("The dog was told to turn left!");
@@ -134,6 +136,7 @@ public class EinRightForthCommandsPublisher : Publisher {
         // Switching between dogs with the left controller's horizontal pad
 
         if (Input.GetAxis("Left Horizontal Pad") > 0.8f) {
+            //Debug.Log("Left pad swiped");
             currLftTrackLeftState = true;
             prevLftTrackLeftState = false;
         }
@@ -216,6 +219,30 @@ public class EinRightForthCommandsPublisher : Publisher {
             }
             rightTriggerPressed = false;
 
+        }
+
+        if (Input.GetAxis("Left Trigger") > 0.5f)
+        {
+            //Debug.Log("Left trigger");
+            currLftTriggerState = true;
+            prevLftTriggerState = false;
+        }
+        if (Math.Abs(Input.GetAxis("Left Trigger")) <= 0.5f && currLftTriggerState && !prevLftTriggerState)
+        {
+            currLftTriggerState = false;
+            prevLftTriggerState = true;
+        }
+        if (!currLftTriggerState && prevLftTriggerState)
+        {
+            message.data = "demoDogWagYourTail";
+            rosSocket.Publish(publicationId, message);
+            Debug.Log("The dog was told to wag its tail");
+            prevLftTriggerState = false;
+        }
+
+        if (Input.GetAxis("Left Track Press") > 0.5)
+        {
+            Debug.Log("Wakanda!");
         }
     }
 }
