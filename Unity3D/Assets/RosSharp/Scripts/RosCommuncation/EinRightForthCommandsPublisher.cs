@@ -23,6 +23,9 @@ public class EinRightForthCommandsPublisher : Publisher {
     private int currDog = 0;
     private static int totalDogs = dogList.Length - 1;
 
+    // Setup for all tracking variables to make sure commands are executed once and not
+    // at the rate of a Unity update, which is thousands of times a second
+
     private bool currLftGrpButtonState = false;
     private bool prevLftGrpButtonState = false;
     private bool currLftTriggerState = false;
