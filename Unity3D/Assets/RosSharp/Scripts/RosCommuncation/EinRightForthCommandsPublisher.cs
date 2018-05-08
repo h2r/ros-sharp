@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+// This script publishes commands to the topic /ein/right/forth_commands for the 
+// Aibos to be commanded! 
 public class EinRightForthCommandsPublisher : Publisher {
 
     public GameObject leftController;
