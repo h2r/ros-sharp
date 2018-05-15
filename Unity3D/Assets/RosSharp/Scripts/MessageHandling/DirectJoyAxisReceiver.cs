@@ -15,21 +15,22 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace RosSharp.RosBridgeClient
-{
+namespace RosSharp.RosBridgeClient {
     [RequireComponent(typeof(JoyAxisWriter))]
-    public class DirectJoyAxisReceiver : MonoBehaviour
-    {
+    public class DirectJoyAxisReceiver : MonoBehaviour {
         public string AxisName;
         private JoyAxisWriter joyAxisWriter;
+        public float curAngle = 0f;
 
-        private void Start()
-        {
+        private void Start() {
             joyAxisWriter = GetComponent<JoyAxisWriter>();
         }
-        private void Update()
-        {
-            joyAxisWriter.Write(Input.GetAxis(AxisName));
+        private void Update() {
+            joyAxisWriter.Write(curAngle);
+            //if (Input.GetAxis(AxisName) != 0f) {
+
+            //    joyAxisWriter.Write(Input.GetAxis(AxisName));
+            //}
         }
     }
 }

@@ -20,14 +20,21 @@ namespace RosSharp.RosBridgeClient
     [RequireComponent(typeof(Joint)),RequireComponent(typeof(JointStateWriter))]
     public class JoyAxisJointTransformWriter : JoyAxisWriter
     {
-        public float StepLength;
         public bool DoApplyUnityJointLimits;
 
         private Joint joint;
         private JointStateWriter jointStateWriter;
         
-        private float state;
+        public float state;
         private Vector2 limit;
+
+        public Vector2 GetLimit() {
+            return limit;
+        }
+
+        public float GetState() {
+            return state;
+        }
 
         private void Start()
         {
@@ -47,7 +54,7 @@ namespace RosSharp.RosBridgeClient
             else if (jointStateWriter.JointType == JointStateWriter.JointTypes.prismatic)
             {
                 ConfigurableJoint configurableJoint = (ConfigurableJoint)joint;
-                limit = new Vector2(-configurableJoint.linearLimit.limit, configurableJoint.linearLimit.limit);
+                limit = new Vector2(-configurableJoint.linearLimit.limit, 0f);
             }
         }
 
@@ -60,11 +67,15 @@ namespace RosSharp.RosBridgeClient
 
         public override void Write(float value)
         {
-            state = value * StepLength;
+            state = value;
             if (DoApplyUnityJointLimits)
                 ApplyLimits();
 
-            jointStateWriter.Write(state);
+            if (jointStateWriter.JointType != JointStateWriter.JointTypes.prismatic) {
+                jointStateWriter.Write(state * Mathf.Deg2Rad);
+            } else {
+                jointStateWriter.Write(state);
+            }
         }
     }
 }
