@@ -87,8 +87,9 @@ public class WebSocket {
     }
 
     void OnMessageRecieved(MessageWebSocket FromSocket, MessageWebSocketMessageReceivedEventArgs InputMessage) {
+        Debug.Log("Start of OnMessageRecieved");
         MessageEventArgs OutputMessage = null;
-
+        
         if (InputMessage.MessageType == SocketMessageType.Utf8) {
             var stringLength = InputMessage.GetDataReader().UnconsumedBufferLength;
             string receivedMessage = InputMessage.GetDataReader().ReadString(stringLength);
@@ -246,8 +247,8 @@ public class WebSocket {
             OnError.Invoke(this, new ErrorEventArgs(ex.Message));
             return;
         }
-        OnOpen.Invoke(this, null);
         Debug.Log("end of StartAsync");
+        OnOpen.Invoke(this, null);
     }
     /*
 // Continuously read incoming data. For reading data we'll show how to use activeSocket.InputStream.AsStream()
