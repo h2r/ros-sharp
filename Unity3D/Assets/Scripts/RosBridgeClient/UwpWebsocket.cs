@@ -1,4 +1,4 @@
-﻿#if WINDOWS_UWP
+﻿#if !UNITY_EDITOR
 
 using System.Collections;
 using System.Collections.Generic;

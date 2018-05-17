@@ -25,7 +25,7 @@ using WebSocketSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
-
+using UnityEngine;
 
 public class RosSocket {
     #region Public
@@ -144,11 +144,12 @@ public class RosSocket {
     private Dictionary<int, ServiceCaller> serviceCallers = new Dictionary<int, ServiceCaller>();
 
     private void recievedOperation(object sender, MessageEventArgs e) {
-        JObject operation = Deserialize(e.RawData);
+
+        JObject operation = Deserialize(e.Data);
 
 #if DEBUG
-        Console.WriteLine("Recieved " + operation.GetOperation());
-        Console.WriteLine(JsonConvert.SerializeObject(operation, Formatting.Indented));
+        Debug.Log("Recieved " + operation.GetOperation());
+        Debug.Log(JsonConvert.SerializeObject(operation, Formatting.Indented));
 #endif
 
         switch (operation.GetOperation()) {
@@ -197,7 +198,7 @@ public class RosSocket {
 
     private void sendOperation(Operation operation) {
 #if DEBUG
-        Console.WriteLine(JsonConvert.SerializeObject(operation, Formatting.Indented));
+        Debug.Log(JsonConvert.SerializeObject(operation, Formatting.Indented));
 #endif
         webSocket.SendAsync(Serialize(operation), null);
     }
@@ -213,6 +214,10 @@ public class RosSocket {
         string ascii = Encoding.ASCII.GetString(buffer, 0, buffer.Length);
         int I = ascii.Length;
         int J = buffer.Length;
+        return JsonConvert.DeserializeObject<JObject>(ascii);
+    }
+
+    public static JObject Deserialize(string ascii) {
         return JsonConvert.DeserializeObject<JObject>(ascii);
     }
 
