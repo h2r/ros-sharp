@@ -133,8 +133,8 @@ public class WebSocket {
         };
     }
 
-    public void SendAsync(string data, System.Action<bool> completed) {
-        ThreadPool.RunAsync((Handler) => {
+    public async void SendAsync(string data, System.Action<bool> completed) {
+        await ThreadPool.RunAsync((Handler) => {
             lock (SendLock) {
                 var SendTask = SendAsyncTask(data);
                 SendTask.Wait();
@@ -146,8 +146,8 @@ public class WebSocket {
         //completed.Invoke(true);
     }
 
-    public void SendAsync(byte[] data, System.Action<bool> completed) {
-        ThreadPool.RunAsync((Handler) => {
+    public async void SendAsync(byte[] data, System.Action<bool> completed) {
+        await ThreadPool.RunAsync((Handler) => {
             lock (SendLock) {
                 var SendTask = SendAsyncTask(data);
                 SendTask.Wait();
@@ -161,9 +161,9 @@ public class WebSocket {
     }
 
 
-    public void ConnectAsync() {
+    public async void ConnectAsync() {
         Debug.Log("beginning ConnectAsync");
-        StartAsync();
+        await StartAsync();
         Debug.Log("ending of ConnectAsync");
     }
 

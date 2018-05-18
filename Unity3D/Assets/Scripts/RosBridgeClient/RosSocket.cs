@@ -154,17 +154,17 @@ public class RosSocket {
 
         switch (operation.GetOperation()) {
             case "publish": {
-                    recievedPublish(operation, e.RawData);
+                    recievedPublish(operation, e.Data);
                     return;
                 }
             case "service_response": {
-                    recievedServiceResponse(operation, e.RawData);
+                    recievedServiceResponse(operation, e.Data);
                     return;
                 }
         }
     }
 
-    private void recievedServiceResponse(JObject serviceResponse, byte[] rawData) {
+    private void recievedServiceResponse(JObject serviceResponse, string data) {
         ServiceCaller serviceCaller;
         bool foundById = serviceCallers.TryGetValue(serviceResponse.GetServiceId(), out serviceCaller);
 
@@ -184,7 +184,7 @@ public class RosSocket {
         }
     }
 
-    private void recievedPublish(JObject publication, byte[] rawData) {
+    private void recievedPublish(JObject publication, string data) {
         Subscriber subscriber;
 
         bool foundById = subscribers.TryGetValue(publication.GetServiceId(), out subscriber);
