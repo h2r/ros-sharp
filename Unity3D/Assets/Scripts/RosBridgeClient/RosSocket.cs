@@ -147,11 +147,6 @@ public class RosSocket {
 
         JObject operation = Deserialize(e.Data);
 
-#if DEBUG
-        Debug.Log("Recieved " + operation.GetOperation());
-        Debug.Log(JsonConvert.SerializeObject(operation, Formatting.Indented));
-#endif
-
         switch (operation.GetOperation()) {
             case "publish": {
                     recievedPublish(operation, e.Data);
@@ -197,9 +192,6 @@ public class RosSocket {
     }
 
     private void sendOperation(Operation operation) {
-#if DEBUG
-        Debug.Log(JsonConvert.SerializeObject(operation, Formatting.Indented));
-#endif
         webSocket.SendAsync(Serialize(operation), null);
     }
     public static byte[] Serialize(object obj) {
