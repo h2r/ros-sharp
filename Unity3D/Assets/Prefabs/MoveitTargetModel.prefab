@@ -245,6 +245,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4508813778718180}
+  - component: {fileID: 65773617554720944}
+  - component: {fileID: 114578217658766586}
   m_Layer: 0
   m_Name: MoveitTargetModel
   m_TagString: Untagged
@@ -572,7 +574,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1444275439983518}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: 0.088, y: 0.187, z: 0.64}
+  m_LocalPosition: {x: -0.318, y: 0.275, z: 3.467}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4410196143342572}
@@ -917,6 +919,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &65773617554720944
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1444275439983518}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.11, y: 0.12, z: 0.08}
+  m_Center: {x: 0, y: 0.03, z: 0}
 --- !u!114 &114048581380642390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -960,6 +974,22 @@ MonoBehaviour:
   CenterOfMass: {x: -0, y: 0, z: 0}
   InertiaTensor: {x: 0.01, y: 0.01, z: 0.01}
   InertiaTensorRotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &114578217658766586
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1444275439983518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb034688bcf84b4bb52b3a3310868c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HostTransform: {fileID: 0}
+  boundingBoxPrefab: {fileID: 0}
+  ManipulationMode: 1
+  ConstraintOnRotation: 0
+  OneHandMovement: 1
 --- !u!114 &114579633849555042
 MonoBehaviour:
   m_ObjectHideFlags: 1
