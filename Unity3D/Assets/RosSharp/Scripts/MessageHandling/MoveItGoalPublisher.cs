@@ -17,7 +17,7 @@ namespace RosSharp.RosBridgeClient {
         private RosSocket rosSocket;
         private int publicationId;
 
-        private GeometryPose TargetPose = new GeometryPose(); 
+        private GeometryPose TargetPose = new GeometryPose();
 
         // Use this for initialization
         void Start() {
@@ -26,13 +26,12 @@ namespace RosSharp.RosBridgeClient {
         }
 
         // Update is called once per frame
-        void Update() {
-            if (Input.GetKeyDown("p") || Input.GetKeyDown("joystick button 2")){
-                UpdateMessageContents();
-                Debug.Log("Sending plan request");
-                rosSocket.Publish(publicationId, TargetPose);
-                //rosSocket.CallService("plan_path", typeof(GeometryPose), new RosSocket.ServiceHandler(PlanHandler), TargetPose);
-            }
+        public void Publish() {
+            UpdateMessageContents();
+            Debug.Log("Sending plan request");
+            rosSocket.Publish(publicationId, TargetPose);
+            //rosSocket.CallService("plan_path", typeof(GeometryPose), new RosSocket.ServiceHandler(PlanHandler), TargetPose);
+
         }
 
         void PlanHandler(object args) {
@@ -40,11 +39,17 @@ namespace RosSharp.RosBridgeClient {
         }
 
         void UpdateMessageContents() {
+
             Vector3 position = TargetModel.transform.position - UrdfModel.transform.position;
             Quaternion rotation = UrdfModel.transform.rotation * TargetModel.transform.rotation;
             TargetPose.position = GetGeometryPoint(position.Unity2Ros());
+            TargetPose.position = new GeometryPoint {
+                x = -TargetPose.position.x,
+                y = -TargetPose.position.y,
+                z = TargetPose.position.z
+            };
             TargetPose.orientation = GetGeometryQuaternion(rotation.Unity2Ros());
-            
+
         }
 
         private GeometryPoint GetGeometryPoint(Vector3 position) {
