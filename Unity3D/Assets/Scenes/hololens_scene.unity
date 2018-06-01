@@ -9811,9 +9811,9 @@ MonoBehaviour:
   Keywords:
   - Keyword: plan
     KeyCode: 97
-  - Keyword: execute
+  - Keyword: move
     KeyCode: 98
-  recognitionConfidenceLevel: 1
+  recognitionConfidenceLevel: 2
 --- !u!114 &934407291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9855,12 +9855,12 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - Keyword: execute
+  - Keyword: move
     Response:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 934407291}
-          m_MethodName: Execute
+          m_MethodName: Move
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

@@ -17,8 +17,8 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
     }
 
     // Tells MoveIt to execute the plan
-    public void Execute() {
+    public void Move() {
         Debug.Log("Execute");
-        MoveItGoalPublisher.PublishExecute();
+        MoveItGoalPublisher.PublishMove();
     }
 }

@@ -35,7 +35,7 @@ namespace RosSharp.RosBridgeClient {
             rosSocket.Publish(planPublicationId, TargetPose);
         }
 
-        public void PublishExecute() {
+        public void PublishMove() {
             Debug.Log("Sending execute message");
             rosSocket.Publish(executePublicationId, new StandardString());
         }
