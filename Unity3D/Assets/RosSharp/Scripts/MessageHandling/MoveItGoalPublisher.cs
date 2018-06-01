@@ -11,28 +11,29 @@ namespace RosSharp.RosBridgeClient {
         public string PlanTopic;
         public string ExecuteTopic;
 
-        public GameObject UrdfBaseModel; // the root gameobject of your robot
-        public GameObject UrdfEndEffector; // the gameobject of the end effector of your robot
-        public GameObject TargetModel; // the goal target
+        public GameObject UrdfModel; // the root gameobject of your robot
+        public GameObject LeftTargetModel; // the goal target
+        public GameObject RightTargetModel; // the goal target
 
 
         private RosSocket rosSocket;
         private int planPublicationId;
         private int executePublicationId;
 
-        private GeometryPose TargetPose = new GeometryPose();
+        private MoveitTarget MoveitTarget = new MoveitTarget();
 
         // Use this for initialization
         void Start() {
             rosSocket = GetComponent<RosConnector>().RosSocket;
-            planPublicationId = rosSocket.Advertise(PlanTopic, "geometry_msgs/Pose");
+            planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
             executePublicationId = rosSocket.Advertise(ExecuteTopic, "std_msgs/String");
         }
 
         public void PublishPlan() {
-            UpdateMessageContents();
+            MoveitTarget.left_arm = UpdateMessageContents(LeftTargetModel);
+            MoveitTarget.right_arm = UpdateMessageContents(RightTargetModel);
             Debug.Log("Sending plan request");
-            rosSocket.Publish(planPublicationId, TargetPose);
+            rosSocket.Publish(planPublicationId, MoveitTarget);
         }
 
         public void PublishMove() {
@@ -44,10 +45,12 @@ namespace RosSharp.RosBridgeClient {
             return;
         }
 
-        void UpdateMessageContents() {
+        GeometryPose UpdateMessageContents(GameObject TargetModel) {
 
-            Vector3 position = TargetModel.transform.position - UrdfBaseModel.transform.position;
-            Quaternion rotation = UrdfBaseModel.transform.rotation * TargetModel.transform.rotation;
+            GeometryPose TargetPose = new GeometryPose();
+
+            Vector3 position = TargetModel.transform.position - UrdfModel.transform.position;
+            Quaternion rotation = UrdfModel.transform.rotation * TargetModel.transform.rotation;
             TargetPose.position = GetGeometryPoint(position.Unity2Ros());
             TargetPose.position = new GeometryPoint {
                 x = -TargetPose.position.x,
@@ -56,6 +59,7 @@ namespace RosSharp.RosBridgeClient {
             };
             TargetPose.orientation = GetGeometryQuaternion(rotation.Unity2Ros());
 
+            return TargetPose;
         }
 
         private GeometryPoint GetGeometryPoint(Vector3 position) {

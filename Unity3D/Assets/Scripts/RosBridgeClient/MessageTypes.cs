@@ -21,6 +21,7 @@ public static class MessageTypes {
     public static readonly Dictionary<string, Type> Dictionary = new Dictionary<string, Type>
     {
             { "geometry_msgs/Twist", typeof(GeometryTwist) },
+            { "ros_reality_bridge_msgs/MoveitTarget", typeof(MoveitTarget)},
             { "std_msgs/String", typeof(StandardString) },
             { "geometry_msgs/Accel", typeof(GeometryAccel) },
             { "sensor_msgs/JointState", typeof(SensorJointStates) },

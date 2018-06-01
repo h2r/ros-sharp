@@ -23,6 +23,15 @@ public class Message {
     }
 }
 
+public class MoveitTarget : Message {
+    public GeometryPose left_arm;
+    public GeometryPose right_arm;
+    public MoveitTarget() {
+        left_arm = new GeometryPose();
+        right_arm = new GeometryPose();
+    }
+}
+
 public class MoveItDisplayTrajectory : Message {
     public string model_id;
     public MoveItRobotTrajectory[] trajectory;
