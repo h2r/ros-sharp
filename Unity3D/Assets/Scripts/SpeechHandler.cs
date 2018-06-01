@@ -5,6 +5,7 @@ using RosSharp.RosBridgeClient;
 public class SpeechHandler : MonoBehaviour, ISpeechHandler {
 
     public MoveItGoalPublisher MoveItGoalPublisher;
+    public DisplayTrajectoryReceiver DisplayTrajectoryReceiver;
 
     
     void ISpeechHandler.OnSpeechKeywordRecognized(SpeechEventData eventData) {
@@ -19,6 +20,7 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
     // Tells MoveIt to execute the plan
     public void Move() {
         Debug.Log("Execute");
-        MoveItGoalPublisher.PublishMove();
+        MoveItGoalPublisher.PublishMove(); // move the arm
+        DisplayTrajectoryReceiver.loop = false; // stop the visualization
     }
 }

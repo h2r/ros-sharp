@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: FastDefault 1
+  m_Name: FastDefaultGreen
   m_Shader: {fileID: 4800000, guid: d45c0efca53019e43891b0f610f8146e, type: 3}
   m_ShaderKeywords: _BORDER_LIGHT_USES_HOVER_COLOR _DIRECTIONAL_LIGHT _DISABLE_ALBEDO_MAP
     _HOVER_LIGHT _SPECULAR_HIGHLIGHTS
@@ -137,7 +137,7 @@ Material:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _ClipPlane: {r: 0, g: 1, b: 0, a: 0}
     - _ClippingPlaneBorderColor: {r: 1, g: 0.19999996, b: 0, a: 1}
-    - _Color: {r: 0.67474055, g: 0.6544118, b: 1, a: 1}
+    - _Color: {r: 0.66089964, g: 1, b: 0.6397059, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EnvironmentColorX: {r: 1, g: 0, b: 0, a: 1}
