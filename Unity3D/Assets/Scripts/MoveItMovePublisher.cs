@@ -26,7 +26,8 @@ public class MoveItMovePublisher : MonoBehaviour {
             Debug.Log("Sending move request");
             rosSocket.Publish(publicationId, new StandardString());
             isDown = true;
-            DisplayTrajectoryReceiver.trail = false;
+            DisplayTrajectoryReceiver.DestroyTrail();
+            DisplayTrajectoryReceiver.UrdfModel.SetActive(false);
         }
         if (Input.GetAxis(ButtonName) < 0.01f) {
             isDown = false;

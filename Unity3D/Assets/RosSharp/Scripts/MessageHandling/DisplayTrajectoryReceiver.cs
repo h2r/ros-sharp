@@ -54,7 +54,7 @@ namespace RosSharp.RosBridgeClient {
             }
         }
 
-        private void DestroyTrail() {
+        public void DestroyTrail() {
             foreach(GameObject trailPoint in TrailPoints) {
                 Destroy(trailPoint);
             }

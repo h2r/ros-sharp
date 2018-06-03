@@ -33,7 +33,7 @@ namespace RosSharp.RosBridgeClient {
                 UpdateMessageContents();
                 Debug.Log("Sending plan request");
                 rosSocket.Publish(publicationId, TargetPose);
-                DisplayTrajectoryReceiver.trail = true;
+                DisplayTrajectoryReceiver.UrdfModel.SetActive(true);
             }
         }
 
