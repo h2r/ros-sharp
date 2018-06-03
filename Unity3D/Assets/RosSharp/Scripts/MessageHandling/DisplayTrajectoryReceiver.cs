@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
+using HoloToolkit.Unity.InputModule.Utilities.Interactions;
 
 namespace RosSharp.RosBridgeClient {
 
@@ -117,6 +118,8 @@ namespace RosSharp.RosBridgeClient {
                 TrailPoints[point_index].SetActive(true);
             } else {
                 GameObject clone = Instantiate(UrdfModel, UrdfModel.transform.position, UrdfModel.transform.rotation);
+                clone.GetComponent<TwoHandManipulatable>().enabled = false;
+                clone.GetComponent<BoxCollider>().enabled = false;
                 clone.transform.localScale = new Vector3(1.01f, 1.01f, 1.01f);
                 TrailPoints.Add(clone);
             }
