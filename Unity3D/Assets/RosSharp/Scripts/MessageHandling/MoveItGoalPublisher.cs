@@ -9,6 +9,8 @@ namespace RosSharp.RosBridgeClient {
     public class MoveItGoalPublisher : MonoBehaviour {
 
         public string Topic;
+        public string ButtonName;
+        public DisplayTrajectoryReceiver DisplayTrajectoryReceiver;
 
         public GameObject UrdfModel;
         public GameObject TargetModel;
@@ -27,11 +29,11 @@ namespace RosSharp.RosBridgeClient {
 
         // Update is called once per frame
         void Update() {
-            if (Input.GetKeyDown("p") || Input.GetKeyDown("joystick button 2")){
+            if (Input.GetKeyDown("p") || Input.GetKeyDown(ButtonName)){
                 UpdateMessageContents();
                 Debug.Log("Sending plan request");
                 rosSocket.Publish(publicationId, TargetPose);
-                //rosSocket.CallService("plan_path", typeof(GeometryPose), new RosSocket.ServiceHandler(PlanHandler), TargetPose);
+                DisplayTrajectoryReceiver.trail = true;
             }
         }
 
