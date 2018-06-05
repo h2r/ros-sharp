@@ -10,7 +10,7 @@ namespace RosSharp.RosBridgeClient {
 
         public override Type MessageType { get { return (typeof(MoveItDisplayTrajectory)); } }
 
-        public GameObject UrdfModel;
+        public GameObject UrdfModel; // baxter
 
         public JointStateWriter[] JointStateWriters;
         public Dictionary<string, JointStateWriter> JointDict = new Dictionary<string, JointStateWriter>();
