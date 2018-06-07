@@ -20,7 +20,6 @@ namespace RosSharp.RosBridgeClient {
         public Boolean loop = false;
         public Boolean trail = false;
 
-
         public Boolean color = false;
         private Boolean prev_color;
 
@@ -35,8 +34,11 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Start() {
-            foreach (JointStateWriter jsw in JointStateWriters) {
+            // foreach (JointStateWriter jsw in JointStateWriters) {
+            for(int i = 0; i < 10; i++) {
+                JointStateWriter jsw = JointStateWriters[i];
                 string name = jsw.name.Split(new char[] { ':' })[1];
+                // Debug.Log(name);
                 name = name.Substring(1, name.Length - 2);
                 JointDict.Add(name, jsw);
             }
@@ -83,6 +85,7 @@ namespace RosSharp.RosBridgeClient {
                 for (int i = 0; i < start_names.Length; i++) {
                     if (JointDict.ContainsKey(start_names[i])) {
                         JointDict[start_names[i]].Write(start_positions[i]);
+                        // Debug.Log(start_names[i]);
                         JointDict[start_names[i]].WriteUpdate();
                     }
                 }
@@ -122,7 +125,6 @@ namespace RosSharp.RosBridgeClient {
             }
         }
 
-
         void ColorTrailPoint(int point_index) {
             foreach (MeshRenderer mr in TrailPoints[point_index].GetComponentsInChildren<MeshRenderer>()) {
                 foreach (Material mat in mr.materials) {
@@ -130,6 +132,5 @@ namespace RosSharp.RosBridgeClient {
                 }
             }
         }
-        }
-
+    }
 }

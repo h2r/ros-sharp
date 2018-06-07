@@ -12,7 +12,7 @@ namespace RosSharp.RosBridgeClient {
         public string ExecuteTopic;
 
         public GameObject UrdfModel; // the root gameobject of your robot
-        public GameObject LeftTargetModel; // the goal target
+        // public GameObject LeftTargetModel; // the goal target
         public GameObject RightTargetModel; // the goal target
 
 
@@ -30,7 +30,7 @@ namespace RosSharp.RosBridgeClient {
         }
 
         public void PublishPlan() {
-            MoveitTarget.left_arm = UpdateMessageContents(LeftTargetModel);
+            // MoveitTarget.left_arm = UpdateMessageContents(LeftTargetModel);
             MoveitTarget.right_arm = UpdateMessageContents(RightTargetModel);
             Debug.Log("Sending plan request");
             rosSocket.Publish(planPublicationId, MoveitTarget);
