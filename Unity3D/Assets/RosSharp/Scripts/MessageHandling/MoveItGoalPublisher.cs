@@ -12,7 +12,7 @@ namespace RosSharp.RosBridgeClient {
         public string ExecuteTopic;
 
         public GameObject UrdfModel; // the root gameobject of your robot
-        // public GameObject LeftTargetModel; // the goal target
+        public GameObject LeftTargetModel; // the goal target
         public GameObject RightTargetModel; // the goal target
 
 
@@ -25,8 +25,8 @@ namespace RosSharp.RosBridgeClient {
         // Use this for initialization
         void Start() {
             rosSocket = GetComponent<RosConnector>().RosSocket;
-            planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
-            executePublicationId = rosSocket.Advertise(ExecuteTopic, "std_msgs/String");
+            // planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
+            // executePublicationId = rosSocket.Advertise(ExecuteTopic, "std_msgs/String");
         }
 
         public void PublishPlan() {
