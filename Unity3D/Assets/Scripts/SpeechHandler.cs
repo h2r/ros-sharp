@@ -12,9 +12,14 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
     }
 
     // Sends the goal position to MoveIt
-    public void Plan() {
-        Debug.Log("Plan");
-        MoveItGoalPublisher.PublishPlan();
+    //public void Plan() {
+    //    Debug.Log("Plan");
+    //    MoveItGoalPublisher.PublishPlan();
+    //}
+
+    public void New()
+    {
+        // make a new target model
     }
 
     // Tells MoveIt to execute the plan

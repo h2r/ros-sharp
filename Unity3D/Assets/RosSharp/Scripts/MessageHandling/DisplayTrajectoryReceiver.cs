@@ -34,11 +34,11 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Start() {
-            //foreach (JointStateWriter jsw in JointStateWriters) {
-            for(int i = 0; i < 10; i++) {
-                JointStateWriter jsw = JointStateWriters[i];
+            foreach (JointStateWriter jsw in JointStateWriters) {
+            //for(int i = 0; i < 10; i++) {
+                //JointStateWriter jsw = JointStateWriters[i];
                 string name = jsw.name.Split(new char[] { ':' })[1];
-                // Debug.Log(name);
+                //Debug.Log(name);
                 name = name.Substring(1, name.Length - 2);
                 JointDict.Add(name, jsw);
             }
