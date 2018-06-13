@@ -47,7 +47,6 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Update() {
-            
             if (Input.GetKeyDown("f") || new_trajectory) {
                 new_trajectory = false;
                 DestroyTrail();

@@ -20,6 +20,28 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
     public void New()
     {
         // make a new target model
+        if (MoveItGoalPublisher.LastSmartGripper == null) return;
+        Debug.Log(MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id);
+        Debug.Log(MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().PrevId);
+        Debug.Log(MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().NextId);
+
+        // make a new smart gripper
+        GameObject newObj = Instantiate(MoveItGoalPublisher.LastSmartGripper);
+        Vector3 offset = new Vector3(0.0f, 0.0f, 1.0f);
+        newObj.transform.position = newObj.transform.position + offset;
+
+        Debug.Log(newObj.GetComponent<TargetModelBehavior>().Id);
+
+        // set the last smart gripper's next pointer to the newly instantiated obj's id
+        MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().NextId = 
+            newObj.GetComponent<TargetModelBehavior>().Id;
+
+        // set prev pointerS
+        newObj.GetComponent<TargetModelBehavior>().PrevId =
+            MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id;
+
+        // change the last smart gripperS
+        MoveItGoalPublisher.LastSmartGripper = newObj;
     }
 
     // Tells MoveIt to execute the plan

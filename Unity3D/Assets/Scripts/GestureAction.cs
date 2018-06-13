@@ -7,10 +7,7 @@ using UnityEngine;
 /// </summary>
 public class GestureAction : MonoBehaviour, INavigationHandler, IManipulationHandler
 {
-    [Tooltip("Rotation max speed controls amount of rotation.")]
     [SerializeField]
-
-    private Vector3 manipulationOriginalPosition = Vector3.zero;
 
     void INavigationHandler.OnNavigationStarted(NavigationEventData eventData)
     {
@@ -42,8 +39,6 @@ public class GestureAction : MonoBehaviour, INavigationHandler, IManipulationHan
     {
 
         InputManager.Instance.PushModalInputHandler(gameObject);
-
-        manipulationOriginalPosition = transform.position;
         
     }
 

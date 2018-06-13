@@ -9,9 +9,9 @@ public class IdGenerator : Singleton<IdGenerator>
 {
 
     private HashSet<string> ids { get; set; }
-    public bool PointsToStart;
+    public bool PointsToStart { get; set; }
 
-    void Awake()
+    public IdGenerator()
     {
         Debug.Log("Hihi");
         ids = new HashSet<string>();
@@ -34,6 +34,7 @@ public class IdGenerator : Singleton<IdGenerator>
             return CreateId();
         }
         ids.Add(id);
+        //Debug.Log(ids.)
         return id;
     }
 }
