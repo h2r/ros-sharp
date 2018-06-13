@@ -37,9 +37,11 @@ namespace RosSharp.RosBridgeClient {
 
         private void Start() {
             foreach (JointStateWriter jsw in JointStateWriters) {
-                string name = jsw.name.Split(new char[] { ':' })[1];
-                name = name.Substring(1, name.Length - 2);
-                JointDict.Add(name, jsw);
+                //Debug.Log(jsw);
+                //string name = jsw.name.Split(new char[] { ':' })[1];
+                //name = name.Substring(1, name.Length - 2);
+                //JointDict.Add(name, jsw);
+                //Debug.Log(name);
             }
             TrailPoints = new List<GameObject>();
             prev_color = color;
@@ -48,19 +50,20 @@ namespace RosSharp.RosBridgeClient {
         private void Update() {
             
             if (Input.GetKeyDown("f") || new_trajectory) {
+                //Debug.Log("f detected");
                 new_trajectory = false;
-                DestroyTrail();
+                //DestroyTrail();
                 StopCoroutine("Animate");
-                StartCoroutine("Animate");
+                //StartCoroutine("Animate");
             }
         }
 
-        private void DestroyTrail() {
-            foreach(GameObject trailPoint in TrailPoints) {
-                Destroy(trailPoint);
-            }
-            TrailPoints.Clear();
-        }
+        //private void DestroyTrail() {
+        //    foreach(GameObject trailPoint in TrailPoints) {
+        //        Destroy(trailPoint);
+        //    }
+        //    TrailPoints.Clear();
+        //}
 
         private void ReceiveMessage(object sender, MessageEventArgs e) {
             message = (MoveItDisplayTrajectory)e.Message;
@@ -71,7 +74,7 @@ namespace RosSharp.RosBridgeClient {
             do {
                 if (prev_color != color) {
                     prev_color = color;
-                    DestroyTrail();
+                    //DestroyTrail();
                 }
 
                 for (int i = 0; i < TrailPoints.Count; i++) {
@@ -92,7 +95,7 @@ namespace RosSharp.RosBridgeClient {
                 TrajectoryJointTrajectoryPoint[] points = message.trajectory[0].joint_trajectory.points;
 
                 if (TrailPoints.Count < points.Length) {
-                    DestroyTrail();
+                    //DestroyTrail();
                 }
 
                 for (int i = 0; i < points.Length; i++) {

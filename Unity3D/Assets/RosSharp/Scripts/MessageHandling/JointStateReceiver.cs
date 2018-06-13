@@ -38,15 +38,23 @@ namespace RosSharp.RosBridgeClient
             foreach(JointStateWriter jsw in JointStateWriters) {
                 string name = jsw.name.Split(new char[] { ':' })[1];
                 name = name.Substring(1, name.Length - 2);
+                //Debug.Log("name: " + name);
                 JointDict.Add(name, jsw);
             }
+        }
+
+        private void PrintArray(string[] arr) {
+
         }
 
         private void ReceiveMessage(object sender, MessageEventArgs e)
         {
             message = (SensorJointStates)e.Message;
+            //Debug.Log(message);
             for (int i = 0; i < message.name.Length; i++) {
+                //Debug.Log("name: " + message.name[i]);
                 if (JointDict.ContainsKey(message.name[i])) {
+                    //Debug.Log("check");
                     JointDict[message.name[i]].Write(message.position[i]);
                 }
             }

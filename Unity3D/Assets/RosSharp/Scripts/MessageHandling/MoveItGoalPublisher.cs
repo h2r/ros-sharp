@@ -25,15 +25,15 @@ namespace RosSharp.RosBridgeClient {
         // Use this for initialization
         void Start() {
             rosSocket = GetComponent<RosConnector>().RosSocket;
-            planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
+            //planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
             executePublicationId = rosSocket.Advertise(ExecuteTopic, "std_msgs/String");
         }
 
         public void PublishPlan() {
             MoveitTarget.left_arm = UpdateMessageContents(LeftTargetModel);
             MoveitTarget.right_arm = UpdateMessageContents(RightTargetModel);
-            Debug.Log("Sending plan request");
-            rosSocket.Publish(planPublicationId, MoveitTarget);
+            Debug.Log("Sendi    ng plan request");
+            //rosSocket.Publish(planPublicationId, MoveitTarget);
         }
 
         public void PublishMove() {

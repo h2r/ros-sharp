@@ -44,6 +44,7 @@ namespace RosSharp.RosBridgeClient
         Dictionary<Transform, JointStateHandler.JointTypes> jointTypeDictionary;
 
         public void Patch() {
+            Debug.Log("Patch");
             RemoveExistingComponents();
 
             PatchRigidbodies(EnableRigidbodiesGravity, SetRigidbodiesKinematic);
@@ -71,6 +72,7 @@ namespace RosSharp.RosBridgeClient
         }
 
         private void SetGPUInstancing() {
+            Debug.Log("Check2");
             foreach (MeshRenderer mr in UrdfModel.GetComponentsInChildren<MeshRenderer>()) {
                     foreach (Material mat in mr.sharedMaterials) {
                         mat.enableInstancing = true;
@@ -79,6 +81,7 @@ namespace RosSharp.RosBridgeClient
         }
 
         private void GetSingleDimensionalJoints() {
+            Debug.Log("Check3");
             jointTypeDictionary = new Dictionary<Transform, JointStateHandler.JointTypes>();
 
             JointStateHandler.JointTypes jointType;
@@ -90,6 +93,7 @@ namespace RosSharp.RosBridgeClient
         }
 
         public T[] PatchJoints<T>() where T : JointStateHandler {
+            Debug.Log("Check 4");
             int jointID = 0;
             T[] jointStateHandlers = new T[jointTypeDictionary.Count];
 
@@ -104,6 +108,7 @@ namespace RosSharp.RosBridgeClient
 
 
         private bool HasSingleDimensionalJoint(Transform child, out JointStateReader.JointTypes jointType) {
+            Debug.Log("Check 5");
             jointType = JointStateHandler.JointTypes.continuous;
 
             if (child.name.Contains("continuous Joint"))
@@ -119,6 +124,7 @@ namespace RosSharp.RosBridgeClient
         }
 
         private void RemoveExistingComponents() {
+            Debug.Log("Check 6");
             foreach (Transform child in UrdfModel.GetComponentsInChildren<Transform>()) {
                 child.DestroyImmediateIfExists<JointStateReader>();
                 child.DestroyImmediateIfExists<JointStateWriter>();
@@ -128,11 +134,13 @@ namespace RosSharp.RosBridgeClient
         }
 
         private void PatchMeshColliders(bool convex) {
+            Debug.Log("Check 7");
             foreach (MeshCollider meshCollider in UrdfModel.GetComponentsInChildren<MeshCollider>()) {
                 meshCollider.convex = convex;
             }
         }
         private void PatchRigidbodies(bool useGravity, bool isKinematic) {
+            Debug.Log("Check 8");
             foreach (Rigidbody rigidbody in UrdfModel.GetComponentsInChildren<Rigidbody>()) {
                 rigidbody.useGravity = useGravity;
                 rigidbody.isKinematic = isKinematic;
