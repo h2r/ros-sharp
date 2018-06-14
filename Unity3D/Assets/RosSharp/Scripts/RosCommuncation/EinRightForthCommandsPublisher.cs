@@ -37,13 +37,60 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     // Use this for initialization
     protected override void Start() {
-        //base.Start();
-
         rosSocket = GetComponent<RosConnector>().RosSocket;
 
         publicationId = rosSocket.Advertise(Topic, "std_msgs/String");
         message = new StandardString();
+        InvokeRepeating("SendControls", .1f, .1f);
     }
+
+    void SendControls() {
+        Debug.Log("It works! Wakanda forever!");
+        ////Convert the Unity position of the hand controller to a ROS position (scaled)
+        //Vector3 outPos = UnityToRosPositionAxisConversion(GetComponent<Transform>().position) / scale;
+        ////Convert the Unity rotation of the hand controller to a ROS rotation (scaled, quaternions)
+        //Quaternion outQuat = UnityToRosRotationAxisConversion(GetComponent<Transform>().rotation);
+        ////construct the Ein message to be published
+        //string message = "";
+        ////Allows movement control with controllers if menu is disabled
+
+        ////if deadman switch held in, move to new pose
+        //if (Input.GetAxis(grip_label) > 0.5f) {
+        //    //construct message to move to new pose for the robot end effector 
+        //    message = outPos.x + " " + outPos.y + " " + outPos.z + " " +
+        //    outQuat.x + " " + outQuat.y + " " + outQuat.z + " " + outQuat.w + " moveToEEPose";
+        //    //if touchpad is pressed (Crane game), incrementally move in new direction
+        //}
+
+        ////If trigger pressed, open the gripper. Else, close gripper
+        //if (Input.GetAxis(trigger_label) > 0.5f) {
+        //    message += " openGripper ";
+        //}
+        //else {
+        //    message += " closeGripper ";
+        //}
+
+        ////Send the message to the websocket client (i.e: publish message onto ROS network)
+        //wsc.SendEinMessage(message, arm);
+    }
+
+    //Convert 3D Unity position to ROS position 
+    Vector3 UnityToRosPositionAxisConversion(Vector3 rosIn) {
+        return new Vector3(-rosIn.x, -rosIn.z, rosIn.y);
+    }
+
+    //Convert 4D Unity quaternion to ROS quaternion
+    Quaternion UnityToRosRotationAxisConversion(Quaternion qIn) {
+
+        Quaternion temp = (new Quaternion(qIn.x, qIn.z, -qIn.y, qIn.w)) * (new Quaternion(0, 1, 0, 0));
+        return temp;
+
+        //return new Quaternion(-qIn.z, qIn.x, -qIn.w, -qIn.y);
+        //return new Quaternion(-qIn.z, qIn.w, -qIn.x, -qIn.y);
+        //return new Quaternion(-qIn.z, qIn.w, -qIn.x, -qIn.y);
+        //return new Quaternion(-qIn.z, qIn.x, qIn.w, qIn.y);
+    }
+
 
     //// Update is called once per frame
     //void Update() {
