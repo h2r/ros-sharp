@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-// This script publishes commands to the topic /ein/right/forth_commands for the 
-// Aibos to be commanded! 
+// This script publishes commands to the topic /ein/right/forth_commands
 public class EinRightForthCommandsPublisher : Publisher {
 
     public GameObject leftController;
@@ -13,27 +12,12 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     private StandardString message;
 
-    // Setup for all tracking variables to make sure commands are executed once and not
-    // at the rate of a Unity update, which is thousands of times a second
-    private bool rightTriggerPressed = false;
-    private bool currLftGrpButtonState = false;
-    private bool prevLftGrpButtonState = false;
-    private bool currLftTriggerState = false;
-    private bool prevLftTriggerState = false;
-    private bool currLftTrackLeftState = false;
-    private bool prevLftTrackLeftState = false;
-    private bool currLftTrackRightState = false;
-    private bool prevLftTrackRightState = false;
+    // The boolean deciding which arm is currently being controlled. False is right and True is left. 
+    // Starts with right by default.
+    private bool currArm = false;
 
-    private bool currRgtTrackUpState = false;
-    private bool prevRgtTrackUpState = false;
-    private bool currRgtTrackDownState = false;
-    private bool prevRgtTrackDownState = false;
-    private bool currRgtTrackRightState = false;
-    private bool prevRgtTrackRightState = false;
-    private bool currRgtTrackLeftState = false;
-    private bool prevRgtTrackLeftState = false;
-
+    private bool rightGripperClosed = true;
+    private bool leftGripperClosed = true;
 
     // Use this for initialization
     protected override void Start() {
@@ -45,38 +29,74 @@ public class EinRightForthCommandsPublisher : Publisher {
     }
 
     void SendControls() {
-        Debug.Log("It works! Wakanda forever!");
-        ////Convert the Unity position of the hand controller to a ROS position (scaled)
-        //Vector3 outPos = UnityToRosPositionAxisConversion(GetComponent<Transform>().position) / scale;
-        ////Convert the Unity rotation of the hand controller to a ROS rotation (scaled, quaternions)
-        //Quaternion outQuat = UnityToRosRotationAxisConversion(GetComponent<Transform>().rotation);
-        ////construct the Ein message to be published
-        //string message = "";
-        ////Allows movement control with controllers if menu is disabled
+        //Convert the Unity position of the hand controller to a ROS position (scaled)
+        Vector3 outLeftPos = UnityToRosPositionAxisConversion(leftController.transform.position);
+        Vector3 outRightPos = UnityToRosPositionAxisConversion(rightController.transform.position);
+        //Convert the Unity rotation of the hand controller to a ROS rotation (scaled, quaternions)
+        Quaternion outLeftQuat = UnityToRosRotationAxisConversion(leftController.transform.rotation);
+        Quaternion outRightQuat = UnityToRosRotationAxisConversion(rightController.transform.rotation);
+        //construct the Ein message to be published
+        message.data = "";
+        //Allows movement control with controllers if menu is disabled
+        String controllerPrefix = "";
 
-        ////if deadman switch held in, move to new pose
-        //if (Input.GetAxis(grip_label) > 0.5f) {
-        //    //construct message to move to new pose for the robot end effector 
-        //    message = outPos.x + " " + outPos.y + " " + outPos.z + " " +
-        //    outQuat.x + " " + outQuat.y + " " + outQuat.z + " " + outQuat.w + " moveToEEPose";
-        //    //if touchpad is pressed (Crane game), incrementally move in new direction
-        //}
+        //if deadman switch held in, move to new pose
+        if (Input.GetAxis("Left_grip") > 0.5f) {
+            //construct message to move to new pose for the robot end effector
+            if (!currArm) {
+                controllerPrefix = "switchToLeftArm \n";
+                currArm = true;
+            }            
+            message.data = controllerPrefix + outLeftPos.x + " " + outLeftPos.y + " " + outLeftPos.z + " " +
+            outLeftQuat.x + " " + outLeftQuat.y + " " + outLeftQuat.z + " " + outLeftQuat.w + " moveToEEPose";
+            //if touchpad is pressed (Crane game), incrementally move in new direction
+        }
+        if (Input.GetAxis("Right_grip") > 0.5f) {
+            //construct message to move to new pose for the robot end effector
+            if (currArm) {
+                controllerPrefix = "switchToRightArm \n";
+                currArm = false;
+            }
+            message.data = controllerPrefix + outRightPos.x + " " + outRightPos.y + " " + outRightPos.z + " " +
+            outRightQuat.x + " " + outRightQuat.y + " " + outRightQuat.z + " " + outRightQuat.w + " moveToEEPose";
+            //if touchpad is pressed (Crane game), incrementally move in new direction
+        }
 
-        ////If trigger pressed, open the gripper. Else, close gripper
-        //if (Input.GetAxis(trigger_label) > 0.5f) {
-        //    message += " openGripper ";
-        //}
-        //else {
-        //    message += " closeGripper ";
-        //}
+        //If trigger pressed, open the gripper. Else, close gripper
+        if (Input.GetAxis("Left_trigger") > 0.5f && leftGripperClosed) {
+            if (!currArm) {
+                controllerPrefix = "\n" + "switchToLeftArm \n";
+                currArm = true;
+            }
+            message.data += controllerPrefix + " openGripper ";
+            leftGripperClosed = false;
+        }
+        else if (Input.GetAxis("Left_trigger") < 0.5f && !leftGripperClosed) {
+            message.data += controllerPrefix + " closeGripper";
+            leftGripperClosed = true;
+        }
 
-        ////Send the message to the websocket client (i.e: publish message onto ROS network)
-        //wsc.SendEinMessage(message, arm);
+        if (Input.GetAxis("Right_trigger") > 0.5f && rightGripperClosed) {
+            if (currArm) {
+                controllerPrefix = "\n" + "switchToRightArm \n";
+                currArm = false;
+            }
+            message.data += controllerPrefix + " openGripper";
+            rightGripperClosed = false;
+        }
+        else if (Input.GetAxis("Right_trigger") < 0.5f && !rightGripperClosed) {
+            message.data += controllerPrefix + " closeGripper ";
+            rightGripperClosed = true;
+        }
+
+        //Send the message to the websocket client (i.e: publish message onto ROS network)
+        Debug.Log(message.data);
+        rosSocket.Publish(publicationId, message);
     }
 
     //Convert 3D Unity position to ROS position 
     Vector3 UnityToRosPositionAxisConversion(Vector3 rosIn) {
-        return new Vector3(-rosIn.x, -rosIn.z, rosIn.y);
+        return new Vector3(rosIn.z, rosIn.x, rosIn.y);
     }
 
     //Convert 4D Unity quaternion to ROS quaternion
