@@ -9,12 +9,17 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     public GameObject leftController;
     public GameObject rightController;
+    public GameObject Robot;
 
     private StandardString message;
 
     // The boolean deciding which arm is currently being controlled. False is right and True is left. 
     // Starts with right by default.
     private bool currArm = false;
+
+    // Booleans to keep track of the previous state of the grip buttons
+    private bool leftGripPressed = false;
+    private bool rightGripPressed = false;
 
     private bool rightGripperClosed = true;
     private bool leftGripperClosed = true;
@@ -30,8 +35,8 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     void SendControls() {
         //Convert the Unity position of the hand controller to a ROS position (scaled)
-        Vector3 outLeftPos = UnityToRosPositionAxisConversion(leftController.transform.position);
-        Vector3 outRightPos = UnityToRosPositionAxisConversion(rightController.transform.position);
+        Vector3 outLeftPos = UnityToRosPositionAxisConversion(leftController.transform.position - Robot.transform.position);
+        Vector3 outRightPos = UnityToRosPositionAxisConversion(rightController.transform.position - Robot.transform.position);
         //Convert the Unity rotation of the hand controller to a ROS rotation (scaled, quaternions)
         Quaternion outLeftQuat = UnityToRosRotationAxisConversion(leftController.transform.rotation);
         Quaternion outRightQuat = UnityToRosRotationAxisConversion(rightController.transform.rotation);
@@ -40,8 +45,11 @@ public class EinRightForthCommandsPublisher : Publisher {
         //Allows movement control with controllers if menu is disabled
         String controllerPrefix = "";
 
+        if(Input.GetAxis("Left_grip") > 0.5f && !leftGripPressed) {
+            leftGripPressed = true;
+        }
         //if deadman switch held in, move to new pose
-        if (Input.GetAxis("Left_grip") > 0.5f) {
+        if (Input.GetAxis("Left_grip") < 0.5f && leftGripPressed) {
             //construct message to move to new pose for the robot end effector
             if (!currArm) {
                 controllerPrefix = "switchToLeftArm \n";
@@ -49,9 +57,13 @@ public class EinRightForthCommandsPublisher : Publisher {
             }            
             message.data = controllerPrefix + outLeftPos.x + " " + outLeftPos.y + " " + outLeftPos.z + " " +
             outLeftQuat.x + " " + outLeftQuat.y + " " + outLeftQuat.z + " " + outLeftQuat.w + " moveToEEPose";
+            leftGripPressed = false;
             //if touchpad is pressed (Crane game), incrementally move in new direction
         }
-        if (Input.GetAxis("Right_grip") > 0.5f) {
+        if (Input.GetAxis("Right_grip") > 0.5f && !rightGripPressed) {
+            rightGripPressed = true;
+        }
+        if (Input.GetAxis("Right_grip") < 0.5f && rightGripPressed) {
             //construct message to move to new pose for the robot end effector
             if (currArm) {
                 controllerPrefix = "switchToRightArm \n";
@@ -59,6 +71,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             }
             message.data = controllerPrefix + outRightPos.x + " " + outRightPos.y + " " + outRightPos.z + " " +
             outRightQuat.x + " " + outRightQuat.y + " " + outRightQuat.z + " " + outRightQuat.w + " moveToEEPose";
+            rightGripPressed = false;
             //if touchpad is pressed (Crane game), incrementally move in new direction
         }
 
@@ -96,7 +109,7 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     //Convert 3D Unity position to ROS position 
     Vector3 UnityToRosPositionAxisConversion(Vector3 rosIn) {
-        return new Vector3(rosIn.z, rosIn.x, rosIn.y);
+        return new Vector3(rosIn.z, -rosIn.x, rosIn.y);
     }
 
     //Convert 4D Unity quaternion to ROS quaternion
