@@ -115,7 +115,7 @@ public class EinRightForthCommandsPublisher : Publisher {
     //Convert 4D Unity quaternion to ROS quaternion
     Quaternion UnityToRosRotationAxisConversion(Quaternion qIn) {
 
-        Quaternion temp = (new Quaternion(qIn.x, qIn.z, -qIn.y, qIn.w)) * (new Quaternion(0, 1, 0, 0));
+        Quaternion temp = (new Quaternion(-qIn.x, -qIn.y, -qIn.z, -qIn.w));
         return temp;
 
         //return new Quaternion(-qIn.z, qIn.x, -qIn.w, -qIn.y);

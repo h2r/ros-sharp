@@ -29,20 +29,25 @@ namespace RosSharp.RosBridgeClient
         private MeshRenderer meshRenderer;
         private Texture2D texture2D;
 
+        public float scale = 1.0f;
+
         private void Awake()
         {
             MessageReception += ReceiveMessage;
         }
         private void Start()
         {
-            texture2D = new Texture2D(1,1);
-            meshRenderer = GetComponent<MeshRenderer>();
-            meshRenderer.material = new Material(Shader.Find("Standard"));
+            texture2D = new Texture2D(2,2);
+            GetComponent<Renderer>().material.mainTexture = texture2D;
+
+            //meshRenderer = GetComponent<MeshRenderer>();
+            //meshRenderer.material = new Material(Shader.Find("Standard"));
         }
         private void Update()
         {
             if (isMessageReceived)
                 ProcessMessage();
+            gameObject.transform.localScale = new Vector3(16f * scale, scale, 9f *scale);
         }
         private void ReceiveMessage(object sender, MessageEventArgs e)
         {
@@ -52,9 +57,13 @@ namespace RosSharp.RosBridgeClient
 
         private void ProcessMessage()
         {
+            Debug.Log("begining of process message");
+            //Debug.Log(imageData.Length);
+            //Debug.Log(imageData[452]);
             texture2D.LoadImage(imageData);
-            texture2D.Apply();
-            meshRenderer.material.SetTexture("_MainTex", texture2D);
+            //texture2D.Apply();
+            //GetComponent<Renderer>().material.mainTexture = texture2D;
+            //meshRenderer.material.SetTexture("_MainTex", texture2D);
             isMessageReceived = false;
         }
     }
