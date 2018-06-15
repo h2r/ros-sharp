@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity.InputModule;
+using UnityEngine.XR.WSA.Input;
 
 namespace RosSharp.RosBridgeClient
 {
     [RequireComponent(typeof(RosConnector))]
-    public class TargetModelBehavior : MonoBehaviour, INavigationHandler, IManipulationHandler
+    public class TargetModelBehavior : MonoBehaviour, IInputClickHandler, INavigationHandler
     {
 
         public string PlanTopic = "/goal_pose";
@@ -14,6 +15,9 @@ namespace RosSharp.RosBridgeClient
         public string Id { get; set; }
         public string PrevId { get; set; }
         public string NextId { get; set; }
+        public string RightOpen { get; set; }
+        public string LeftOpen { get; set; }
+        public bool OutOfBounds { get; set; }
 
         public MoveItGoalPublisher MoveItGoalPublisher;
 
@@ -27,18 +31,20 @@ namespace RosSharp.RosBridgeClient
             Id = IdGenerator.Instance.CreateId();
             PrevId = "";
             NextId = "";
+            RightOpen = "0";
+            LeftOpen = "0";
             if (IdGenerator.Instance.PointsToStart == false)
             {
                 IdGenerator.Instance.PointsToStart = true;
                 PrevId = "START";
             }
-            // MoveItGoalPublisher.LastSmartGripper = this.gameObject;
+            OutOfBounds = false;
+            Debug.Log("got here");
         }
 
         GeometryPose UpdateMessageContents(GameObject TargetModel)
         {
             GeometryPose TargetPose = new GeometryPose();
-
             Vector3 position = TargetModel.transform.position - UrdfModel.transform.position;
             Quaternion rotation = UrdfModel.transform.rotation * TargetModel.transform.rotation;
             TargetPose.position = GetGeometryPoint(position.Unity2Ros());
@@ -49,7 +55,6 @@ namespace RosSharp.RosBridgeClient
                 z = TargetPose.position.z
             };
             TargetPose.orientation = GetGeometryQuaternion(rotation.Unity2Ros());
-
             return TargetPose;
         }
 
@@ -80,81 +85,45 @@ namespace RosSharp.RosBridgeClient
             return geometryQuaternion;
         }
 
+        public void SendPlanRequest()
+        {
+            MoveItGoalPublisher.LastManipulatedGripper = this.gameObject;
+            MoveitTarget moveitTarget = new MoveitTarget();
+            moveitTarget.right_arm = UpdateMessageContents(TargetModel);
+            moveitTarget.id.data = Id;
+            moveitTarget.prev_id.data = PrevId;
+            moveitTarget.next_id.data = NextId;
+            moveitTarget.right_open.data = RightOpen;
+            moveitTarget.left_open.data = LeftOpen;
+            MoveItGoalPublisher.PublishPlan(moveitTarget);
+        }
+
+        void IInputClickHandler.OnInputClicked(InputClickedEventData eventData)
+        {
+            Debug.Log("tap");
+            // TODO: Graphically change gripper
+            RightOpen = (RightOpen == "0") ? "1" : "0"; // toggle gripper state
+            this.SendPlanRequest();
+        }
+
         void INavigationHandler.OnNavigationStarted(NavigationEventData eventData)
         {
-            InputManager.Instance.PushModalInputHandler(gameObject);
+            
         }
 
         void INavigationHandler.OnNavigationUpdated(NavigationEventData eventData)
         {
-            //// 2.c: Calculate a float rotationFactor based on eventData's NormalizedOffset.x multiplied by RotationSensitivity.
-            //// This will help control the amount of rotation.
-            //float rotationFactor = eventData.NormalizedOffset.x * RotationSensitivity;
-
-            //// 2.c: transform.Rotate around the Y axis using rotationFactor.
-            //transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
+            
         }
 
         void INavigationHandler.OnNavigationCompleted(NavigationEventData eventData)
         {
-            Debug.Log("SHOULD BE CALLED");
-            MoveitTarget moveitTarget = new MoveitTarget();
-            moveitTarget.right_arm = UpdateMessageContents(TargetModel);
-            moveitTarget.id.data = Id;
-            moveitTarget.prev_id.data = PrevId;
-            moveitTarget.next_id.data = NextId;
-            //Debug.Log(Id);
-            //Debug.Log(PrevId);
-            //Debug.Log(NextId);
-            //Debug.Log("----------");
-
-            MoveItGoalPublisher.PublishPlan(moveitTarget);
-            InputManager.Instance.PopModalInputHandler();
+            this.SendPlanRequest();
         }
 
         void INavigationHandler.OnNavigationCanceled(NavigationEventData eventData)
         {
-            MoveitTarget moveitTarget = new MoveitTarget();
-            moveitTarget.right_arm = UpdateMessageContents(TargetModel);
-            moveitTarget.id.data = Id;
-            moveitTarget.prev_id.data = PrevId;
-            moveitTarget.next_id.data = NextId;
-            //Debug.Log(Id);
-            //Debug.Log(PrevId);
-            //Debug.Log(NextId);
-            //Debug.Log("----------");
-
-            MoveItGoalPublisher.PublishPlan(moveitTarget);
-            InputManager.Instance.PopModalInputHandler();
+            this.SendPlanRequest();
         }
-
-        void IManipulationHandler.OnManipulationStarted(ManipulationEventData eventData)
-        {
-
-            InputManager.Instance.PushModalInputHandler(gameObject);
-
-        }
-
-        void IManipulationHandler.OnManipulationUpdated(ManipulationEventData eventData)
-        {
-
-            // 4.a: Make this transform's position be the manipulationOriginalPosition + eventData.CumulativeDelta
-            //transform.position = manipulationOriginalPosition + eventData.CumulativeDelta;
-
-
-        }
-
-        void IManipulationHandler.OnManipulationCompleted(ManipulationEventData eventData)
-        {
-            Debug.Log("WASSUP");
-            InputManager.Instance.PopModalInputHandler();
-            
-        }
-
-        void IManipulationHandler.OnManipulationCanceled(ManipulationEventData eventData)
-        {
-            InputManager.Instance.PopModalInputHandler();
-        }
-
     }
 }

@@ -26,18 +26,27 @@ public class Message {
 public class MoveitTarget : Message {
     public GeometryPose left_arm;
     public GeometryPose right_arm;
+    public StandardString left_open;
+    public StandardString right_open;
     public StandardString id;
     public StandardString prev_id;
     public StandardString next_id;
     public MoveitTarget() {
         left_arm = new GeometryPose();
         right_arm = new GeometryPose();
+        left_open = new StandardString();
+        right_open = new StandardString();
         id = new StandardString();
         prev_id = new StandardString();
         next_id = new StandardString();
+
+        left_open.data = "0";
+        right_open.data = "0";
         id.data = "";
         prev_id.data = "";
         next_id.data = "";
+
+
     }
 }
 

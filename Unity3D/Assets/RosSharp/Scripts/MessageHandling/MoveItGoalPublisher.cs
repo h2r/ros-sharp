@@ -20,6 +20,7 @@ namespace RosSharp.RosBridgeClient {
         private int executePublicationId;
 
         public GameObject LastSmartGripper;
+        public GameObject LastManipulatedGripper;
 
         //private MoveitTarget MoveitTarget = new MoveitTarget();
 
@@ -28,15 +29,15 @@ namespace RosSharp.RosBridgeClient {
             rosSocket = GetComponent<RosConnector>().RosSocket;
             planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
             executePublicationId = rosSocket.Advertise(ExecuteTopic, "std_msgs/String");
+            //FadeManager.AssertIsInitialized();
         }
 
         public void PublishPlan(MoveitTarget moveitTarget) {
-            Debug.Log("Sending plan request!!!!!!");
             rosSocket.Publish(planPublicationId, moveitTarget);
         }
 
         public void PublishMove() {
-            Debug.Log("Sending execute message");
+            Debug.Log("Sending execute message"); 
             rosSocket.Publish(executePublicationId, new StandardString());
         }
 

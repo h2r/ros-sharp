@@ -21,14 +21,14 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
     {
         // make a new target model
         if (MoveItGoalPublisher.LastSmartGripper == null) return;
-        Debug.Log(MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id);
-        Debug.Log(MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().PrevId);
-        Debug.Log(MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().NextId);
 
         // make a new smart gripper
         GameObject newObj = Instantiate(MoveItGoalPublisher.LastSmartGripper);
-        Vector3 offset = new Vector3(0.0f, 0.0f, 1.0f);
+        Vector3 offset = new Vector3(0.1f, 0.0f, 0.0f);
         newObj.transform.position = newObj.transform.position + offset;
+        newObj.GetComponent<TargetModelBehavior>().RightOpen = 
+            MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().RightOpen;
+
 
         Debug.Log(newObj.GetComponent<TargetModelBehavior>().Id);
 
@@ -40,8 +40,9 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
         newObj.GetComponent<TargetModelBehavior>().PrevId =
             MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id;
 
-        // change the last smart gripperS
+        // change the last smart gripper
         MoveItGoalPublisher.LastSmartGripper = newObj;
+        MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest();
     }
 
     // Tells MoveIt to execute the plan
