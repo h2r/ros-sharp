@@ -48,6 +48,12 @@ public class EinRightForthCommandsPublisher : Publisher {
     private bool leftTrackpadLeftPressed = false;
     private int timeStepsLeftLeftPressed = 0;
 
+    // Variables to track previous state of menu buttons
+    private bool leftMenuButtonPressed = false;
+    private int timeStepsLeftMenuPressed = 0;
+    private bool rightMenuButtonPressed = false;
+    private int timeStepsRightMenuPressed = 0;
+
     // Use this for initialization
     protected override void Start() {
         rosSocket = GetComponent<RosConnector>().RosSocket;
@@ -71,6 +77,7 @@ public class EinRightForthCommandsPublisher : Publisher {
         //Allows movement control with controllers if menu is disabled
         String controllerPrefix = "";
 
+        // Driving forward and backwards code
         if (Input.GetAxis("Right_trackpad_vertical") > 0.8) {
             if (!rightTrackpadUpPressed) {
                 message.data = "-0.2 baseSendXVel";
@@ -108,6 +115,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsRightDownPressed = 0;
         }
 
+        // Turning robot base code
         if (Input.GetAxis("Right_trackpad_horizontal") > 0.8) {
             if (!rightTrackpadRightPressed) {
                 message.data = "-0.2 baseSendOZVel";
@@ -145,8 +153,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsRightLeftPressed = 0;
         }
 
-        Debug.Log(Input.GetAxis("Left_trackpad_vertical"));
-
+        // Tilting code
         if (Input.GetAxis("Left_trackpad_vertical") > 0.8) {
             Debug.Log("Left Up button pressed");
             if (!leftTrackpadUpPressed) {
@@ -185,6 +192,7 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsLeftDownPressed = 0;
         }
 
+        // Panning code
         if (Input.GetAxis("Left_trackpad_horizontal") > 0.8) {
             if (!leftTrackpadRightPressed) {
                 message.data += "\n panUp";
@@ -216,12 +224,52 @@ public class EinRightForthCommandsPublisher : Publisher {
             }
         }
         else {
-            rightTrackpadRightPressed = false;
-            rightTrackpadLeftPressed = false;
-            timeStepsRightRightPressed = 0;
-            timeStepsRightLeftPressed = 0;
+            leftTrackpadRightPressed = false;
+            leftTrackpadLeftPressed = false;
+            timeStepsLeftRightPressed = 0;
+            timeStepsLeftLeftPressed = 0;
         }
 
+        // Torso moving up and down code
+        if (Input.GetButton("Left_menu_button")) {
+            if (!leftMenuButtonPressed) {
+                message.data += "\n torsoDown";
+                leftMenuButtonPressed = true;
+            }
+            else {
+                if (timeStepsLeftMenuPressed == 1) {
+                    message.data += "\n torsoDown";
+                    timeStepsLeftMenuPressed = 0;
+                }
+                else {
+                    timeStepsLeftMenuPressed += 1;
+                }
+            }
+        }
+        else if (Input.GetButton("Right_menu_button")) {
+            if (!rightMenuButtonPressed) {
+                message.data += "\n torsoUp";
+                rightMenuButtonPressed = true;
+            }
+            else {
+                if (timeStepsRightMenuPressed == 1) {
+                    message.data += "\n torsoUp";
+                    timeStepsRightMenuPressed = 0;
+                }
+                else {
+                    timeStepsRightMenuPressed += 1;
+                }
+            }
+        }
+        else {
+            leftMenuButtonPressed = false;
+            rightMenuButtonPressed = false;
+            timeStepsLeftMenuPressed = 0;
+            timeStepsRightMenuPressed = 0;
+        }
+
+
+        // Arms moving to a position code
 
         if (Input.GetAxis("Left_grip") > 0.5f && !leftGripPressed) {
             leftGripPressed = true;
@@ -297,6 +345,7 @@ public class EinRightForthCommandsPublisher : Publisher {
         }
 
 
+
         if (message.data != "") {
             //Send the message to the websocket client (i.e: publish message onto ROS network)
             Debug.Log(message.data);
@@ -312,7 +361,7 @@ public class EinRightForthCommandsPublisher : Publisher {
     //Convert 4D Unity quaternion to ROS quaternion
     Quaternion UnityToRosRotationAxisConversion(Quaternion qIn) {
 
-        Quaternion temp = (new Quaternion(-qIn.w, qIn.y, qIn.x, qIn.z));
+        Quaternion temp = (new Quaternion(-qIn.w, -qIn.y, qIn.x, -qIn.z));
         return temp;
 
         //return new Quaternion(-qIn.z, qIn.x, -qIn.w, -qIn.y);

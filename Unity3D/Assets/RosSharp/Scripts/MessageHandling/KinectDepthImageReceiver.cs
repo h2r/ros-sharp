@@ -19,7 +19,9 @@ using UnityEngine;
 namespace RosSharp.RosBridgeClient {
     [RequireComponent(typeof(MeshRenderer))]
     public class KinectDepthImageReceiver : MessageReceiver {
-        public override Type MessageType { get { return (typeof(SensorCompressedImage)); } }
+        public override Type MessageType { get { return (typeof(SensorImage)); } }
+
+        public Material Material;
 
         private byte[] depthData;
         private bool isMessageReceived;
@@ -31,6 +33,7 @@ namespace RosSharp.RosBridgeClient {
         private int height = 424;
 
         public float scale = 1.0f;
+        Matrix4x4 m;
 
         private void Awake() {
             MessageReception += ReceiveMessage;
@@ -45,13 +48,25 @@ namespace RosSharp.RosBridgeClient {
             //gameObject.transform.localScale = new Vector3(16f * scale, scale, 9f * scale);
         }
         private void ReceiveMessage(object sender, MessageEventArgs e) {
-            depthData = ((SensorCompressedImage)e.Message).data;
+            depthData = ((SensorImage)e.Message).data;
             isMessageReceived = true;
         }
 
         private void ProcessMessage() {
-            depthTexture.LoadRawTextureData(depthData); ;
+            depthTexture.LoadRawTextureData(depthData);
+            //Debug.Log(depthData[1341]);
             isMessageReceived = false;
+        }
+
+        void OnRenderObject() {
+
+            Material.SetTexture("_MainTex", depthTexture);
+            Material.SetPass(0);
+
+            m = Matrix4x4.TRS(this.transform.position, this.transform.rotation, this.transform.localScale);
+            Material.SetMatrix("transformationMatrix", m);
+
+            Graphics.DrawProcedural(MeshTopology.Points, 512 * 424, 1);
         }
     }
 }
