@@ -299,7 +299,7 @@ public class EinRightForthCommandsPublisher : Publisher {
 
         if (message.data != "") {
             //Send the message to the websocket client (i.e: publish message onto ROS network)
-            //Debug.Log(message.data);
+            Debug.Log(message.data);
             rosSocket.Publish(publicationId, message);
         }
     }
@@ -312,7 +312,7 @@ public class EinRightForthCommandsPublisher : Publisher {
     //Convert 4D Unity quaternion to ROS quaternion
     Quaternion UnityToRosRotationAxisConversion(Quaternion qIn) {
 
-        Quaternion temp = (new Quaternion(-qIn.x, -qIn.y, -qIn.z, -qIn.w));
+        Quaternion temp = (new Quaternion(-qIn.w, qIn.y, qIn.x, qIn.z));
         return temp;
 
         //return new Quaternion(-qIn.z, qIn.x, -qIn.w, -qIn.y);
