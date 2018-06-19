@@ -5,7 +5,8 @@ using UnityEngine;
 public class TogglePointCloud : MonoBehaviour {
 
     public GameObject pointCloudView;
-    public SteamVR_Controller.Device device;
+    public GameObject rightHand;
+    public GameObject leftHand;
     private bool buttonPressed = false;
     private bool pointCloudToggled = false;
 
@@ -13,7 +14,9 @@ public class TogglePointCloud : MonoBehaviour {
     // Use this for initialization
     void Start () {
         pointCloudView.SetActive(false);
-		
+        rightHand.GetComponent<Renderer>().material.color = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+        leftHand.GetComponent<Renderer>().material.color = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+        
 	}
 	
 	// Update is called once per frame
