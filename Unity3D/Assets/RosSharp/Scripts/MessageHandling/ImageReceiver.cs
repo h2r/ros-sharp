@@ -57,13 +57,7 @@ namespace RosSharp.RosBridgeClient
 
         private void ProcessMessage()
         {
-            //Debug.Log("begining of process message");
-            //Debug.Log(imageData.Length);
-            //Debug.Log(imageData[452]);
             texture2D.LoadImage(imageData);
-            //texture2D.Apply();
-            //GetComponent<Renderer>().material.mainTexture = texture2D;
-            //meshRenderer.material.SetTexture("_MainTex", texture2D);
             isMessageReceived = false;
         }
     }
