@@ -11,7 +11,7 @@ namespace RosSharp.RosBridgeClient {
         public override Type MessageType { get { return (typeof(MoveItDisplayTrajectory)); } }
 
         public GameObject UrdfModel; // baxter
-
+        public int NumPoints;
         public JointStateWriter[] JointStateWriters;
         public Dictionary<string, JointStateWriter> JointDict = new Dictionary<string, JointStateWriter>();
         private List<GameObject> TrailPoints;
@@ -21,6 +21,7 @@ namespace RosSharp.RosBridgeClient {
         public Boolean trail = false;
 
         public Boolean color = false;
+        public Boolean sampling = false;
         private Boolean prev_color;
 
         private Boolean new_trajectory = false;
@@ -34,6 +35,7 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Start() {
+            NumPoints = 1;
             foreach (JointStateWriter jsw in JointStateWriters) {
             //for(int i = 0; i < 10; i++) {
                 //JointStateWriter jsw = JointStateWriters[i];
@@ -84,7 +86,7 @@ namespace RosSharp.RosBridgeClient {
                 for (int i = 0; i < start_names.Length; i++) {
                     if (JointDict.ContainsKey(start_names[i])) {
                         JointDict[start_names[i]].Write(start_positions[i]);
-                        // Debug.Log(start_names[i]);
+                        //Debug.Log(start_names[i]);
                         JointDict[start_names[i]].WriteUpdate();
                     }
                 }
@@ -96,21 +98,37 @@ namespace RosSharp.RosBridgeClient {
                     DestroyTrail();
                 }
 
-                for (int i = 0; i < points.Length; i++) {
-                    for (int j = 0; j < joint_names.Length; j++) {
-                        if (JointDict.ContainsKey(joint_names[j])) {
+                
+                if (sampling)
+                {
+                    int[] samplePoints = new int[NumPoints + 2];
+                    samplePoints[0] = 0;
+                    samplePoints[samplePoints.Length - 1] = points.Length - 1;
+                }
+
+                for (int i = 0; i < points.Length; i++)
+                {
+                    for (int j = 0; j < joint_names.Length; j++)
+                    {
+                        if (JointDict.ContainsKey(joint_names[j]))
+                        {
                             JointDict[joint_names[j]].Write(points[i].positions[j]);
                             JointDict[joint_names[j]].WriteUpdate();
                         }
                     }
-                    if (trail) {
-                        AddTrailPoint(i);
-                    }
-                    if (trail && color) {
-                        ColorTrailPoint(i);
-                    }
+
+                    //if (trail)
+                    //{
+                    //    AddTrailPoint(i);
+                    //}
+                    //if (trail && color)
+                    //{
+                    //    ColorTrailPoint(i);
+                    //}
                     yield return new WaitForSeconds(.1f);
                 }
+                
+                
             } while (loop);
         }
 

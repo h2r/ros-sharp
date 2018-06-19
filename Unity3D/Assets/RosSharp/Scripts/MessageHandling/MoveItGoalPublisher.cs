@@ -45,39 +45,9 @@ namespace RosSharp.RosBridgeClient {
             return;
         }
 
-        //GeometryPose UpdateMessageContents(GameObject TargetModel) {
-
-        //    GeometryPose TargetPose = new GeometryPose();
-
-        //    Vector3 position = TargetModel.transform.position - UrdfModel.transform.position;
-        //    Quaternion rotation = UrdfModel.transform.rotation * TargetModel.transform.rotation;
-        //    TargetPose.position = GetGeometryPoint(position.Unity2Ros());
-        //    TargetPose.position = new GeometryPoint {
-        //        x = -TargetPose.position.x,
-        //        y = -TargetPose.position.y,
-        //        z = TargetPose.position.z
-        //    };
-        //    TargetPose.orientation = GetGeometryQuaternion(rotation.Unity2Ros());
-
-        //    return TargetPose;
-        //}
-
-        //private GeometryPoint GetGeometryPoint(Vector3 position) {
-        //    GeometryPoint geometryPoint = new GeometryPoint {
-        //        x = position.x,
-        //        y = position.y,
-        //        z = position.z
-        //    };
-        //    return geometryPoint;
-        //}
-        //private GeometryQuaternion GetGeometryQuaternion(Quaternion quaternion) {
-        //    GeometryQuaternion geometryQuaternion = new GeometryQuaternion {
-        //        x = quaternion.x,
-        //        y = quaternion.y,
-        //        z = quaternion.z,
-        //        w = quaternion.w
-        //    };
-        //    return geometryQuaternion;
-        //}
+        public void ResetBackend()
+        {
+            rosSocket.Publish(planPublicationId, new MoveitTarget());
+        }
     }
 }

@@ -8,18 +8,17 @@ using UnityEngine;
 public class IdGenerator : Singleton<IdGenerator>
 {
 
-    private HashSet<string> ids { get; set; }
+    private Dictionary<string, GameObject> id_to_obj { get; set; }
     public bool PointsToStart { get; set; }
 
     public IdGenerator()
     {
-        Debug.Log("Hihi");
-        ids = new HashSet<string>();
-        ids.Add("START");
+        id_to_obj = new Dictionary<string, GameObject>();
+        id_to_obj.Add("START", null); 
         PointsToStart = false;
     }
 
-    public string CreateId()
+    public string CreateId(GameObject go)
     {
         // Here 5 is the lenght of the id
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -29,12 +28,13 @@ public class IdGenerator : Singleton<IdGenerator>
         {
             id += chars[Random.Range(0, chars.Length)];
         }
-        if (ids.Contains(id))
+        if (id_to_obj.ContainsKey(id))
         {
-            return CreateId();
+            return CreateId(go);
         }
-        ids.Add(id);
-        //Debug.Log(ids.)
+        id_to_obj.Add(id, go);
         return id;
     }
+
+    
 }

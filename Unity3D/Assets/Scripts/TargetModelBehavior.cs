@@ -6,8 +6,8 @@ using UnityEngine.XR.WSA.Input;
 
 namespace RosSharp.RosBridgeClient
 {
-    [RequireComponent(typeof(RosConnector))]
-    public class TargetModelBehavior : MonoBehaviour, IInputClickHandler, INavigationHandler
+    //[RequireComponent(typeof(RosConnector))]
+    public class TargetModelBehavior : MonoBehaviour, INavigationHandler, IInputClickHandler
     {
 
         public string PlanTopic = "/goal_pose";
@@ -28,7 +28,7 @@ namespace RosSharp.RosBridgeClient
         void Awake()
         {
             Debug.Log("hi hello");
-            Id = IdGenerator.Instance.CreateId();
+            Id = IdGenerator.Instance.CreateId(gameObject); // IdGenerator keeps references to each object
             PrevId = "";
             NextId = "";
             RightOpen = "0";
@@ -39,6 +39,7 @@ namespace RosSharp.RosBridgeClient
                 PrevId = "START";
             }
             OutOfBounds = false;
+           
             Debug.Log("got here");
         }
 
@@ -100,20 +101,37 @@ namespace RosSharp.RosBridgeClient
 
         void IInputClickHandler.OnInputClicked(InputClickedEventData eventData)
         {
-            Debug.Log("tap");
-            // TODO: Graphically change gripper
-            RightOpen = (RightOpen == "0") ? "1" : "0"; // toggle gripper state
-            this.SendPlanRequest();
+            if (!eventData.used)
+            {
+                eventData.Use();
+                Debug.Log("tap");
+                Vector3 offset = new Vector3(0.02f, 0.0f, 0.0f);
+                Debug.Log(RightOpen);
+                if (RightOpen == "0")
+                {
+                    RightOpen = "1";
+                    gameObject.transform.GetChild(1).transform.position -= offset;
+                    gameObject.transform.GetChild(2).transform.position += offset;
+                }
+                else
+                {
+                    RightOpen = "0";
+                    gameObject.transform.GetChild(1).transform.position += offset;
+                    gameObject.transform.GetChild(2).transform.position -= offset;
+                }
+                this.SendPlanRequest();
+            }
+            
         }
 
         void INavigationHandler.OnNavigationStarted(NavigationEventData eventData)
         {
-            
+            //Debug.Log("ONs");
         }
 
         void INavigationHandler.OnNavigationUpdated(NavigationEventData eventData)
         {
-            
+            //Debug.Log("ONup");
         }
 
         void INavigationHandler.OnNavigationCompleted(NavigationEventData eventData)

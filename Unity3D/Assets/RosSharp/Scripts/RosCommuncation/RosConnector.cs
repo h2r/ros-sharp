@@ -32,6 +32,7 @@ public class RosConnector : MonoBehaviour
 
     public void Disconnect()
     {
+        GetComponent<MoveItGoalPublisher>().ResetBackend(); // clear all the data we have sent
         RosSocket.Close();
         Debug.Log("Disconnected from RosBridge: " + RosBridgeServerUrl);
     }

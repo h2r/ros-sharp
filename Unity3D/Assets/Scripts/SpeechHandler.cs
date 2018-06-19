@@ -6,7 +6,7 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
 
     public MoveItGoalPublisher MoveItGoalPublisher;
     public DisplayTrajectoryReceiver DisplayTrajectoryReceiver;
-
+    
     
     void ISpeechHandler.OnSpeechKeywordRecognized(SpeechEventData eventData) {
     }
@@ -29,9 +29,6 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
         newObj.GetComponent<TargetModelBehavior>().RightOpen = 
             MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().RightOpen;
 
-
-        Debug.Log(newObj.GetComponent<TargetModelBehavior>().Id);
-
         // set the last smart gripper's next pointer to the newly instantiated obj's id
         MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().NextId = 
             newObj.GetComponent<TargetModelBehavior>().Id;
@@ -43,6 +40,7 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
         // change the last smart gripper
         MoveItGoalPublisher.LastSmartGripper = newObj;
         MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest();
+        DisplayTrajectoryReceiver.NumPoints++;
     }
 
     // Tells MoveIt to execute the plan
