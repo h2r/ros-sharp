@@ -4,7 +4,7 @@ using System;
 
 public class DepthRosGeometryView : MonoBehaviour {
 
-    private WebsocketClient wsc;
+    public WebsocketClient wsc;
     string depthTopic;
     string colorTopic;
     int framerate = 100;
@@ -27,8 +27,6 @@ public class DepthRosGeometryView : MonoBehaviour {
         depthTexture = new Texture2D(width, height, TextureFormat.R16, false);
         colorTexture = new Texture2D(2, 2);
 
-
-        wsc = GameObject.Find("WebsocketClient").GetComponent<WebsocketClient>();
         depthTopic = "kinect2/sd/image_depth_rect";
         colorTopic = "kinect2/sd/image_color_rect/compressed";
         wsc.Subscribe(depthTopic, "sensor_msgs/Image", compression, framerate);
