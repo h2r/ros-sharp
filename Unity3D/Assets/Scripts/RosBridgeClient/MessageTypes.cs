@@ -39,6 +39,7 @@ public static class MessageTypes {
             { "sensor_msgs/PointField", typeof(SensorPointField) },
             { "sensor_msgs/Image", typeof(SensorImage) },
             { "sensor_msgs/CompressedImage", typeof(SensorCompressedImage) },
+            { "audio_common_msgs/AudioData", typeof(SensorAudio) },
             { "std_msgs/Time", typeof(StandardTime)    },
             { "nav_msgs/MapMetaData", typeof(NavigationMapMetaData) },
             { "nav_msgs/OccupancyGrid", typeof(NavigationOccupancyGrid)},

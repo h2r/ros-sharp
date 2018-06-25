@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using RosSharp.RosBridgeClient;
 using UnityEngine;
 
 namespace RosSharp.RosBridgeClient {

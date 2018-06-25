@@ -448,6 +448,14 @@ public class SensorCompressedImage : Message {
     }
 }
 
+public class SensorAudio : Message {
+    public byte[] data;
+    public SensorAudio() {
+        data = new byte[0];
+    }
+
+}
+
 public class StandardTime : Message {
     public int secs;
     public int nsecs;
