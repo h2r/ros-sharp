@@ -44,28 +44,57 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void ProcessMessage() {
-            scaledAudio = ConvertByteToFloat(audioData);
-            //Debug.Log(audioData[1]);
-            //Debug.Log(Mathf.Max(scaledAudio));
+            scaledAudio = ConvertByteToFloat16(audioData);
             AudioClip audioClip = AudioClip.Create("RobotAudio", scaledAudio.Length, 1, 16000, false);
             audioClip.SetData(scaledAudio, 0);
             AudioSource.PlayClipAtPoint(audioClip, robot.transform.position);
             isMessageReceived = false;
         }
 
+        private float[] ConvertByteToFloat16(byte[] array) {
+            float[] floatArr = new float[array.Length / 2];
+            for (int i = 0; i < floatArr.Length; i++) {
+                if (BitConverter.IsLittleEndian) {
+                    Array.Reverse(array, i * 2, 2);
+                }
+                floatArr[i] = (float) (BitConverter.ToInt16(array, i * 2) / 32767f);
+            }
+            return floatArr;
+        }
+
+
         private float[] ConvertByteToFloat(byte[] array) {
             float[] floatArr = new float[array.Length / 4];
             for (int i = 0; i < floatArr.Length; i++) {
                 if (BitConverter.IsLittleEndian) {
-                    Debug.Log("Little Endian");
                     Array.Reverse(array, i * 4, 4);
-                }
-                else {
-                    Debug.Log("Big Endian");
                 }
                 floatArr[i] = BitConverter.ToSingle(array, i * 4) / 0x80000000;
             }
             return floatArr;
+        }
+
+        private float[] Convert16BitByteArrayToAudioClipData(byte[] source) {
+
+            int wavSize = BitConverter.ToInt32(source, 0);
+            int x = sizeof(Int16); // block size = 2
+            int convertedSize = wavSize / x;
+
+            float[] data = new float[convertedSize];
+
+            Int16 maxValue = Int16.MaxValue;
+
+            int offset = 0;
+            int i = 0;
+            Debug.Log(convertedSize);
+            while (i < convertedSize) {
+                offset = i * x;
+                Debug.Log(source[offset]);
+                data[i] = (float)BitConverter.ToInt16(source, offset) / maxValue;
+                i = i+1;
+            }
+
+            return data;
         }
 
     }
