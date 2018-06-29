@@ -17,12 +17,12 @@ using System;
 using UnityEngine;
 
 namespace RosSharp.RosBridgeClient {
-    [RequireComponent(typeof(AudioSource))]
     public class AudioReceiver : MessageReceiver {
         public override Type MessageType { get { return (typeof(SensorAudio)); } }
 
         // The virtual model of the robot to be the source of the sound
         public GameObject robot;
+        public AudioSource audioSource;
 
         private byte[] audioData;
         private float[] scaledAudio;
@@ -44,10 +44,14 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void ProcessMessage() {
-            scaledAudio = ConvertByteToFloat16(audioData);
-            AudioClip audioClip = AudioClip.Create("RobotAudio", scaledAudio.Length, 1, 16000, false);
-            audioClip.SetData(scaledAudio, 0);
-            AudioSource.PlayClipAtPoint(audioClip, robot.transform.position);
+            //scaledAudio = ConvertByteToFloat16(audioData);
+            //AudioClip audioClip = AudioClip.Create("RobotAudio", scaledAudio.Length, 1, 16000, false);
+            //audioClip.SetData(scaledAudio, 0);
+            //AudioSource.PlayClipAtPoint(audioClip, robot.transform.position);
+            //GetComponent<AudioSource>().clip = NAudioPlayer.FromMp3Data(audioData);
+            //AudioSource.PlayClipAtPoint(NAudioPlayer.FromMp3Data(audioData), robot.transform.position);
+            //audioSource.clip = NAudioPlayer.FromMp3Data(audioData);
+            //audioSource.Play();
             isMessageReceived = false;
         }
 
