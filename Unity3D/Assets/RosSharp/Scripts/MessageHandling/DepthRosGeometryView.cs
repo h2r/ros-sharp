@@ -2,6 +2,15 @@
 using System.Collections;
 using System;
 
+/*
+ * This script collects color and depth data from the Kinect2
+ * and uses this to display a 3D Point Cloud where the robot is 
+ * looking. This is done by updating the texture of a material 
+ * that has a custom shader.
+ * 
+ * This code and the shader used here were written by David F. Whitney.
+ */
+
 public class DepthRosGeometryView : MonoBehaviour {
 
     public WebsocketClient wsc;

@@ -2,6 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * This script toggles the point cloud depth view from the Movo's kinect on and off when the 
+ * Left Controller trackpad is clicked. It is intended that users will toggle off point cloud view
+ * when driving the robot (because it can induce motion sickness to look at the point cloud and drive around) 
+ * and toggle it on when attempting to use the hands to pick up or manipulate objects).
+ * 
+ * This script also makes the copies of the Movo's hands (that are attached to the user's controller) appear transparent
+ * so as not to be confused with the Movo's actual hands in the scene
+ */
+
 public class TogglePointCloud : MonoBehaviour {
 
     public GameObject pointCloudView;

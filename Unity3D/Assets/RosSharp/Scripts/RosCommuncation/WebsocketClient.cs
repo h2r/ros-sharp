@@ -3,7 +3,11 @@ using WebSocketSharp;
 using System;
 using System.Collections.Generic;
 
-
+/*
+ * This script contains methods for getting data from a ROS topic. It is used (instead of
+ * ROS#'s default Publisher/Subscriber architecture) when a script needs to subscribe to
+ * more than one Topic and therefore needs more than one Subscriber
+ */
 public class WebsocketClient : MonoBehaviour {
 
     private WebSocket ws;

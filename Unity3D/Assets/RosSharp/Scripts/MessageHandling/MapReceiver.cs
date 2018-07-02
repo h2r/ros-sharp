@@ -41,7 +41,8 @@ namespace RosSharp.RosBridgeClient {
         }
         private void ReceiveMessage(object sender, MessageEventArgs e) {
             mapData = ((NavigationOccupancyGrid)e.Message).data;
-            Debug.Log(mapData[0]);
+            int[] result = Array.ConvertAll(mapData, Convert.ToInt32);
+            Debug.Log(result[0]);
             isMessageReceived = true;
         }
 

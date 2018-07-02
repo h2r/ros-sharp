@@ -4,21 +4,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-// This script publishes commands to the topic /ein/right/forth_commands
+/* QUICKSTART BUTTON GUIDE FOR MOVO:
+ * Forward and backward movement: Right Trackpad up and down
+ * Turning: Right Trackpad left and right
+ * Tilting head: Left trackpad up and down
+ * Panning head: Left trackpad left and right
+ * Torso Up: Right Controller Menu button (above trackpad)
+ * Torso Down: Left Controller Menu button (above trackpad)
+ * Move Right Arm to position: Right Grip button squeeze (robot's right arm will move position and orientation of your controller in VR)
+ * Move Left Arm to position: Left Grip button squeeze (robot's left arm will move position and orientation of your controller in VR)
+ * Open Right gripper: Hold Right Controller Trigger down (closed by default, so release trigger to close)
+ * Open Left gripper: Hold Left Controller Trigger down (closed by default, so release trigger to close) */
+
+
+
+/* This script takes input from a user's hand controllers and publishes relevant commands to the ROS Topic
+ * /ein/right/forth_commands. Commands on this topic are executed by the robot via Ein. 
+ * Note: Controller input is obtained using Unity Input for OpenVR (see here: https://docs.unity3d.com/Manual/OpenVRControllers.html)
+ * Because of this, button's must be named exactly as specified in Unity's Input Manager (located in Edit/Project Settings/Input).
+ * If buttons are unresponsive, then this is probably the issue.
+  */
+
+// The class for this script extends the Publisher class of ROS# which was authored by Dr. Martin Bischoff
 public class EinRightForthCommandsPublisher : Publisher {
 
+    /* The script required three GameObjects - the user's controllers and the robot model.
+     * Note: The controllers don't have to be the actual controller game objects, but rather
+     * anything that moves and rotates with the controllers (so perhaps a child of the actual
+     * controller game objects). This is because only the position and rotation is obtained from this
+     * GameObject, not any of the button presses.
+     */
     public GameObject leftController;
     public GameObject rightController;
     public GameObject Robot;
 
+    // Declaring a variable for the message that will be published on the ROS topic
     private StandardString message;
 
-    // The boolean deciding which arm is currently being controlled. False is right and True is left. 
-    // Starts with right by default.
+
+    /* Below are a set of variables used to keep track of button states. These are necessary because the main loop of
+       this script runs every 0.1 seconds - so simply publishing a command if a button is pressed would cause multiple
+       commands to be published on every click, which is undesirable behavior. Keeping track of previous button states
+       enables the script to detect clicks and holding of buttons and publish commands accordingly. */
+    /**************************************************************************************************************/
+
+    // currArm decides which arm is currently being controlled. False is right and True is left. 
+    // It starts with right by default.
     private bool currArm = false;
     private bool firstTime = true;
 
-    // Booleans to keep track of the previous state of the grip buttons
+    // Booleans to keep track of the state of the grip buttons
     private bool leftGripPressed = false;
     private bool rightGripPressed = false;
 
@@ -54,30 +89,36 @@ public class EinRightForthCommandsPublisher : Publisher {
     private bool rightMenuButtonPressed = false;
     private int timeStepsRightMenuPressed = 0;
 
-    // Use this for initialization
+    /**************************************************************************************************************/
+
+    // Used for initialization
     protected override void Start() {
         rosSocket = GetComponent<RosConnector>().RosSocket;
-
         publicationId = rosSocket.Advertise(Topic, "std_msgs/String");
         message = new StandardString();
-        message.data = "baseGoCfg";
+        message.data = "baseGoCfg"; // This command is a quirk of the Movo. Base doesn't move if this isn't sent first.
         rosSocket.Publish(publicationId, message);
         InvokeRepeating("SendControls", .1f, .1f);
     }
 
     void SendControls() {
-        //Convert the Unity position of the hand controller to a ROS position (scaled)
+        /* Convert the Unity position of the hand controller to a ROS position (scaled) and offset whetre the robot is.
+           This is where the user wants to move the robot's left/right hand */
         Vector3 outLeftPos = UnityToRosPositionAxisConversion(leftController.transform.position - Robot.transform.position);
         Vector3 outRightPos = UnityToRosPositionAxisConversion(rightController.transform.position - Robot.transform.position);
+        
         //Convert the Unity rotation of the hand controller to a ROS rotation (scaled, quaternions)
         Quaternion outLeftQuat = UnityToRosRotationAxisConversion(leftController.transform.rotation);
         Quaternion outRightQuat = UnityToRosRotationAxisConversion(rightController.transform.rotation);
+        
         //construct the Ein message to be published
         message.data = "";
-        //Allows movement control with controllers if menu is disabled
+        
         String controllerPrefix = "";
 
-        // Driving forward and backwards code
+        /* The below code block sends a forward or backward command to the robot if the Right Trackpad is
+           tapped once. If it is held, it sends a command once every 0.5 seconds to allow smooth
+           forward and backward motion. */
         if (Input.GetAxis("Right_trackpad_vertical") > 0.8) {
             if (!rightTrackpadUpPressed) {
                 message.data = "-0.2 baseSendXVel";
@@ -115,7 +156,9 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsRightDownPressed = 0;
         }
 
-        // Turning robot base code
+        /* The below code block sends a left or right turn command to the robot if the Right Trackpad is
+           tapped once. If it is held, it sends a command once every 0.5 seconds to allow smooth
+           motion. */
         if (Input.GetAxis("Right_trackpad_horizontal") > 0.8) {
             if (!rightTrackpadRightPressed) {
                 message.data = "-0.2 baseSendOZVel";
@@ -153,7 +196,9 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsRightLeftPressed = 0;
         }
 
-        // Tilting code
+        /* The below code block sends a tilt up or down command to the robot's head if the Right Trackpad is
+           tapped once. If it is held, it sends a command once every 0.5 seconds to allow smooth
+           motion. */
         if (Input.GetAxis("Left_trackpad_vertical") > 0.8) {
             if (!leftTrackpadUpPressed) {
                 message.data += "\n tiltUp";
@@ -191,7 +236,9 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsLeftDownPressed = 0;
         }
 
-        // Panning code
+        /* The below code block sends a pan right or left command to the robot's head if the Right Trackpad is
+           tapped once. If it is held, it sends a command once every 0.5 seconds to allow smooth
+           motion. */
         if (Input.GetAxis("Left_trackpad_horizontal") > 0.8) {
             if (!leftTrackpadRightPressed) {
                 message.data += "\n panUp";
@@ -229,7 +276,9 @@ public class EinRightForthCommandsPublisher : Publisher {
             timeStepsLeftLeftPressed = 0;
         }
 
-        // Torso moving up and down code
+        /* The below code sends a torso up or down command to the robot's head if the Right Trackpad is
+           tapped once. If it is held, it sends a command once every 0.2 seconds to allow smooth
+            motion. */
         if (Input.GetButton("Left_menu_button")) {
             if (!leftMenuButtonPressed) {
                 message.data += "\n torsoDown";
@@ -268,14 +317,15 @@ public class EinRightForthCommandsPublisher : Publisher {
         }
 
 
-        // Arms moving to a position code
+        /* The below code moves the robot's arms to the user's controller's position and orientation when the
+         * relevant arm's grip buttons are pressed. If the robot's arms are UNABLE to reach the position, nothing
+         will happen. Also, it may take upto 10 seconds for the arms to begin moving to complicated positions.*/
 
         if (Input.GetAxis("Left_grip") > 0.5f && !leftGripPressed) {
             leftGripPressed = true;
         }
         //if deadman switch held in, move to new pose
         if (Input.GetAxis("Left_grip") < 0.5f && leftGripPressed) {
-            //construct message to move to new pose for the robot end effector
             if (firstTime) {
                 controllerPrefix = "switchToLeftArm \n";
                 firstTime = false;
@@ -304,10 +354,10 @@ public class EinRightForthCommandsPublisher : Publisher {
             message.data += "\n" + controllerPrefix + outRightPos.x + " " + outRightPos.y + " " + outRightPos.z + " " +
             outRightQuat.x + " " + outRightQuat.y + " " + outRightQuat.z + " " + outRightQuat.w + " moveToEEPose";
             rightGripPressed = false;
-            //if touchpad is pressed (Crane game), incrementally move in new direction
         }
 
-        //If trigger pressed, open the gripper. Else, close gripper
+        // The below code block opens and closes the robot's grippers if the relevant controller's
+        // trigger button is held
         if (Input.GetAxis("Left_trigger") > 0.5f && leftGripperClosed) {
             if (firstTime) {
                 controllerPrefix = "switchToLeftArm \n";
@@ -342,11 +392,11 @@ public class EinRightForthCommandsPublisher : Publisher {
             rightGripperClosed = true;
         }
 
-
-
+        /* This statement first checks that there is something to publish, then takes the message
+           (which may contain several commands built-up over the previous code blocks) and publishes
+           it onto the ROS Network. */
         if (message.data != "") {
-            //Send the message to the websocket client (i.e: publish message onto ROS network)
-            Debug.Log(message.data);
+            //Debug.Log(message.data);
             rosSocket.Publish(publicationId, message);
         }
     }
@@ -358,13 +408,7 @@ public class EinRightForthCommandsPublisher : Publisher {
 
     //Convert 4D Unity quaternion to ROS quaternion
     Quaternion UnityToRosRotationAxisConversion(Quaternion qIn) {
-
         Quaternion temp = (new Quaternion(-qIn.w, qIn.y, qIn.x, -qIn.z));
         return temp;
-
-        //return new Quaternion(-qIn.z, qIn.x, -qIn.w, -qIn.y);
-        //return new Quaternion(-qIn.z, qIn.w, -qIn.x, -qIn.y);
-        //return new Quaternion(-qIn.z, qIn.w, -qIn.x, -qIn.y);
-        //return new Quaternion(-qIn.z, qIn.x, qIn.w, qIn.y);
     }
 }
