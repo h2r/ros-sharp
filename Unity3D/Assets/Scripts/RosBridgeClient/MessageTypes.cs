@@ -22,6 +22,7 @@ public static class MessageTypes {
     {
             { "geometry_msgs/Twist", typeof(GeometryTwist) },
             { "ros_reality_bridge_msgs/MoveitTarget", typeof(MoveitTarget)},
+            { "ros_reality_bridge_msgs/MoveitPlan", typeof(MoveitPlan)},
             { "std_msgs/String", typeof(StandardString) },
             { "geometry_msgs/Accel", typeof(GeometryAccel) },
             { "sensor_msgs/JointState", typeof(SensorJointStates) },

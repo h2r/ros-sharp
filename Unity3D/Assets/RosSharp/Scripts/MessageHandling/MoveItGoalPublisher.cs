@@ -29,6 +29,7 @@ namespace RosSharp.RosBridgeClient {
             rosSocket = GetComponent<RosConnector>().RosSocket;
             planPublicationId = rosSocket.Advertise(PlanTopic, "ros_reality_bridge_msgs/MoveitTarget");
             executePublicationId = rosSocket.Advertise(ExecuteTopic, "std_msgs/String");
+            this.ResetBackend();
             //FadeManager.AssertIsInitialized();
         }
 

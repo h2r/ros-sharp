@@ -61,6 +61,18 @@ public class MoveItDisplayTrajectory : Message {
     }
 }
 
+// wrapper for a MoveItRobotTrajectory with an id field -Samir
+public class MoveitPlan : Message
+{
+    public string id;
+    public MoveItRobotTrajectory plan;
+    public MoveitPlan()
+    {
+        id = "";
+        plan = new MoveItRobotTrajectory();
+    }
+}
+
 public class MoveItRobotTrajectory : Message {
     public TrajectoryJointTrajectory joint_trajectory;
     public TrajectoryMultiDOFJointTrajectory multi_dof_joint_trajectory;

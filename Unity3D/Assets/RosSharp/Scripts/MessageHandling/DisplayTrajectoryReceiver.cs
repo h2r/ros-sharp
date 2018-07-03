@@ -11,7 +11,6 @@ namespace RosSharp.RosBridgeClient {
         public override Type MessageType { get { return (typeof(MoveItDisplayTrajectory)); } }
 
         public GameObject UrdfModel; // baxter
-        public int NumPoints;
         public JointStateWriter[] JointStateWriters;
         public Dictionary<string, JointStateWriter> JointDict = new Dictionary<string, JointStateWriter>();
         private List<GameObject> TrailPoints;
@@ -35,7 +34,6 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Start() {
-            NumPoints = 1;
             foreach (JointStateWriter jsw in JointStateWriters) {
             //for(int i = 0; i < 10; i++) {
                 //JointStateWriter jsw = JointStateWriters[i];
@@ -66,6 +64,7 @@ namespace RosSharp.RosBridgeClient {
 
         private void ReceiveMessage(object sender, MessageEventArgs e) {
             message = (MoveItDisplayTrajectory)e.Message;
+            Debug.Log(message.model_id);
             new_trajectory = true;
         }
 
@@ -101,12 +100,12 @@ namespace RosSharp.RosBridgeClient {
                 
                 if (sampling)
                 {
-                    int[] samplePoints = new int[NumPoints + 2];
+                    int[] samplePoints = new int[IdGenerator.Instance.NumPoints + 2];
                     samplePoints[0] = 0;
                     samplePoints[samplePoints.Length - 1] = points.Length - 1;
                 }
 
-                for (int i = 0; i < points.Length; i++)
+                for (int i = 0; i < points.Length; i+=10)
                 {
                     for (int j = 0; j < joint_names.Length; j++)
                     {
@@ -117,18 +116,35 @@ namespace RosSharp.RosBridgeClient {
                         }
                     }
 
-                    //if (trail)
-                    //{
-                    //    AddTrailPoint(i);
-                    //}
+                    if (trail)
+                    {
+                        AddTrailPoint(i);
+                    }
+                    if (i == 0)
+                    {
+                        ColorTrailPoint(i);
+                    }
                     //if (trail && color)
                     //{
                     //    ColorTrailPoint(i);
                     //}
-                    yield return new WaitForSeconds(.1f);
+                    yield return new WaitForSeconds(.5f);
                 }
-                
-                
+                for (int j = 0; j < joint_names.Length; j++)
+                {
+                    if (JointDict.ContainsKey(joint_names[j]))
+                    {
+                        JointDict[joint_names[j]].Write(points[points.Length-1].positions[j]);
+                        JointDict[joint_names[j]].WriteUpdate();
+                    }
+                }
+
+                if (trail)
+                {
+                    AddTrailPoint(points.Length-1);
+                }
+
+
             } while (loop);
         }
 
@@ -138,6 +154,7 @@ namespace RosSharp.RosBridgeClient {
             } else {
                 GameObject clone = Instantiate(UrdfModel, UrdfModel.transform.position, UrdfModel.transform.rotation);
                 clone.transform.localScale = new Vector3(1.01f, 1.01f, 1.01f);
+          
                 TrailPoints.Add(clone);
             }
         }

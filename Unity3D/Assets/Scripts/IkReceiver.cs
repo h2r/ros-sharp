@@ -33,25 +33,18 @@ namespace RosSharp.RosBridgeClient
             Debug.Log("gjfdkghjkfdhgjkfdhgjkfdhgk");
             StandardString message = (StandardString)e.Message;
             
-            string[] payload = message.data.Split(' ');
-            
-   
-            //if (MoveItGoalPublisher
-            //    .LastManipulatedGripper.GetComponent<TargetModelBehavior>().OutOfBounds && payload[1] == "SUCCESS") // case where we are back in bounds
+            string[] payload = message.data.Split(' '); // payload[0] is the name of the gripper, [1] is status
+
+            //if (IdGenerator.Instance.OutOfBounds[payload[0]]
+            //    && payload[1] == "SUCCESS") // case where we are back in bounds
             //{
-            //    GetComponent<RosConnector>().GetComponent<MoveItGoalPublisher>()
-            //    .LastManipulatedGripper.GetComponent<Renderer>().material.color = Color.blue;
-            //    MoveItGoalPublisher
-            //    .LastManipulatedGripper.GetComponent<TargetModelBehavior>().OutOfBounds = false;
-            //} else if (!MoveItGoalPublisher
-            //    .LastManipulatedGripper.GetComponent<TargetModelBehavior>().OutOfBounds && payload[1] == "FAIL") // case where we are now out of bounds
+            //    IdGenerator.Instance.SetInBounds(payload[0]);
+            //}
+            //else if(!IdGenerator.Instance.OutOfBounds[payload[0]]
+            //    && payload[1] == "FAIL") // case where we are now out of bounds
             //{
-            //    Debug.Log("Should be here");
-            //    GetComponent<RosConnector>().GetComponent<MoveItGoalPublisher>()
-            //    .LastManipulatedGripper.GetComponent<Renderer>().material.color = Color.red;
-            //    MoveItGoalPublisher
-            //    .LastManipulatedGripper.GetComponent<TargetModelBehavior>().OutOfBounds = true;
-            //} 
+            //    IdGenerator.Instance.SetOutOfBounds(payload[0]);
+            //}
 
         }
 

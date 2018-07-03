@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using HoloToolkit.Unity;
 using System.Linq;
 using UnityEngine;
-
+using RosSharp.RosBridgeClient;
 
 public class IdGenerator : Singleton<IdGenerator>
 {
 
-    private Dictionary<string, GameObject> id_to_obj { get; set; }
-    public bool PointsToStart { get; set; }
+    public Dictionary<string, GameObject> IdToObj { get; set; }
+    public Dictionary<string, bool> OutOfBounds { get; set; }
+    public int NumPoints { get; set; }
+    public GameObject FirstWaypoint { get; set; }
 
     public IdGenerator()
     {
-        id_to_obj = new Dictionary<string, GameObject>();
-        id_to_obj.Add("START", null); 
-        PointsToStart = false;
+        IdToObj = new Dictionary<string, GameObject>();
+        IdToObj.Add("START", null);
+        OutOfBounds = new Dictionary<string, bool>();
+        FirstWaypoint = null;
+        NumPoints = 1;
     }
 
     public string CreateId(GameObject go)
@@ -28,13 +32,24 @@ public class IdGenerator : Singleton<IdGenerator>
         {
             id += chars[Random.Range(0, chars.Length)];
         }
-        if (id_to_obj.ContainsKey(id))
+        if (IdToObj.ContainsKey(id))
         {
             return CreateId(go);
         }
-        id_to_obj.Add(id, go);
+        IdToObj.Add(id, go);
         return id;
     }
 
+    public void SetOutOfBounds(string id)
+    {
+        IdToObj[id].GetComponent<TargetModelBehavior>().MakeRed();
+        OutOfBounds[id] = true;
+    }
+
+    public void SetInBounds(string id)
+    {
+        IdToObj[id].GetComponent<TargetModelBehavior>().MakeGreen();
+        OutOfBounds[id] = false;
+    }
     
 }

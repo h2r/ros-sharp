@@ -15,9 +15,11 @@ namespace RosSharp.RosBridgeClient
         public string Id { get; set; }
         public string PrevId { get; set; }
         public string NextId { get; set; }
+        public string PrevShadowId { get; set; }
+        public string NextShadowId { get; set; }
         public string RightOpen { get; set; }
         public string LeftOpen { get; set; }
-        public bool OutOfBounds { get; set; }
+        public bool IsShadow { get; set; }
 
         public MoveItGoalPublisher MoveItGoalPublisher;
 
@@ -31,17 +33,49 @@ namespace RosSharp.RosBridgeClient
             Id = IdGenerator.Instance.CreateId(gameObject); // IdGenerator keeps references to each object
             PrevId = "";
             NextId = "";
+            PrevShadowId = "";
+            NextShadowId = "";
             RightOpen = "0";
             LeftOpen = "0";
-            if (IdGenerator.Instance.PointsToStart == false)
+            IsShadow = false;
+            if (IdGenerator.Instance.FirstWaypoint == null)
             {
-                IdGenerator.Instance.PointsToStart = true;
+                IdGenerator.Instance.FirstWaypoint = gameObject;
                 PrevId = "START";
             }
-            OutOfBounds = false;
-           
-            Debug.Log("got here");
+            IdGenerator.Instance.OutOfBounds[Id] = false;
+            
         }
+
+        public void MakeRed()
+        {
+            Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in rs)
+            {
+                r.material.color = new Color(0.95f, 0.56f, 0.56f);
+            }
+        }
+
+        public void MakeGreen()
+        {
+            IsShadow = false;
+            Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in rs)
+            {
+                r.material.color = new Color(0.56f, 0.95f, 0.82f);
+            }
+        }
+
+        public void MakeYellow()
+        {
+            IsShadow = true;
+            Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in rs)
+            {
+                r.material.color = new Color(0.93f, 0.95f, 0.56f);
+            }
+        }
+
 
         GeometryPose UpdateMessageContents(GameObject TargetModel)
         {
@@ -99,6 +133,38 @@ namespace RosSharp.RosBridgeClient
             MoveItGoalPublisher.PublishPlan(moveitTarget);
         }
 
+        public void MakeShadow(bool createPrev, bool createNext)
+        {
+            if (createPrev)
+            {
+                GameObject newObj = Instantiate(gameObject);
+                newObj.GetComponent<TargetModelBehavior>().PrevId = PrevId;
+                newObj.GetComponent<TargetModelBehavior>().NextId = Id;
+                newObj.GetComponent<TargetModelBehavior>().MakeYellow();
+                this.SetInterpTransform(newObj, IdGenerator.Instance.IdToObj[PrevId], gameObject);
+                PrevShadowId = newObj.GetComponent<TargetModelBehavior>().Id;
+                IdGenerator.Instance.IdToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
+                newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
+            }
+            if (createNext)
+            {
+                GameObject newObj = Instantiate(gameObject);
+                newObj.GetComponent<TargetModelBehavior>().PrevId = Id;
+                newObj.GetComponent<TargetModelBehavior>().NextId = NextId;
+                newObj.GetComponent<TargetModelBehavior>().MakeYellow();
+                this.SetInterpTransform(newObj, gameObject, IdGenerator.Instance.IdToObj[NextId]);
+                NextShadowId  = newObj.GetComponent<TargetModelBehavior>().Id;
+                IdGenerator.Instance.IdToObj[NextId].GetComponent<TargetModelBehavior>().PrevShadowId = NextShadowId;
+                newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
+            }
+        }
+
+        private void SetInterpTransform(GameObject obj, GameObject from, GameObject to)
+        {
+            obj.transform.position = Vector3.Lerp(from.transform.position, to.transform.position, 0.5f); ;
+            obj.transform.rotation = Quaternion.Slerp(from.transform.rotation, to.transform.rotation, 0.5f);
+        }
+
         void IInputClickHandler.OnInputClicked(InputClickedEventData eventData)
         {
             if (!eventData.used)
@@ -110,18 +176,46 @@ namespace RosSharp.RosBridgeClient
                 if (RightOpen == "0")
                 {
                     RightOpen = "1";
-                    gameObject.transform.GetChild(1).transform.position -= offset;
-                    gameObject.transform.GetChild(2).transform.position += offset;
+                    gameObject.transform.GetChild(1).transform.localPosition -= offset;
+                    gameObject.transform.GetChild(2).transform.localPosition += offset;
                 }
                 else
                 {
                     RightOpen = "0";
-                    gameObject.transform.GetChild(1).transform.position += offset;
-                    gameObject.transform.GetChild(2).transform.position -= offset;
+                    gameObject.transform.GetChild(1).transform.localPosition += offset;
+                    gameObject.transform.GetChild(2).transform.localPosition -= offset;
                 }
+
+                if (IsShadow) // case where someone moved a yellow gripper
+                {
+                    this.MakeShadow(true, true);
+                    this.MakeGreen();
+                    IdGenerator.Instance.IdToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = Id;
+                    IdGenerator.Instance.IdToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = Id;
+                }
+                UpdateNumbering();
                 this.SendPlanRequest();
             }
             
+        }
+
+        public void UpdateNumbering()
+        {
+            GameObject curr = IdGenerator.Instance.FirstWaypoint;
+            int num = 1;
+            while (true)
+            {
+                curr.transform.Find("Text").GetComponent<TextMesh>().text = num.ToString();
+                if(curr.GetComponent<TargetModelBehavior>().NextId != "")
+                {
+                    curr = IdGenerator.Instance.IdToObj[curr.GetComponent<TargetModelBehavior>().NextId];
+                    num++;
+                } else
+                {
+                    break;
+                }
+               
+            }
         }
 
         void INavigationHandler.OnNavigationStarted(NavigationEventData eventData)
@@ -136,6 +230,38 @@ namespace RosSharp.RosBridgeClient
 
         void INavigationHandler.OnNavigationCompleted(NavigationEventData eventData)
         {
+            // if you are a yellow gripper, we need to become green, get networked in etc.
+            if(IsShadow) // case where someone moved a yellow gripper
+            {
+                this.MakeShadow(true, true);
+                this.MakeGreen();
+                IdGenerator.Instance.IdToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = Id;
+                IdGenerator.Instance.IdToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = Id;
+            } else // moving a green gripper
+            {
+                Debug.Log("(0)");
+                if (PrevShadowId != "") // case where we just need to update position
+                {
+                    Debug.Log("(1)");
+                    SetInterpTransform(IdGenerator.Instance.IdToObj[PrevShadowId], IdGenerator.Instance.IdToObj[PrevId], gameObject);
+                } else
+                {
+                    Debug.Log("(2)");
+                    if (PrevId != "START")
+                    {
+                        Debug.Log("(3)");
+                        this.MakeShadow(true, false);
+                    }
+                }
+                if (NextShadowId != "") // case where we just need to update position
+                {
+                    Debug.Log("(4)");
+                    SetInterpTransform(IdGenerator.Instance.IdToObj[NextShadowId], gameObject, IdGenerator.Instance.IdToObj[NextId]);
+                }
+            }
+
+            // update the position of the gripper
+            UpdateNumbering();
             this.SendPlanRequest();
         }
 

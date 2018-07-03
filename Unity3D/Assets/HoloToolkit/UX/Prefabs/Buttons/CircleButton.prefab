@@ -371,9 +371,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e77a98cf320fe9340a55eecfe4567ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonState: 4
-  ButtonPressFilter: 1
-  RequireGaze: 1
+  buttonState: 4
+  buttonPressFilter: 1
+  requireGaze: 1
   MainCollider: {fileID: 65993064671435812}
   MainRenderer: {fileID: 23396038408084068}
 --- !u!114 &114210285476315908
@@ -389,7 +389,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeywordSource: 2
   Keyword: 
-  ConfidenceLevel: 4
 --- !u!114 &114212354578965816
 MonoBehaviour:
   m_ObjectHideFlags: 1

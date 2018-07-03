@@ -21,10 +21,11 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
     {
         // make a new target model
         if (MoveItGoalPublisher.LastSmartGripper == null) return;
-
+        int pointNumber = ++IdGenerator.Instance.NumPoints;
         // make a new smart gripper
         GameObject newObj = Instantiate(MoveItGoalPublisher.LastSmartGripper);
         Vector3 offset = new Vector3(0.1f, 0.0f, 0.0f);
+        newObj.transform.Find("Text").GetComponent<TextMesh>().text = pointNumber.ToString();
         newObj.transform.position = newObj.transform.position + offset;
         newObj.GetComponent<TargetModelBehavior>().RightOpen = 
             MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().RightOpen;
@@ -36,11 +37,11 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
         // set prev pointerS
         newObj.GetComponent<TargetModelBehavior>().PrevId =
             MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id;
+        newObj.GetComponent<TargetModelBehavior>().UpdateNumbering();
 
         // change the last smart gripper
         MoveItGoalPublisher.LastSmartGripper = newObj;
         MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest();
-        DisplayTrajectoryReceiver.NumPoints++;
     }
 
     // Tells MoveIt to execute the plan
