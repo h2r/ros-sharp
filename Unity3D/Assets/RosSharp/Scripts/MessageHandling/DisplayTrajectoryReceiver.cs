@@ -153,6 +153,7 @@ namespace RosSharp.RosBridgeClient {
                 TrailPoints[point_index].SetActive(true);
             } else {
                 GameObject clone = Instantiate(UrdfModel, UrdfModel.transform.position, UrdfModel.transform.rotation);
+                Destroy(clone.gameObject.GetComponentInChildren<Canvas>().gameObject);
                 clone.transform.localScale = new Vector3(1.01f, 1.01f, 1.01f);
           
                 TrailPoints.Add(clone);
