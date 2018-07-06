@@ -97,13 +97,12 @@ namespace RosSharp.RosBridgeClient {
                     DestroyTrail();
                 }
 
-                
-                if (sampling)
-                {
-                    int[] samplePoints = new int[IdGenerator.Instance.NumPoints + 2];
-                    samplePoints[0] = 0;
-                    samplePoints[samplePoints.Length - 1] = points.Length - 1;
-                }
+                //if (sampling)
+                //{
+                //    int[] samplePoints = new int[IdGenerator.Instance.NumPoints + 2];
+                //    samplePoints[0] = 0;
+                //    samplePoints[samplePoints.Length - 1] = points.Length - 1;
+                //}
 
                 for (int i = 0; i < points.Length; i+=10)
                 {

@@ -7,24 +7,21 @@ using RosSharp.RosBridgeClient;
 
 public class IdGenerator : Singleton<IdGenerator>
 {
+    public Dictionary<string, Group> GIDtoGroup;
 
-    public Dictionary<string, GameObject> IdToObj { get; set; }
-    public Dictionary<string, bool> OutOfBounds { get; set; }
-    public int NumPoints { get; set; }
-    public GameObject FirstWaypoint { get; set; }
+    //public Dictionary<string, GameObject> IdToObj { get; set; }
+    //public Dictionary<string, bool> OutOfBounds { get; set; }
+    //public int NumPoints { get; set; }
+    //public GameObject FirstWaypoint { get; set; }
 
     public IdGenerator()
     {
-        IdToObj = new Dictionary<string, GameObject>();
-        IdToObj.Add("START", null);
-        OutOfBounds = new Dictionary<string, bool>();
-        FirstWaypoint = null;
-        NumPoints = 1;
+        GIDtoGroup = new Dictionary<string, Group>();
     }
 
-    public string CreateId(GameObject go)
+    public string CreateSID(string gid)
     {
-        // Here 5 is the lenght of the id
+        // Here 5 is the length of the id
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         string id = "";
         int charAmount = 5;
@@ -32,24 +29,28 @@ public class IdGenerator : Singleton<IdGenerator>
         {
             id += chars[Random.Range(0, chars.Length)];
         }
-        if (IdToObj.ContainsKey(id))
+        if (GIDtoGroup[gid].SIDToObj.ContainsKey(id))
         {
-            return CreateId(go);
+            return CreateSID(gid);
         }
-        IdToObj.Add(id, go);
         return id;
     }
 
-    public void SetOutOfBounds(string id)
+    public string CreateGID(Group g)
     {
-        IdToObj[id].GetComponent<TargetModelBehavior>().MakeRed();
-        OutOfBounds[id] = true;
+        // Here 3 is the length of the id
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        string id = "";
+        int charAmount = 3;
+        for (int i = 0; i < charAmount; i++)
+        {
+            id += chars[Random.Range(0, chars.Length)];
+        }
+        if (GIDtoGroup.ContainsKey(id))
+        {
+            return CreateGID(g);
+        }
+        GIDtoGroup.Add(id, g);
+        return id;
     }
-
-    public void SetInBounds(string id)
-    {
-        IdToObj[id].GetComponent<TargetModelBehavior>().MakeGreen();
-        OutOfBounds[id] = false;
-    }
-    
 }

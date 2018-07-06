@@ -30,10 +30,10 @@ namespace RosSharp.RosBridgeClient
 
         private void ReceiveMessage(object sender, MessageEventArgs e)
         {
-            Debug.Log("gjfdkghjkfdhgjkfdhgjkfdhgk");
-            StandardString message = (StandardString)e.Message;
+            //Debug.Log("gjfdkghjkfdhgjkfdhgjkfdhgk");
+            //StandardString message = (StandardString)e.Message;
             
-            string[] payload = message.data.Split(' '); // payload[0] is the name of the gripper, [1] is status
+            //string[] payload = message.data.Split(' '); // payload[0] is the name of the gripper, [1] is status
 
             //if (IdGenerator.Instance.OutOfBounds[payload[0]]
             //    && payload[1] == "SUCCESS") // case where we are back in bounds

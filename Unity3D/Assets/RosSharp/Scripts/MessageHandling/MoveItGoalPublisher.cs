@@ -19,9 +19,6 @@ namespace RosSharp.RosBridgeClient {
         private int planPublicationId;
         private int executePublicationId;
 
-        public GameObject LastSmartGripper;
-        public GameObject LastManipulatedGripper;
-
         //private MoveitTarget MoveitTarget = new MoveitTarget();
 
         // Use this for initialization

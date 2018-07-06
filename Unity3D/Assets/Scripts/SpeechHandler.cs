@@ -19,29 +19,29 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
 
     public void New()
     {
-        // make a new target model
-        if (MoveItGoalPublisher.LastSmartGripper == null) return;
-        int pointNumber = ++IdGenerator.Instance.NumPoints;
-        // make a new smart gripper
-        GameObject newObj = Instantiate(MoveItGoalPublisher.LastSmartGripper);
-        Vector3 offset = new Vector3(0.1f, 0.0f, 0.0f);
-        newObj.transform.Find("Text").GetComponent<TextMesh>().text = pointNumber.ToString();
-        newObj.transform.position = newObj.transform.position + offset;
-        newObj.GetComponent<TargetModelBehavior>().RightOpen = 
-            MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().RightOpen;
+        //// make a new target model
+        //if (MoveItGoalPublisher.LastSmartGripper == null) return;
+        //int pointNumber = ++IdGenerator.Instance.NumPoints;
+        //// make a new smart gripper
+        //GameObject newObj = Instantiate(MoveItGoalPublisher.LastSmartGripper);
+        //Vector3 offset = new Vector3(0.1f, 0.0f, 0.0f);
+        //newObj.transform.Find("Text").GetComponent<TextMesh>().text = pointNumber.ToString();
+        //newObj.transform.position = newObj.transform.position + offset;
+        //newObj.GetComponent<TargetModelBehavior>().RightOpen = 
+        //    MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().RightOpen;
 
-        // set the last smart gripper's next pointer to the newly instantiated obj's id
-        MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().NextId = 
-            newObj.GetComponent<TargetModelBehavior>().Id;
+        //// set the last smart gripper's next pointer to the newly instantiated obj's id
+        //MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().NextId = 
+        //    newObj.GetComponent<TargetModelBehavior>().Id;
 
-        // set prev pointerS
-        newObj.GetComponent<TargetModelBehavior>().PrevId =
-            MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id;
-        newObj.GetComponent<TargetModelBehavior>().UpdateNumbering();
+        //// set prev pointer
+        //newObj.GetComponent<TargetModelBehavior>().PrevId =
+        //    MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().Id;
+        //newObj.GetComponent<TargetModelBehavior>().UpdateNumbering();
 
-        // change the last smart gripper
-        MoveItGoalPublisher.LastSmartGripper = newObj;
-        MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest();
+        //// change the last smart gripper
+        //MoveItGoalPublisher.LastSmartGripper = newObj;
+        //MoveItGoalPublisher.LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest();
     }
 
     // Tells MoveIt to execute the plan

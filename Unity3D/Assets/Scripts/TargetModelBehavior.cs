@@ -12,7 +12,8 @@ namespace RosSharp.RosBridgeClient
 
         public string PlanTopic = "/goal_pose";
 
-        public string Id { get; set; }
+        public string GID { get; set; }
+        public string SID { get; set; }
         public string PrevId { get; set; }
         public string NextId { get; set; }
         public string PrevShadowId { get; set; }
@@ -30,7 +31,7 @@ namespace RosSharp.RosBridgeClient
         void Awake()
         {
             Debug.Log("hi hello");
-            Id = IdGenerator.Instance.CreateId(gameObject); // IdGenerator keeps references to each object
+            SID = "";
             PrevId = "";
             NextId = "";
             PrevShadowId = "";
@@ -38,13 +39,21 @@ namespace RosSharp.RosBridgeClient
             RightOpen = "0";
             LeftOpen = "0";
             IsShadow = false;
-            if (IdGenerator.Instance.FirstWaypoint == null)
+            GID = "";
+        }
+
+        public void Init(string gid, string prevId, string nextId)
+        {
+            SID = IdGenerator.Instance.CreateSID(gid);
+            GID = gid;
+            if (prevId != null)
             {
-                IdGenerator.Instance.FirstWaypoint = gameObject;
-                PrevId = "START";
+                PrevId = prevId;
             }
-            IdGenerator.Instance.OutOfBounds[Id] = false;
-            
+            if (nextId != null)
+            {
+                NextId = nextId;
+            }
         }
 
         public void MakeRed()
@@ -122,10 +131,10 @@ namespace RosSharp.RosBridgeClient
 
         public void SendPlanRequest()
         {
-            MoveItGoalPublisher.LastManipulatedGripper = this.gameObject;
             MoveitTarget moveitTarget = new MoveitTarget();
             moveitTarget.right_arm = UpdateMessageContents(TargetModel);
-            moveitTarget.id.data = Id;
+            moveitTarget.sid.data = SID;
+            moveitTarget.gid.data = GID;
             moveitTarget.prev_id.data = PrevId;
             moveitTarget.next_id.data = NextId;
             moveitTarget.right_open.data = RightOpen;
@@ -139,22 +148,22 @@ namespace RosSharp.RosBridgeClient
             {
                 GameObject newObj = Instantiate(gameObject);
                 newObj.GetComponent<TargetModelBehavior>().PrevId = PrevId;
-                newObj.GetComponent<TargetModelBehavior>().NextId = Id;
+                newObj.GetComponent<TargetModelBehavior>().NextId = SID;
                 newObj.GetComponent<TargetModelBehavior>().MakeYellow();
-                this.SetInterpTransform(newObj, IdGenerator.Instance.IdToObj[PrevId], gameObject);
-                PrevShadowId = newObj.GetComponent<TargetModelBehavior>().Id;
-                IdGenerator.Instance.IdToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
+                this.SetInterpTransform(newObj, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
+                PrevShadowId = newObj.GetComponent<TargetModelBehavior>().SID;
+                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
                 newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
             }
             if (createNext)
             {
                 GameObject newObj = Instantiate(gameObject);
-                newObj.GetComponent<TargetModelBehavior>().PrevId = Id;
+                newObj.GetComponent<TargetModelBehavior>().PrevId = SID;
                 newObj.GetComponent<TargetModelBehavior>().NextId = NextId;
                 newObj.GetComponent<TargetModelBehavior>().MakeYellow();
-                this.SetInterpTransform(newObj, gameObject, IdGenerator.Instance.IdToObj[NextId]);
-                NextShadowId  = newObj.GetComponent<TargetModelBehavior>().Id;
-                IdGenerator.Instance.IdToObj[NextId].GetComponent<TargetModelBehavior>().PrevShadowId = NextShadowId;
+                this.SetInterpTransform(newObj, gameObject, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
+                NextShadowId  = newObj.GetComponent<TargetModelBehavior>().SID;
+                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevShadowId = NextShadowId;
                 newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
             }
         }
@@ -190,8 +199,8 @@ namespace RosSharp.RosBridgeClient
                 {
                     this.MakeShadow(true, true);
                     this.MakeGreen();
-                    IdGenerator.Instance.IdToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = Id;
-                    IdGenerator.Instance.IdToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = Id;
+                    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
+                    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
                 }
                 UpdateNumbering();
                 this.SendPlanRequest();
@@ -201,14 +210,18 @@ namespace RosSharp.RosBridgeClient
 
         public void UpdateNumbering()
         {
-            GameObject curr = IdGenerator.Instance.FirstWaypoint;
+            Debug.Log("In update #");
+            Debug.Log(GID);
+            Debug.Log(IdGenerator.Instance.GIDtoGroup);
+            Debug.Log(IdGenerator.Instance.GIDtoGroup[GID].FirstWaypoint);
+            GameObject curr = IdGenerator.Instance.GIDtoGroup[GID].FirstWaypoint;
             int num = 1;
             while (true)
             {
                 curr.transform.Find("Text").GetComponent<TextMesh>().text = num.ToString();
                 if(curr.GetComponent<TargetModelBehavior>().NextId != "")
                 {
-                    curr = IdGenerator.Instance.IdToObj[curr.GetComponent<TargetModelBehavior>().NextId];
+                    curr = IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[curr.GetComponent<TargetModelBehavior>().NextId];
                     num++;
                 } else
                 {
@@ -235,28 +248,26 @@ namespace RosSharp.RosBridgeClient
             {
                 this.MakeShadow(true, true);
                 this.MakeGreen();
-                IdGenerator.Instance.IdToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = Id;
-                IdGenerator.Instance.IdToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = Id;
+                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
+                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
             } else // moving a green gripper
             {
-                Debug.Log("(0)");
                 if (PrevShadowId != "") // case where we just need to update position
                 {
-                    Debug.Log("(1)");
-                    SetInterpTransform(IdGenerator.Instance.IdToObj[PrevShadowId], IdGenerator.Instance.IdToObj[PrevId], gameObject);
+                    SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevShadowId], 
+                        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
                 } else
                 {
-                    Debug.Log("(2)");
                     if (PrevId != "START")
                     {
-                        Debug.Log("(3)");
                         this.MakeShadow(true, false);
                     }
                 }
                 if (NextShadowId != "") // case where we just need to update position
                 {
-                    Debug.Log("(4)");
-                    SetInterpTransform(IdGenerator.Instance.IdToObj[NextShadowId], gameObject, IdGenerator.Instance.IdToObj[NextId]);
+                    SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextShadowId], 
+                        gameObject,
+                        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
                 }
             }
 
