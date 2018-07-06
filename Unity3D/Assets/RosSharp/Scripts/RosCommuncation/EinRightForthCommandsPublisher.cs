@@ -396,7 +396,7 @@ public class EinRightForthCommandsPublisher : Publisher {
            (which may contain several commands built-up over the previous code blocks) and publishes
            it onto the ROS Network. */
         if (message.data != "") {
-            //Debug.Log(message.data);
+            Debug.Log(message.data);
             rosSocket.Publish(publicationId, message);
         }
     }

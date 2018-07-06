@@ -1,0 +1,9 @@
+v=0
+o=- 0 0 IN IP4 127.0.0.1
+s=No Name
+c=IN IP4 234.5.5.5
+t=0 0
+a=tool:libavformat 57.83.100
+m=audio 1234 RTP/AVP 97
+b=AS:512
+a=rtpmap:97 PCMU/16000/4
