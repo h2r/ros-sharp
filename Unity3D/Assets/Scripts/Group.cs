@@ -101,6 +101,10 @@ public class Group : MonoBehaviour
         while (true)
         {
             wayPointList.Add(curr);
+            if (curr.GetComponent<TargetModelBehavior>().PrevShadowId != "")
+            {
+                wayPointList.Add(SIDToObj[curr.GetComponent<TargetModelBehavior>().PrevShadowId]);
+            }
             string nextId = curr.GetComponent<TargetModelBehavior>().NextId;
             if (nextId != "")
             {
