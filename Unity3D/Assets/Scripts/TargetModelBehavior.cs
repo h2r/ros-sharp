@@ -10,8 +10,6 @@ namespace RosSharp.RosBridgeClient
     public class TargetModelBehavior : MonoBehaviour, INavigationHandler, IInputClickHandler
     {
 
-        public string PlanTopic = "/goal_pose";
-
         public string GID { get; set; }
         public string SID { get; set; }
         public string PrevId { get; set; }
@@ -147,24 +145,25 @@ namespace RosSharp.RosBridgeClient
             if (createPrev)
             {
                 GameObject newObj = Instantiate(gameObject);
-                newObj.GetComponent<TargetModelBehavior>().PrevId = PrevId;
-                newObj.GetComponent<TargetModelBehavior>().NextId = SID;
+                newObj.GetComponent<TargetModelBehavior>().Init(GID, PrevId, SID);
                 newObj.GetComponent<TargetModelBehavior>().MakeYellow();
                 this.SetInterpTransform(newObj, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
                 PrevShadowId = newObj.GetComponent<TargetModelBehavior>().SID;
+                Debug.Log("setting prevshadow id of: " + SID.ToString() + " to " + PrevShadowId);
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
                 newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
+                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
             }
             if (createNext)
             {
                 GameObject newObj = Instantiate(gameObject);
-                newObj.GetComponent<TargetModelBehavior>().PrevId = SID;
-                newObj.GetComponent<TargetModelBehavior>().NextId = NextId;
+                newObj.GetComponent<TargetModelBehavior>().Init(GID, SID, NextId);
                 newObj.GetComponent<TargetModelBehavior>().MakeYellow();
                 this.SetInterpTransform(newObj, gameObject, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
                 NextShadowId  = newObj.GetComponent<TargetModelBehavior>().SID;
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevShadowId = NextShadowId;
                 newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
+                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
             }
         }
 
@@ -246,14 +245,18 @@ namespace RosSharp.RosBridgeClient
             // if you are a yellow gripper, we need to become green, get networked in etc.
             if(IsShadow) // case where someone moved a yellow gripper
             {
+                
                 this.MakeShadow(true, true);
                 this.MakeGreen();
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
             } else // moving a green gripper
             {
+                Debug.Log("dfhjdhfjdhfjdhfjdhfjdhfjdhfjdhf");
+                Debug.Log(PrevShadowId);
                 if (PrevShadowId != "") // case where we just need to update position
                 {
+
                     SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevShadowId], 
                         IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
                 } else
