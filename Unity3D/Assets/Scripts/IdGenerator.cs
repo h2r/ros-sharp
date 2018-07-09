@@ -50,6 +50,7 @@ public class IdGenerator : Singleton<IdGenerator>
         {
             return CreateGID(g);
         }
+        Debug.Log("GID added: " + id);
         GIDtoGroup.Add(id, g);
         return id;
     }

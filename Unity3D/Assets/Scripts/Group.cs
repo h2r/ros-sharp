@@ -170,7 +170,6 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
             targetWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow = sourceWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow;
         }
 
-        SIDToObj = new Dictionary<string, GameObject>();
         // OutOfBounds = new Dictionary<string, bool>();
         for(int i = 0; i < sourceWaypoints.Count; i++)
         {
@@ -186,7 +185,7 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
                 GameObject.Find("dummy").GetComponent<Group>().LastSmartGripper =
                     GameObject.Find("dummy").GetComponent<Group>().SIDToObj[targetWaypoints[i].GetComponent<TargetModelBehavior>().SID];
             }
-        } 
+        }
 
         //GameObject.Find("dummy").GetComponent<Group>().SIDToObj = SIDToObj;
         //GameObject.Find("dummy").GetComponent<Group>().OutOfBounds = OutOfBounds;
