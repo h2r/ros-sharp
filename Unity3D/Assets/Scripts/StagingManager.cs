@@ -9,7 +9,7 @@ public class StagingManager : MonoBehaviour {
     public MoveItGoalPublisher MoveItGoalPublisher;
     public DisplayTrajectoryReceiver DisplayTrajectoryReceiver;
 
-    public Button GroupButton, GripperButton;
+    public Button GroupButton, GripperButton, VisualButton, ExecButton;
     public Button FirstPoseButton;
     public GameObject FirstGripperEver;
 
@@ -20,24 +20,31 @@ public class StagingManager : MonoBehaviour {
 
     void Start()
     {
-        Button visualsButton = GroupButton.GetComponent<Button>();
-        Button execButton = GripperButton.GetComponent<Button>();
-        visualsButton.onClick.AddListener(NewGroupClicked);
-        execButton.onClick.AddListener(NewGripperClicked);
+        Button groupButton = GroupButton.GetComponent<Button>();
+        Button gripperButton = GripperButton.GetComponent<Button>();
+        groupButton.onClick.AddListener(NewGroupClicked);
+        gripperButton.onClick.AddListener(NewGripperClicked);
+        Button visualsButton = VisualButton.GetComponent<Button>();
+        Button execButton = ExecButton.GetComponent<Button>();
+        visualsButton.onClick.AddListener(VisualClicked);
+        execButton.onClick.AddListener(ExecClicked);
 
         this.GroupInit(true);
     }
 
     void NewGroupClicked()
     {
-        Debug.Log("hfjdhfjdhf");
         if (GroupButtonList.Count < 10)
         {
-            Debug.Log("here");
             currentGroupButton.GetComponent<Group>().HideGroup();
             this.GroupInit(false);
         }
         
+    }
+
+    public Button CopyButtonGroup(Button b)
+    {
+        return null;
     }
 
     private void GroupInit(bool firstGroup)
@@ -58,7 +65,6 @@ public class StagingManager : MonoBehaviour {
 
             groupFirstWaypoint = Instantiate(FirstGripperEver);
             groupFirstWaypoint.SetActive(true);
-            Debug.Log(groupFirstWaypoint.transform.position);
         }
         string gid = currentGroupButton.GetComponent<Group>().GID;
         groupFirstWaypoint.GetComponent<TargetModelBehavior>().Init(gid, "START", null);
@@ -79,8 +85,22 @@ public class StagingManager : MonoBehaviour {
     void NewGripperClicked()
     {
         // make a new target model
+        if (currentGroupButton == null)
+        {
+            return;
+        }
         string gid = currentGroupButton.GetComponent<Group>().GID;
         IdGenerator.Instance.GIDtoGroup[gid].AddGripper();
+    }
+
+    void VisualClicked()
+    {
+        Debug.Log("visual");
+    }
+
+    void ExecClicked()
+    {
+
     }
 
     public void ChangeCurrentGroup(Button b)

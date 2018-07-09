@@ -28,7 +28,6 @@ namespace RosSharp.RosBridgeClient
         // Use this for initialization
         void Awake()
         {
-            Debug.Log("hi hello");
             SID = "";
             PrevId = "";
             NextId = "";
@@ -149,7 +148,6 @@ namespace RosSharp.RosBridgeClient
                 newObj.GetComponent<TargetModelBehavior>().MakeYellow();
                 this.SetInterpTransform(newObj, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
                 PrevShadowId = newObj.GetComponent<TargetModelBehavior>().SID;
-                Debug.Log("setting prevshadow id of: " + SID.ToString() + " to " + PrevShadowId);
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
                 newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
@@ -178,9 +176,7 @@ namespace RosSharp.RosBridgeClient
             if (!eventData.used)
             {
                 eventData.Use();
-                Debug.Log("tap");
                 Vector3 offset = new Vector3(0.02f, 0.0f, 0.0f);
-                Debug.Log(RightOpen);
                 if (RightOpen == "0")
                 {
                     RightOpen = "1";
@@ -209,10 +205,6 @@ namespace RosSharp.RosBridgeClient
 
         public void UpdateNumbering()
         {
-            Debug.Log("In update #");
-            Debug.Log(GID);
-            Debug.Log(IdGenerator.Instance.GIDtoGroup);
-            Debug.Log(IdGenerator.Instance.GIDtoGroup[GID].FirstWaypoint);
             GameObject curr = IdGenerator.Instance.GIDtoGroup[GID].FirstWaypoint;
             int num = 1;
             while (true)
@@ -232,12 +224,10 @@ namespace RosSharp.RosBridgeClient
 
         void INavigationHandler.OnNavigationStarted(NavigationEventData eventData)
         {
-            //Debug.Log("ONs");
         }
 
         void INavigationHandler.OnNavigationUpdated(NavigationEventData eventData)
         {
-            //Debug.Log("ONup");
         }
 
         void INavigationHandler.OnNavigationCompleted(NavigationEventData eventData)
@@ -252,8 +242,6 @@ namespace RosSharp.RosBridgeClient
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
             } else // moving a green gripper
             {
-                Debug.Log("dfhjdhfjdhfjdhfjdhfjdhfjdhfjdhf");
-                Debug.Log(PrevShadowId);
                 if (PrevShadowId != "") // case where we just need to update position
                 {
 
