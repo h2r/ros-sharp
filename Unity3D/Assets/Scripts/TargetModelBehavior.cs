@@ -144,17 +144,8 @@ namespace RosSharp.RosBridgeClient
             if (createPrev)
             {
                 GameObject newObj = Instantiate(gameObject);
-                Debug.Log(GID);
-                Debug.Log(PrevId);
-                Debug.Log(SID);
                 newObj.GetComponent<TargetModelBehavior>().Init(GID, PrevId, SID);
                 newObj.GetComponent<TargetModelBehavior>().MakeYellow();
-                Debug.Log(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Count);
-                foreach (string kvp in IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Keys)
-                {
-                    //textBox3.Text += ("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
-                    Debug.Log(kvp);
-                }
                 this.SetInterpTransform(newObj, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
                 PrevShadowId = newObj.GetComponent<TargetModelBehavior>().SID;
                 IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;

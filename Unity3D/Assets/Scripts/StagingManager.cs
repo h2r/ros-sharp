@@ -50,14 +50,16 @@ public class StagingManager : MonoBehaviour {
     private void GroupInit(bool firstGroup)
     {
         GameObject groupFirstWaypoint;
-        
+        string slotNum;
         if (firstGroup) {
+            slotNum = "0";
             currentGroupButton = FirstPoseButton;
             groupFirstWaypoint = FirstGripperEver;
         } else
         {
             currentGroupButton = Instantiate(FirstPoseButton);
-            currentGroupButton.transform.parent = GameObject.Find("Slot" + GroupButtonList.Count.ToString()).transform;
+            slotNum = GroupButtonList.Count.ToString();
+            currentGroupButton.transform.parent = GameObject.Find("Slot" + slotNum).transform;
             currentGroupButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
             currentGroupButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             currentGroupButton.GetComponentInChildren<Text>().text = "Group" + GroupButtonList.Count.ToString();
@@ -66,6 +68,7 @@ public class StagingManager : MonoBehaviour {
             groupFirstWaypoint = Instantiate(FirstGripperEver);
             groupFirstWaypoint.SetActive(true);
         }
+        currentGroupButton.GetComponent<Group>().SlotNum = slotNum;
         string gid = currentGroupButton.GetComponent<Group>().GID;
         groupFirstWaypoint.GetComponent<TargetModelBehavior>().Init(gid, "START", null);
 

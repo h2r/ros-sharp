@@ -19,6 +19,7 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
     public Button GroupButton;
     public bool InTrainingQueue;
     public Button CopyButton;
+    public string SlotNum;
 
     // Use this for initialization
     void Awake () {
@@ -29,6 +30,7 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         NumPoints = 1;
         InTrainingQueue = true;
         CopyButton = null;
+        SlotNum = "";
     }
 
     public void SetOutOfBounds(string id)
@@ -72,7 +74,6 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         var colors = GroupButton.colors;
         colors.normalColor = new Color(0.94f, 0.65f, 0.93f);
         GroupButton.colors = colors;
-        Debug.Log("Hide this group");
         List<GameObject> wayPointList = this.TraverseGroup();
         foreach (GameObject p in wayPointList)
         {
@@ -83,7 +84,6 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
 
     public void ShowGroup()
     {
-        Debug.Log("show this group");
         var colors = GroupButton.colors;
         colors.normalColor = new Color(0.99f, 0.96f, 0.66f);
         GroupButton.colors = colors;
@@ -101,8 +101,6 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         while (true)
         {
             wayPointList.Add(curr);
-            Debug.Log(curr);
-            Debug.Log(curr.GetComponent<TargetModelBehavior>().PrevShadowId);
             if (curr.GetComponent<TargetModelBehavior>().PrevShadowId != "")
             {
                 wayPointList.Add(SIDToObj[curr.GetComponent<TargetModelBehavior>().PrevShadowId]);
@@ -129,7 +127,6 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         {
             GameObject tp = Instantiate(sourceWaypoints[i]);
             tp.GetComponent<TargetModelBehavior>().Init(gid, null, null);
-            Debug.Log("Look at me : " + sourceWaypoints[i].GetComponent<TargetModelBehavior>().SID);
             ListIndex.Add(sourceWaypoints[i].GetComponent<TargetModelBehavior>().SID, i);
             targetWaypoints.Add(tp);
         }
@@ -186,20 +183,24 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
                     GameObject.Find("dummy").GetComponent<Group>().SIDToObj[targetWaypoints[i].GetComponent<TargetModelBehavior>().SID];
             }
         }
-
-        //GameObject.Find("dummy").GetComponent<Group>().SIDToObj = SIDToObj;
-        //GameObject.Find("dummy").GetComponent<Group>().OutOfBounds = OutOfBounds;
+        GameObject.Find("dummy").GetComponent<Group>().SlotNum = SlotNum;
         GameObject.Find("dummy").GetComponent<Group>().NumPoints = NumPoints;
         GameObject.Find("dummy").GetComponent<Group>().HideGroup();
+        GameObject.Find("dummy").GetComponent<Group>().InTrainingQueue = true;
         GameObject.Find("dummy").name = "Button";
     }
 
     public void OnNavigationStarted(NavigationEventData eventData)
     {
+        Debug.Log("I am on the training q: " + InTrainingQueue);
+        Debug.Log("!event.used: " + !eventData.used);
         if (!eventData.used)
         {
-            Debug.Log("MY GID IS: " + GID);
-            Debug.Log("called");
+            if(StagingManager.currentGroupButton.GetComponent<Group>().GID != GID)
+            {
+                Debug.Log("We in here fam");
+                StagingManager.ChangeCurrentGroup(GroupButton);
+            }
             if (InTrainingQueue)
             {
                 CopyButton = Instantiate(gameObject.GetComponent<Button>());
@@ -207,10 +208,10 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
                 var colors = GroupButton.colors;
                 colors.normalColor = new Color(0.94f, 0.65f, 0.93f);
                 CopyButton.colors = colors;
-                CopyButton.transform.parent = GameObject.Find("Slot" + (StagingManager.GroupButtonList.Count - 1).ToString()).transform;
+                CopyButton.transform.parent = GameObject.Find("Slot" + SlotNum).transform;
                 CopyButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
                 CopyButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                CopyButton.GetComponentInChildren<Text>().text = "Group" + (StagingManager.GroupButtonList.Count - 1).ToString();
+                CopyButton.GetComponentInChildren<Text>().text = "Group" + SlotNum;
             }
             eventData.Use();
         }
@@ -220,34 +221,31 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
 
     public void OnNavigationCompleted(NavigationEventData eventData)
     {
-        Debug.Log("I am here");
-        Debug.Log(eventData.used);
         if (!eventData.used)
         {
-            Debug.Log("MY GID IS: " + GID);
             if (InTrainingQueue)
             {
                 GameObject argMin = null;
                 float min = Single.PositiveInfinity;
+                string index = SlotNum;
                 for (int i = 10; i < 20; i++)
                 {
-                    float distToSlot = Vector3.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
+                    float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
                     // Debug.Log(distToSlot);
                     if (distToSlot < 0.6f && distToSlot < min)
                     {
                         min = distToSlot;
                         argMin = GameObject.Find("Slot" + i.ToString());
+                        index = i.ToString();
                     }
                 }
-                if (argMin != null)
+                if (argMin != null && argMin.transform.childCount == 0)
                 {
-                    Debug.Log("jfkdjfkdjfkd");
-                    Debug.Log(min);
                     InTrainingQueue = false;
                     gameObject.transform.parent = argMin.transform;
                     gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
                     gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    // TODO: make the copied stuff real and bonified
+                    SlotNum = index;
                     this.InitCopy(CopyButton.GetComponent<Group>().GID);
                     CopyButton = null;
                 }
@@ -264,26 +262,25 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
                 }
             } else // case where we are on the run queue
             {
-                Debug.Log("jdhfjkdshfjkdshfjkdshfjkdshfkjdshfkjdshf");
                 GameObject argMin = null;
                 float min = Single.PositiveInfinity;
+                string index = SlotNum;
                 for (int i = 10; i < 20; i++)
                 {
-                    float distToSlot = Vector3.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
-                    Debug.Log(distToSlot);
-
+                    float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
                     if (distToSlot < 0.6f && distToSlot < min)
                     {
                         min = distToSlot;
                         argMin = GameObject.Find("Slot" + i.ToString());
+                        index = i.ToString();
                     }
                 }
-                Debug.Log(argMin);
                 if (argMin != null && argMin.transform.childCount == 0)
                 {
                     gameObject.transform.parent = argMin.transform;
                     gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
                     gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    SlotNum = index;
                 }
                 else
                 {
