@@ -5,12 +5,12 @@
 # Write a line equal to 'overwrite-all' (without quotes) to overwrite everything (preserved accross builds)
 # Write a line equal to 'keep-all' (without quotes) to keep files regardless their modification (preserved accross builds)
 # Default behavior is to never overwrite files
-Unity3D.sln: 1DA0A23A0878C551CCBA2D78ED74AA1E
+Unity3D.sln: D4D4B70BA1D9A806A4EE5A7B12DA6D68
 GeneratedProjects\UWP\Assembly-CSharp\project.json: 1D02BC64BAC0D041019673A1C4C51737
 Unity3D\App.cs: 39874F92451B8BFBB8758340A2963801
 Unity3D\Package.appxmanifest: 22606BAF41914F49F0E6D6C8AE324A6B
 Unity3D\project.json: 1D02BC64BAC0D041019673A1C4C51737
-Unity3D\Unity3D.csproj: 8DAE70C227AD5F4799999591CA68D41B
+Unity3D\Unity3D.csproj: 79EADB8ADBFD64676E30CF200C01A3D6
 Unity3D\Unity3D.csproj.user: BEFB8AC4886C4CFDD3C68445D6F19B04
 Unity3D\Assets\SplashScreen.scale-200.png: A85C1D7624B6902CF8CEBD6F0200A826
 Unity3D\Assets\Square150x150Logo.scale-200.png: E02834B4A5DFB97FF8E212C1CACBB084

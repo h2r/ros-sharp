@@ -145,6 +145,7 @@ namespace RosSharp.RosBridgeClient {
 
 
             } while (loop);
+            DestroyTrail();
         }
 
         void AddTrailPoint(int point_index) {

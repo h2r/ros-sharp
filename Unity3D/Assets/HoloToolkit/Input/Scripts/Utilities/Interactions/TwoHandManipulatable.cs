@@ -425,7 +425,14 @@ namespace HoloToolkit.Unity.InputModule.Utilities.Interactions
         private void OnManipulationStarted()
         {
             InputManager.Instance.PushModalInputHandler(gameObject);
-
+            if(gameObject.name.StartsWith("Button"))
+            {
+                gameObject.GetComponent<Group>().ManipulationStarted();
+            }
+            if (gameObject.name.StartsWith("Right"))
+            {
+                GameObject.Find("baxter").GetComponent<TwoHandManipulatable>().enabled = false;
+            }
             //Show Bounding Box visual on manipulation interaction
             ShowBoundingBox = true;
         }
@@ -433,7 +440,10 @@ namespace HoloToolkit.Unity.InputModule.Utilities.Interactions
         private void OnManipulationEnded()
         {
             InputManager.Instance.PopModalInputHandler();
-
+            if (gameObject.name.StartsWith("Button"))
+            {
+                gameObject.GetComponent<Group>().ManipulationEnded();
+            }
             //Hide Bounding Box visual on release
             ShowBoundingBox = false;
         }

@@ -42,11 +42,6 @@ public class StagingManager : MonoBehaviour {
         
     }
 
-    public Button CopyButtonGroup(Button b)
-    {
-        return null;
-    }
-
     private void GroupInit(bool firstGroup)
     {
         GameObject groupFirstWaypoint;
@@ -58,6 +53,7 @@ public class StagingManager : MonoBehaviour {
         } else
         {
             currentGroupButton = Instantiate(FirstPoseButton);
+            currentGroupButton.name = "Button";
             slotNum = GroupButtonList.Count.ToString();
             currentGroupButton.transform.parent = GameObject.Find("Slot" + slotNum).transform;
             currentGroupButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
@@ -103,7 +99,23 @@ public class StagingManager : MonoBehaviour {
 
     void ExecClicked()
     {
+        Debug.Log("Move");
+        MoveItGoalPublisher.PublishMove(this.GetExecGroupOrder()); // move the arm
+        DisplayTrajectoryReceiver.loop = false; // stop the visualization
+    }
 
+    private string GetExecGroupOrder()
+    {
+        string order = "";
+        for(int i = 10; i < 20; i++)
+        {
+            if (GameObject.Find("Slot" + i.ToString()).transform.childCount == 1)
+            {
+                order = order + " " + GameObject.Find("Slot" + i.ToString()).transform.GetChild(0).GetComponent<Group>().GID; 
+            }
+        }
+        Debug.Log(order);
+        return order;
     }
 
     public void ChangeCurrentGroup(Button b)

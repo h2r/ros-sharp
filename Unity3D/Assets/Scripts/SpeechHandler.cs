@@ -46,9 +46,9 @@ public class SpeechHandler : MonoBehaviour, ISpeechHandler {
 
     // Tells MoveIt to execute the plan
     public void Move() {
-        Debug.Log("Move");
-        MoveItGoalPublisher.PublishMove(); // move the arm
-        DisplayTrajectoryReceiver.loop = false; // stop the visualization
+        //Debug.Log("Move");
+        //MoveItGoalPublisher.PublishMove(); // move the arm
+        //DisplayTrajectoryReceiver.loop = false; // stop the visualization
     }
 
     public void Begin()

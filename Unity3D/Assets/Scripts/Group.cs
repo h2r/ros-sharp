@@ -7,7 +7,7 @@ using RosSharp.RosBridgeClient;
 using HoloToolkit.Unity.InputModule;
 using System;
 
-public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
+public class Group : MonoBehaviour, IInputClickHandler
 {
     public string GID; //group id
     public Dictionary<string, GameObject> SIDToObj { get; set; }
@@ -20,6 +20,7 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
     public bool InTrainingQueue;
     public Button CopyButton;
     public string SlotNum;
+    private string prevSlotNum;
 
     // Use this for initialization
     void Awake () {
@@ -31,6 +32,7 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         InTrainingQueue = true;
         CopyButton = null;
         SlotNum = "";
+        prevSlotNum = "";
     }
 
     public void SetOutOfBounds(string id)
@@ -66,7 +68,7 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
 
         // change the last smart gripper
         LastSmartGripper = newObj;
-        LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest();
+        LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest("1");
     }
 
     public void HideGroup()
@@ -101,10 +103,10 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         while (true)
         {
             wayPointList.Add(curr);
-            if (curr.GetComponent<TargetModelBehavior>().PrevShadowId != "")
-            {
-                wayPointList.Add(SIDToObj[curr.GetComponent<TargetModelBehavior>().PrevShadowId]);
-            }
+            //if (curr.GetComponent<TargetModelBehavior>().PrevShadowId != "")
+            //{
+            //    wayPointList.Add(SIDToObj[curr.GetComponent<TargetModelBehavior>().PrevShadowId]);
+            //}
             string nextId = curr.GetComponent<TargetModelBehavior>().NextId;
             if (nextId != "")
             {
@@ -150,21 +152,21 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
                     targetWaypoints[ListIndex[sourceWaypoints[i].GetComponent<TargetModelBehavior>().NextId]]
                     .GetComponent<TargetModelBehavior>().SID;
             }
-            if (sourceWaypoints[i].GetComponent<TargetModelBehavior>().PrevShadowId != "")
-            {
-                targetWaypoints[i].GetComponent<TargetModelBehavior>().PrevShadowId =
-                    targetWaypoints[ListIndex[sourceWaypoints[i].GetComponent<TargetModelBehavior>().PrevShadowId]]
-                    .GetComponent<TargetModelBehavior>().SID;
-            }
-            if (sourceWaypoints[i].GetComponent<TargetModelBehavior>().NextShadowId != "")
-            {
-                targetWaypoints[i].GetComponent<TargetModelBehavior>().NextShadowId =
-                    targetWaypoints[ListIndex[sourceWaypoints[i].GetComponent<TargetModelBehavior>().NextShadowId]]
-                    .GetComponent<TargetModelBehavior>().SID;
-            } 
+            //if (sourceWaypoints[i].GetComponent<TargetModelBehavior>().PrevShadowId != "")
+            //{
+            //    targetWaypoints[i].GetComponent<TargetModelBehavior>().PrevShadowId =
+            //        targetWaypoints[ListIndex[sourceWaypoints[i].GetComponent<TargetModelBehavior>().PrevShadowId]]
+            //        .GetComponent<TargetModelBehavior>().SID;
+            //}
+            //if (sourceWaypoints[i].GetComponent<TargetModelBehavior>().NextShadowId != "")
+            //{
+            //    targetWaypoints[i].GetComponent<TargetModelBehavior>().NextShadowId =
+            //        targetWaypoints[ListIndex[sourceWaypoints[i].GetComponent<TargetModelBehavior>().NextShadowId]]
+            //        .GetComponent<TargetModelBehavior>().SID;
+            //} 
             targetWaypoints[i].GetComponent<TargetModelBehavior>().RightOpen = sourceWaypoints[i].GetComponent<TargetModelBehavior>().RightOpen;
             targetWaypoints[i].GetComponent<TargetModelBehavior>().LeftOpen = sourceWaypoints[i].GetComponent<TargetModelBehavior>().LeftOpen;
-            targetWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow = sourceWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow;
+            //targetWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow = sourceWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow;
         }
 
         // OutOfBounds = new Dictionary<string, bool>();
@@ -172,6 +174,9 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
         {
             GameObject.Find("dummy").GetComponent<Group>().SIDToObj
                 .Add(targetWaypoints[i].GetComponent<TargetModelBehavior>().SID, targetWaypoints[i]);
+            //if (!targetWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow) {
+            targetWaypoints[i].GetComponent<TargetModelBehavior>().SendPlanRequest("0");
+            //}
             if (targetWaypoints[i].GetComponent<TargetModelBehavior>().PrevId == "START")
             {
                 GameObject.Find("dummy").GetComponent<Group>().FirstWaypoint =
@@ -183,117 +188,104 @@ public class Group : MonoBehaviour, INavigationHandler, IInputClickHandler
                     GameObject.Find("dummy").GetComponent<Group>().SIDToObj[targetWaypoints[i].GetComponent<TargetModelBehavior>().SID];
             }
         }
-        GameObject.Find("dummy").GetComponent<Group>().SlotNum = SlotNum;
+        GameObject.Find("dummy").transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        GameObject.Find("dummy").GetComponent<Group>().SlotNum = prevSlotNum;
         GameObject.Find("dummy").GetComponent<Group>().NumPoints = NumPoints;
         GameObject.Find("dummy").GetComponent<Group>().HideGroup();
         GameObject.Find("dummy").GetComponent<Group>().InTrainingQueue = true;
         GameObject.Find("dummy").name = "Button";
     }
 
-    public void OnNavigationStarted(NavigationEventData eventData)
+    public void ManipulationStarted()
     {
-        Debug.Log("I am on the training q: " + InTrainingQueue);
-        Debug.Log("!event.used: " + !eventData.used);
-        if (!eventData.used)
+        if(StagingManager.currentGroupButton.GetComponent<Group>().GID != GID)
         {
-            if(StagingManager.currentGroupButton.GetComponent<Group>().GID != GID)
-            {
-                Debug.Log("We in here fam");
-                StagingManager.ChangeCurrentGroup(GroupButton);
-            }
-            if (InTrainingQueue)
-            {
-                CopyButton = Instantiate(gameObject.GetComponent<Button>());
-                CopyButton.name = "dummy";
-                var colors = GroupButton.colors;
-                colors.normalColor = new Color(0.94f, 0.65f, 0.93f);
-                CopyButton.colors = colors;
-                CopyButton.transform.parent = GameObject.Find("Slot" + SlotNum).transform;
-                CopyButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                CopyButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                CopyButton.GetComponentInChildren<Text>().text = "Group" + SlotNum;
-            }
-            eventData.Use();
+            Debug.Log("We in here fam");
+            StagingManager.ChangeCurrentGroup(GroupButton);
         }
+        if (InTrainingQueue)
+        {
+            CopyButton = Instantiate(gameObject.GetComponent<Button>());
+            CopyButton.name = "dummy";
+            var colors = GroupButton.colors;
+            colors.normalColor = new Color(0.94f, 0.65f, 0.93f);
+            CopyButton.colors = colors;
+            prevSlotNum = SlotNum;
+            CopyButton.transform.parent = GameObject.Find("Slot" + SlotNum).transform;
+            CopyButton.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+            CopyButton.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            CopyButton.GetComponentInChildren<Text>().text = "Group" + SlotNum;
+        }       
     }
 
-    public void OnNavigationUpdated(NavigationEventData eventData){}
-
-    public void OnNavigationCompleted(NavigationEventData eventData)
+    public void ManipulationEnded()
     {
-        if (!eventData.used)
-        {
-            if (InTrainingQueue)
-            {
-                GameObject argMin = null;
-                float min = Single.PositiveInfinity;
-                string index = SlotNum;
-                for (int i = 10; i < 20; i++)
-                {
-                    float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
-                    // Debug.Log(distToSlot);
-                    if (distToSlot < 0.6f && distToSlot < min)
-                    {
-                        min = distToSlot;
-                        argMin = GameObject.Find("Slot" + i.ToString());
-                        index = i.ToString();
-                    }
-                }
-                if (argMin != null && argMin.transform.childCount == 0)
-                {
-                    InTrainingQueue = false;
-                    gameObject.transform.parent = argMin.transform;
-                    gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                    gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    SlotNum = index;
-                    this.InitCopy(CopyButton.GetComponent<Group>().GID);
-                    CopyButton = null;
-                }
-                else
-                {
-                    if (CopyButton != null)
-                    {
-                        IdGenerator.Instance.GIDtoGroup.Remove(CopyButton.GetComponent<Group>().GID);
-                        Destroy(GameObject.Find("dummy"));
-                        CopyButton = null;
-                        gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                    }
 
-                }
-            } else // case where we are on the run queue
+        if (InTrainingQueue)
+        {
+            GameObject argMin = null;
+            float min = Single.PositiveInfinity;
+            string index = SlotNum;
+            for (int i = 10; i < 20; i++)
             {
-                GameObject argMin = null;
-                float min = Single.PositiveInfinity;
-                string index = SlotNum;
-                for (int i = 10; i < 20; i++)
+                float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
+                // Debug.Log(distToSlot);
+                if (distToSlot < 0.6f && distToSlot < min)
                 {
-                    float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
-                    if (distToSlot < 0.6f && distToSlot < min)
-                    {
-                        min = distToSlot;
-                        argMin = GameObject.Find("Slot" + i.ToString());
-                        index = i.ToString();
-                    }
-                }
-                if (argMin != null && argMin.transform.childCount == 0)
-                {
-                    gameObject.transform.parent = argMin.transform;
-                    gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                    gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    SlotNum = index;
-                }
-                else
-                {
-                    gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                    min = distToSlot;
+                    argMin = GameObject.Find("Slot" + i.ToString());
+                    index = i.ToString();
                 }
             }
-            eventData.Use();
-        }  
-    }
+            if (argMin != null && argMin.transform.childCount == 0)
+            {
+                InTrainingQueue = false;
+                gameObject.transform.parent = argMin.transform;
+                gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                SlotNum = index;
+                this.InitCopy(CopyButton.GetComponent<Group>().GID);
+                CopyButton = null;
+            }
+            else
+            {
+                if (CopyButton != null)
+                {
+                    IdGenerator.Instance.GIDtoGroup.Remove(CopyButton.GetComponent<Group>().GID);
+                    Destroy(GameObject.Find("dummy"));
+                    CopyButton = null;
+                    gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                }
 
-    public void OnNavigationCanceled(NavigationEventData eventData)
-    {
-        this.OnNavigationCompleted(eventData);
+            }
+        } else // case where we are on the run queue
+        {
+            GameObject argMin = null;
+            float min = Single.PositiveInfinity;
+            string index = SlotNum;
+            for (int i = 10; i < 20; i++)
+            {
+                float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
+                if (distToSlot < 0.6f && distToSlot < min)
+                {
+                    min = distToSlot;
+                    argMin = GameObject.Find("Slot" + i.ToString());
+                    index = i.ToString();
+                }
+            }
+            if (argMin != null && argMin.transform.childCount == 0)
+            {
+                gameObject.transform.parent = argMin.transform;
+                gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                SlotNum = index;
+            }
+            else
+            {
+                gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+            }
+        }
+            
     }
 
     public void OnInputClicked(InputClickedEventData eventData)

@@ -34,9 +34,11 @@ namespace RosSharp.RosBridgeClient {
             rosSocket.Publish(planPublicationId, moveitTarget);
         }
 
-        public void PublishMove() {
-            Debug.Log("Sending execute message"); 
-            rosSocket.Publish(executePublicationId, new StandardString());
+        public void PublishMove(string groups) {
+            Debug.Log("Sending execute message");
+            StandardString groupData = new StandardString();
+            groupData.data = groups;
+            rosSocket.Publish(executePublicationId, groupData);
         }
 
         void PlanHandler(object args) {

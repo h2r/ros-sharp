@@ -14,35 +14,37 @@ namespace RosSharp.RosBridgeClient
         public string SID { get; set; }
         public string PrevId { get; set; }
         public string NextId { get; set; }
-        public string PrevShadowId { get; set; }
-        public string NextShadowId { get; set; }
+        //public string PrevShadowId { get; set; }
+        //public string NextShadowId { get; set; }
         public string RightOpen { get; set; }
         public string LeftOpen { get; set; }
-        public bool IsShadow { get; set; }
+        //public bool IsShadow { get; set; }
 
         public MoveItGoalPublisher MoveItGoalPublisher;
 
         public GameObject UrdfModel; // the root gameobject of your robot
-        public GameObject TargetModel;
+        public GameObject TargetModel; // point on the end effector that is the point to move to
 
-        // Use this for initialization
+        // proto initialization, the caller can call Init to truely initialize
         void Awake()
         {
             SID = "";
             PrevId = "";
             NextId = "";
-            PrevShadowId = "";
-            NextShadowId = "";
+            //PrevShadowId = "";
+            //NextShadowId = "";
             RightOpen = "0";
             LeftOpen = "0";
-            IsShadow = false;
+            //IsShadow = false;
             GID = "";
         }
 
+        // Function called in StagingManager to initialize a gripper
         public void Init(string gid, string prevId, string nextId)
         {
-            SID = IdGenerator.Instance.CreateSID(gid);
-            GID = gid;
+            SID = IdGenerator.Instance.CreateSID(gid);// creates SID and adds it to a dict
+            GID = gid; // sets the GID of the gripper
+            // sets fields if they are passed
             if (prevId != null)
             {
                 PrevId = prevId;
@@ -53,6 +55,7 @@ namespace RosSharp.RosBridgeClient
             }
         }
 
+        // function called when gripper out of bounds
         public void MakeRed()
         {
             Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
@@ -62,9 +65,10 @@ namespace RosSharp.RosBridgeClient
             }
         }
 
+        // function called when gripper in bounds
         public void MakeGreen()
         {
-            IsShadow = false;
+            //IsShadow = false;
             Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
             foreach (Renderer r in rs)
             {
@@ -72,17 +76,18 @@ namespace RosSharp.RosBridgeClient
             }
         }
 
-        public void MakeYellow()
-        {
-            IsShadow = true;
-            Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
-            foreach (Renderer r in rs)
-            {
-                r.material.color = new Color(0.93f, 0.95f, 0.56f);
-            }
-        }
+        // function called when making an intermediate waypoint
+        //public void MakeYellow()
+        //{
+        //    IsShadow = true;
+        //    Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
+        //    foreach (Renderer r in rs)
+        //    {
+        //        r.material.color = new Color(0.93f, 0.95f, 0.56f);
+        //    }
+        //}
 
-
+        // grabs the position of the TargetModel for use in sending requests to the back end
         GeometryPose UpdateMessageContents(GameObject TargetModel)
         {
             GeometryPose TargetPose = new GeometryPose();
@@ -97,11 +102,6 @@ namespace RosSharp.RosBridgeClient
             };
             TargetPose.orientation = GetGeometryQuaternion(rotation.Unity2Ros());
             return TargetPose;
-        }
-
-        void PlanHandler(object args)
-        {
-            return;
         }
 
         private GeometryPoint GetGeometryPoint(Vector3 position)
@@ -126,7 +126,7 @@ namespace RosSharp.RosBridgeClient
             return geometryQuaternion;
         }
 
-        public void SendPlanRequest()
+        public void SendPlanRequest(string visualize)
         {
             MoveitTarget moveitTarget = new MoveitTarget();
             moveitTarget.right_arm = UpdateMessageContents(TargetModel);
@@ -136,34 +136,35 @@ namespace RosSharp.RosBridgeClient
             moveitTarget.next_id.data = NextId;
             moveitTarget.right_open.data = RightOpen;
             moveitTarget.left_open.data = LeftOpen;
+            moveitTarget.visualize.data = visualize;
             MoveItGoalPublisher.PublishPlan(moveitTarget);
         }
 
-        public void MakeShadow(bool createPrev, bool createNext)
-        {
-            if (createPrev)
-            {
-                GameObject newObj = Instantiate(gameObject);
-                newObj.GetComponent<TargetModelBehavior>().Init(GID, PrevId, SID);
-                newObj.GetComponent<TargetModelBehavior>().MakeYellow();
-                this.SetInterpTransform(newObj, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
-                PrevShadowId = newObj.GetComponent<TargetModelBehavior>().SID;
-                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
-                newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
-                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
-            }
-            if (createNext)
-            {
-                GameObject newObj = Instantiate(gameObject);
-                newObj.GetComponent<TargetModelBehavior>().Init(GID, SID, NextId);
-                newObj.GetComponent<TargetModelBehavior>().MakeYellow();
-                this.SetInterpTransform(newObj, gameObject, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
-                NextShadowId  = newObj.GetComponent<TargetModelBehavior>().SID;
-                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevShadowId = NextShadowId;
-                newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
-                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
-            }
-        }
+        //public void MakeShadow(bool createPrev, bool createNext)
+        //{
+        //    if (createPrev)
+        //    {
+        //        GameObject newObj = Instantiate(gameObject);
+        //        newObj.GetComponent<TargetModelBehavior>().Init(GID, PrevId, SID);
+        //        newObj.GetComponent<TargetModelBehavior>().MakeYellow();
+        //        this.SetInterpTransform(newObj, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
+        //        PrevShadowId = newObj.GetComponent<TargetModelBehavior>().SID;
+        //        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextShadowId = PrevShadowId;
+        //        newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
+        //        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
+        //    }
+        //    if (createNext)
+        //    {
+        //        GameObject newObj = Instantiate(gameObject);
+        //        newObj.GetComponent<TargetModelBehavior>().Init(GID, SID, NextId);
+        //        newObj.GetComponent<TargetModelBehavior>().MakeYellow();
+        //        this.SetInterpTransform(newObj, gameObject, IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
+        //        NextShadowId  = newObj.GetComponent<TargetModelBehavior>().SID;
+        //        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevShadowId = NextShadowId;
+        //        newObj.transform.Find("Text").GetComponent<TextMesh>().text = "";
+        //        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj.Add(newObj.GetComponent<TargetModelBehavior>().SID, newObj);
+        //    }
+        //}
 
         private void SetInterpTransform(GameObject obj, GameObject from, GameObject to)
         {
@@ -190,15 +191,15 @@ namespace RosSharp.RosBridgeClient
                     gameObject.transform.GetChild(2).transform.localPosition -= offset;
                 }
 
-                if (IsShadow) // case where someone moved a yellow gripper
-                {
-                    this.MakeShadow(true, true);
-                    this.MakeGreen();
-                    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
-                    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
-                }
+                //if (IsShadow) // case where someone moved a yellow gripper
+                //{
+                //    this.MakeShadow(true, true);
+                //    this.MakeGreen();
+                //    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
+                //    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
+                //}
                 UpdateNumbering();
-                this.SendPlanRequest();
+                this.SendPlanRequest("1");
             }
             
         }
@@ -233,43 +234,43 @@ namespace RosSharp.RosBridgeClient
         void INavigationHandler.OnNavigationCompleted(NavigationEventData eventData)
         {
             // if you are a yellow gripper, we need to become green, get networked in etc.
-            if(IsShadow) // case where someone moved a yellow gripper
-            {
+            //if(IsShadow) // case where someone moved a yellow gripper
+            //{
                 
-                this.MakeShadow(true, true);
-                this.MakeGreen();
-                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
-                IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
-            } else // moving a green gripper
-            {
-                if (PrevShadowId != "") // case where we just need to update position
-                {
+            //    this.MakeShadow(true, true);
+            //    this.MakeGreen();
+            //    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId].GetComponent<TargetModelBehavior>().NextId = SID;
+            //    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
+            //} else // moving a green gripper
+            //{
+            //    if (PrevShadowId != "") // case where we just need to update position
+            //    {
 
-                    SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevShadowId], 
-                        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
-                } else
-                {
-                    if (PrevId != "START")
-                    {
-                        this.MakeShadow(true, false);
-                    }
-                }
-                if (NextShadowId != "") // case where we just need to update position
-                {
-                    SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextShadowId], 
-                        gameObject,
-                        IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
-                }
-            }
+            //        SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevShadowId], 
+            //            IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevId], gameObject);
+            //    } else
+            //    {
+            //        if (PrevId != "START")
+            //        {
+            //            this.MakeShadow(true, false);
+            //        }
+            //    }
+            //    if (NextShadowId != "") // case where we just need to update position
+            //    {
+            //        SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextShadowId], 
+            //            gameObject,
+            //            IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId]);
+            //    }
+            //}
 
             // update the position of the gripper
             UpdateNumbering();
-            this.SendPlanRequest();
+            this.SendPlanRequest("1");
         }
 
         void INavigationHandler.OnNavigationCanceled(NavigationEventData eventData)
         {
-            this.SendPlanRequest();
+            this.SendPlanRequest("1");
         }
     }
 }
