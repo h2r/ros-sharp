@@ -27,8 +27,8 @@ namespace HoloToolkit.Unity
             InstallFail
         }
 
-        private const float TimeOut = 10.0f;
-        private const float MaxWaitTime = 20.0f;
+        private const float TimeOut = 500.0f;
+        private const float MaxWaitTime = 500.0f;
 
         // Device Portal API Resources
         // https://docs.microsoft.com/en-us/windows/uwp/debug-test-perf/device-portal-api-hololens#holographic-os
