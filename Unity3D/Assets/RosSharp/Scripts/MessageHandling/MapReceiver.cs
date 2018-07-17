@@ -18,11 +18,17 @@ using UnityEngine;
 
 namespace RosSharp.RosBridgeClient {
     public class MapReceiver : MessageReceiver {
-        public override Type MessageType { get { return (typeof(NavigationOccupancyGrid)); } }
+		public override Type MessageType { get { return (typeof(NavigationMapMetaData)); } }
 
-        private sbyte[] mapData;
-        private bool isMessageReceived;
+		public GameObject robotMap;
 
+        // Variables for the metadata
+        private int height;
+        private int width;
+        private float resolution;
+
+		private bool isMessageReceived;
+        
         private MeshRenderer meshRenderer;
         private Texture2D texture2D;
 
@@ -32,7 +38,7 @@ namespace RosSharp.RosBridgeClient {
             MessageReception += ReceiveMessage;
         }
         private void Start() {
-            Debug.Log("Mapping launched!");
+			Debug.Log ("Mapping launched!");
 
         }
         private void Update() {
@@ -40,13 +46,19 @@ namespace RosSharp.RosBridgeClient {
                 ProcessMessage();
         }
         private void ReceiveMessage(object sender, MessageEventArgs e) {
-            mapData = ((NavigationOccupancyGrid)e.Message).data;
-            int[] result = Array.ConvertAll(mapData, Convert.ToInt32);
-            Debug.Log(result[0]);
+			height = Convert.ToInt32(((NavigationMapMetaData)e.Message).height);
+			width =  Convert.ToInt32(((NavigationMapMetaData)e.Message).width);
+			resolution = ((NavigationMapMetaData)e.Message).resolution;
+
+			Debug.Log (height);
+			Debug.Log (width);
+			Debug.Log (resolution);
+
             isMessageReceived = true;
         }
 
         private void ProcessMessage() {
+			robotMap.transform.localScale = new Vector3(resolution * width, 0.1f, resolution * height);
             isMessageReceived = false;
         }
     }
