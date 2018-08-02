@@ -31,11 +31,11 @@ public class TogglePointCloud : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetButton("Left_track_button")) {
+        if (Input.GetButton("Left_menu_button")) {
             buttonPressed = true;
         }
 
-        else if(!Input.GetButton("Left_track_button") && buttonPressed) {
+        else if(!Input.GetButton("Left_menu_button") && buttonPressed) {
             if (pointCloudToggled) {
                 pointCloudView.SetActive(false);
                 pointCloudToggled = false;

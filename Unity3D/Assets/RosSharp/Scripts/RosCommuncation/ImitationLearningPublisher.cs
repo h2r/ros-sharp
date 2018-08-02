@@ -27,7 +27,7 @@ public class ImitationLearningPublisher : Publisher {
 
     void SendRecording() {
         message.data = "";
-        if(Input.GetButton("Right_trackpad_button")) {
+        if(Input.GetButton("Right_menu_button")) {
             rightTrackpadPressed = true;
         }
         else {

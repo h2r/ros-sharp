@@ -9,8 +9,8 @@ using System;
  * Turning: Right Trackpad left and right
  * Tilting head: Left trackpad up and down
  * Panning head: Left trackpad left and right
- * Torso Up: Right Controller Menu button (above trackpad)
- * Torso Down: Left Controller Menu button (above trackpad)
+ * Torso Up: Right Controller Trackpad button
+ * Torso Down: Left Controller Trackpad button
  * Move Right Arm to position: Right Grip button squeeze (robot's right arm will move position and orientation of your controller in VR)
  * Move Left Arm to position: Left Grip button squeeze (robot's left arm will move position and orientation of your controller in VR)
  * Open Right gripper: Hold Right Controller Trigger down (closed by default, so release trigger to close)
@@ -84,10 +84,10 @@ public class EinRightForthCommandsPublisher : Publisher {
     private int timeStepsLeftLeftPressed = 0;
 
     // Variables to track previous state of menu buttons
-    private bool leftMenuButtonPressed = false;
-    private int timeStepsLeftMenuPressed = 0;
-    private bool rightMenuButtonPressed = false;
-    private int timeStepsRightMenuPressed = 0;
+    private bool leftTrackpadButtonPressed = false;
+    private int timeStepsLeftTrackpadPressed = 0;
+    private bool rightTrackpadButtonPressed = false;
+    private int timeStepsRightTrackpadPressed = 0;
 
     /**************************************************************************************************************/
 
@@ -279,41 +279,41 @@ public class EinRightForthCommandsPublisher : Publisher {
         /* The below code sends a torso up or down command to the robot's head if the Right Trackpad is
            tapped once. If it is held, it sends a command once every 0.2 seconds to allow smooth
             motion. */
-        if (Input.GetButton("Left_menu_button")) {
-            if (!leftMenuButtonPressed) {
+        if (Input.GetButton("Left_track_button")) {
+            if (!leftTrackpadButtonPressed) {
                 message.data += "\n torsoDown";
-                leftMenuButtonPressed = true;
+                leftTrackpadButtonPressed = true;
             }
             else {
-                if (timeStepsLeftMenuPressed == 1) {
+                if (timeStepsLeftTrackpadPressed == 1) {
                     message.data += "\n torsoDown";
-                    timeStepsLeftMenuPressed = 0;
+                    timeStepsLeftTrackpadPressed = 0;
                 }
                 else {
-                    timeStepsLeftMenuPressed += 1;
+                    timeStepsLeftTrackpadPressed += 1;
                 }
             }
         }
-        else if (Input.GetButton("Right_menu_button")) {
-            if (!rightMenuButtonPressed) {
+        else if (Input.GetButton("Right_track_button")) {
+            if (!rightTrackpadButtonPressed) {
                 message.data += "\n torsoUp";
-                rightMenuButtonPressed = true;
+                rightTrackpadButtonPressed = true;
             }
             else {
-                if (timeStepsRightMenuPressed == 1) {
+                if (timeStepsRightTrackpadPressed == 1) {
                     message.data += "\n torsoUp";
-                    timeStepsRightMenuPressed = 0;
+                    timeStepsRightTrackpadPressed = 0;
                 }
                 else {
-                    timeStepsRightMenuPressed += 1;
+                    timeStepsRightTrackpadPressed += 1;
                 }
             }
         }
         else {
-            leftMenuButtonPressed = false;
-            rightMenuButtonPressed = false;
-            timeStepsLeftMenuPressed = 0;
-            timeStepsRightMenuPressed = 0;
+            leftTrackpadButtonPressed = false;
+            rightTrackpadButtonPressed = false;
+            timeStepsLeftTrackpadPressed = 0;
+            timeStepsRightTrackpadPressed = 0;
         }
 
 
