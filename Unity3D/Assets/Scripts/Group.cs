@@ -71,6 +71,41 @@ public class Group : MonoBehaviour, IInputClickHandler
         LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest("1");
     }
 
+    public void DeleteGripper(string id)
+    {
+        TargetModelBehavior delGripper = SIDToObj[id].GetComponent<TargetModelBehavior>();
+        int pointNumber = --NumPoints;
+        if (delGripper.PrevId == "START") // case where we are at the head of the list
+        {
+            if (delGripper.NextId == "")
+            {
+                NumPoints++;
+                return;
+            } else
+            {
+                SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().PrevId = "START";
+                FirstWaypoint = SIDToObj[delGripper.NextId];
+                SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().UpdateNumbering();
+                SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+            }
+        } else if (delGripper.NextId == "") // case where we are the tail of the list
+        {
+            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().NextId = "";
+            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+            LastSmartGripper = SIDToObj[delGripper.PrevId];
+        } else // case where we are somewhere in the middle of the list
+        {
+            SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().PrevId = delGripper.PrevId;
+            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().NextId = delGripper.NextId;
+            SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().SendPlanRequest("0");
+            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().SendPlanRequest("0");
+            FirstWaypoint.GetComponent<TargetModelBehavior>().UpdateNumbering();
+            FirstWaypoint.GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+        }
+        Destroy(SIDToObj[id]);
+        SIDToObj.Remove(id);
+    }
+
     public void HideGroup()
     {
         var colors = GroupButton.colors;
@@ -262,18 +297,31 @@ public class Group : MonoBehaviour, IInputClickHandler
         {
             GameObject argMin = null;
             float min = Single.PositiveInfinity;
+            float distToSlot = 0.0f;
             string index = SlotNum;
             for (int i = 10; i < 20; i++)
             {
-                float distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
-                if (distToSlot < 0.6f && distToSlot < min)
+                distToSlot = Vector2.Distance(GameObject.Find("Slot" + i.ToString()).transform.position, gameObject.transform.position);
+                if (distToSlot < min)
                 {
                     min = distToSlot;
                     argMin = GameObject.Find("Slot" + i.ToString());
                     index = i.ToString();
                 }
             }
-            if (argMin != null && argMin.transform.childCount == 0)
+            if (distToSlot > 0.6)
+            {
+                Debug.Log("CASE WHERE I WANT TO DELETE");
+                foreach (KeyValuePair<string, GameObject> entry in SIDToObj)
+                {
+                    Destroy(entry.Value);
+                }
+                IdGenerator.Instance.GIDtoGroup.Remove(GID);
+                Destroy(gameObject);
+                StagingManager.currentGroupButton = GameObject.Find("Slot0").transform.GetComponentInChildren<Button>();
+                StagingManager.currentGroupButton.GetComponent<Group>().ShowGroup();
+            }
+            else if (argMin.transform.childCount == 0)
             {
                 gameObject.transform.parent = argMin.transform;
                 gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);

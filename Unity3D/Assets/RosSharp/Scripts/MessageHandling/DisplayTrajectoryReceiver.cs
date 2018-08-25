@@ -28,6 +28,7 @@ namespace RosSharp.RosBridgeClient {
         public Color TrailColor = Color.magenta;
 
         public MoveItDisplayTrajectory message;
+        public Queue<MoveItDisplayTrajectory> messageQueue;
 
         private void Awake() {
             MessageReception += ReceiveMessage;
@@ -66,6 +67,7 @@ namespace RosSharp.RosBridgeClient {
             message = (MoveItDisplayTrajectory)e.Message;
             Debug.Log(message.model_id);
             new_trajectory = true;
+            messageQueue.Enqueue(message);
         }
 
         IEnumerator Animate() {

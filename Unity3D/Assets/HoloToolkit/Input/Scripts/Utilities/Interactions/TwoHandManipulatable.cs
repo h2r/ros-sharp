@@ -3,6 +3,7 @@
 
 using HoloToolkit.Unity.InputModule;
 using HoloToolkit.Unity.UX;
+using RosSharp.RosBridgeClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -443,6 +444,16 @@ namespace HoloToolkit.Unity.InputModule.Utilities.Interactions
             if (gameObject.name.StartsWith("Button"))
             {
                 gameObject.GetComponent<Group>().ManipulationEnded();
+            }
+            if (gameObject.name.Contains("MoveitTargetModel"))
+            {
+                if (Vector3.Distance(gameObject.transform.position, GameObject.Find("Trash").transform.position) < 0.2)
+                {
+                    // TODO: Delete(gameObject.name);
+                    Debug.Log("DELETERILKDSGJLKLGHKJDSGH");
+                    string sid = gameObject.GetComponent<TargetModelBehavior>().SID;
+                    IdGenerator.Instance.GIDtoGroup[gameObject.GetComponent<TargetModelBehavior>().GID].DeleteGripper(sid);
+                }
             }
             //Hide Bounding Box visual on release
             ShowBoundingBox = false;
