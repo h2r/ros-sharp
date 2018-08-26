@@ -447,10 +447,8 @@ namespace HoloToolkit.Unity.InputModule.Utilities.Interactions
             }
             if (gameObject.name.Contains("MoveitTargetModel"))
             {
-                if (Vector3.Distance(gameObject.transform.position, GameObject.Find("Trash").transform.position) < 0.2)
+                if (Vector3.Distance(gameObject.transform.position, GameObject.Find("Trash").transform.position) < 0.3)
                 {
-                    // TODO: Delete(gameObject.name);
-                    Debug.Log("DELETERILKDSGJLKLGHKJDSGH");
                     string sid = gameObject.GetComponent<TargetModelBehavior>().SID;
                     IdGenerator.Instance.GIDtoGroup[gameObject.GetComponent<TargetModelBehavior>().GID].DeleteGripper(sid);
                 } else

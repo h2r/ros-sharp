@@ -31,13 +31,13 @@
     <AppXManifest Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\bin\x86\Release\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2018-08-26T17:27:28.422</Modified>
+      <Modified>2018-08-26T19:57:06.493</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\bin\x86\Release\Unity3D.exe">
       <PackagePath>entrypoint\Unity3D.exe</PackagePath>
-      <Modified>2018-08-26T17:27:13.788</Modified>
+      <Modified>2018-08-26T19:56:51.714</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\.nuget\packages\microsoft.applicationinsights\1.0.0\lib\portable-win81+wpa81\Microsoft.ApplicationInsights.dll">
       <PackagePath>Microsoft.ApplicationInsights.dll</PackagePath>
@@ -501,7 +501,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Resource.res">
       <PackagePath>Resource.res</PackagePath>
-      <Modified>2018-08-26T17:24:44.452</Modified>
+      <Modified>2018-08-26T19:55:11.729</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
@@ -559,15 +559,15 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\boot.config">
       <PackagePath>Data\boot.config</PackagePath>
-      <Modified>2018-08-26T17:24:01.787</Modified>
+      <Modified>2018-08-26T19:54:28.854</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\globalgamemanagers">
       <PackagePath>Data\globalgamemanagers</PackagePath>
-      <Modified>2018-08-26T17:24:00.851</Modified>
+      <Modified>2018-08-26T19:54:27.790</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\level0">
       <PackagePath>Data\level0</PackagePath>
-      <Modified>2018-08-26T17:23:59.379</Modified>
+      <Modified>2018-08-26T19:54:26.345</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\Resources\unity default resources">
       <PackagePath>Data\Resources\unity default resources</PackagePath>
@@ -575,35 +575,35 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\Resources\unity_builtin_extra">
       <PackagePath>Data\Resources\unity_builtin_extra</PackagePath>
-      <Modified>2018-08-26T17:24:01.783</Modified>
+      <Modified>2018-08-26T19:54:28.851</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\globalgamemanagers.assets">
       <PackagePath>Data\globalgamemanagers.assets</PackagePath>
-      <Modified>2018-08-26T17:24:01.061</Modified>
+      <Modified>2018-08-26T19:54:27.931</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\resources.assets">
       <PackagePath>Data\resources.assets</PackagePath>
-      <Modified>2018-08-26T17:24:01.075</Modified>
+      <Modified>2018-08-26T19:54:27.945</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\sharedassets0.assets">
       <PackagePath>Data\sharedassets0.assets</PackagePath>
-      <Modified>2018-08-26T17:24:01.570</Modified>
+      <Modified>2018-08-26T19:54:28.639</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\level0.resS">
       <PackagePath>Data\level0.resS</PackagePath>
-      <Modified>2018-08-26T17:23:59.372</Modified>
+      <Modified>2018-08-26T19:54:26.338</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\sharedassets0.assets.resS">
       <PackagePath>Data\sharedassets0.assets.resS</PackagePath>
-      <Modified>2018-08-26T17:24:01.567</Modified>
+      <Modified>2018-08-26T19:54:28.637</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\managedAssemblies.txt">
       <PackagePath>Data\managedAssemblies.txt</PackagePath>
-      <Modified>2018-08-26T17:24:44.415</Modified>
+      <Modified>2018-08-26T19:55:11.692</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Data\nativePlugins.txt">
       <PackagePath>Data\nativePlugins.txt</PackagePath>
-      <Modified>2018-08-26T17:24:44.416</Modified>
+      <Modified>2018-08-26T19:55:11.693</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.17134.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -612,231 +612,231 @@
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\bin\x86\Release\resources.pri">
       <PackagePath>resources.pri</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2018-08-26T17:27:14.963</Modified>
+      <Modified>2018-08-26T19:56:52.874</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.TextRenderingModule.dll">
       <PackagePath>UnityEngine.TextRenderingModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.054</Modified>
+      <Modified>2018-08-26T19:57:03.170</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.TerrainPhysicsModule.dll">
       <PackagePath>UnityEngine.TerrainPhysicsModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.066</Modified>
+      <Modified>2018-08-26T19:57:03.182</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.TerrainModule.dll">
       <PackagePath>UnityEngine.TerrainModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.083</Modified>
+      <Modified>2018-08-26T19:57:03.199</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.TilemapModule.dll">
       <PackagePath>UnityEngine.TilemapModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.100</Modified>
+      <Modified>2018-08-26T19:57:03.215</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UIElementsModule.dll">
       <PackagePath>UnityEngine.UIElementsModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.141</Modified>
+      <Modified>2018-08-26T19:57:03.252</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.SharedInternalsModule.dll">
       <PackagePath>UnityEngine.SharedInternalsModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.157</Modified>
+      <Modified>2018-08-26T19:57:03.274</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.ScreenCaptureModule.dll">
       <PackagePath>UnityEngine.ScreenCaptureModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.169</Modified>
+      <Modified>2018-08-26T19:57:03.286</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.SpriteMaskModule.dll">
       <PackagePath>UnityEngine.SpriteMaskModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.182</Modified>
+      <Modified>2018-08-26T19:57:03.298</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.StyleSheetsModule.dll">
       <PackagePath>UnityEngine.StyleSheetsModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.200</Modified>
+      <Modified>2018-08-26T19:57:03.314</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.SpriteShapeModule.dll">
       <PackagePath>UnityEngine.SpriteShapeModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.217</Modified>
+      <Modified>2018-08-26T19:57:03.326</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.VideoModule.dll">
       <PackagePath>UnityEngine.VideoModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.235</Modified>
+      <Modified>2018-08-26T19:57:03.343</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.VehiclesModule.dll">
       <PackagePath>UnityEngine.VehiclesModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.248</Modified>
+      <Modified>2018-08-26T19:57:03.356</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UnityWebRequestWWWModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestWWWModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.262</Modified>
+      <Modified>2018-08-26T19:57:03.371</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.VRModule.dll">
       <PackagePath>UnityEngine.VRModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.288</Modified>
+      <Modified>2018-08-26T19:57:03.392</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.WindModule.dll">
       <PackagePath>UnityEngine.WindModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.300</Modified>
+      <Modified>2018-08-26T19:57:03.409</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.WebModule.dll">
       <PackagePath>UnityEngine.WebModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.318</Modified>
+      <Modified>2018-08-26T19:57:03.429</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UnityAnalyticsModule.dll">
       <PackagePath>UnityEngine.UnityAnalyticsModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.332</Modified>
+      <Modified>2018-08-26T19:57:03.443</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UNETModule.dll">
       <PackagePath>UnityEngine.UNETModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.353</Modified>
+      <Modified>2018-08-26T19:57:03.465</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UIModule.dll">
       <PackagePath>UnityEngine.UIModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.370</Modified>
+      <Modified>2018-08-26T19:57:03.481</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UnityConnectModule.dll">
       <PackagePath>UnityEngine.UnityConnectModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.383</Modified>
+      <Modified>2018-08-26T19:57:03.495</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UnityWebRequestTextureModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestTextureModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.395</Modified>
+      <Modified>2018-08-26T19:57:03.508</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UnityWebRequestModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.415</Modified>
+      <Modified>2018-08-26T19:57:03.527</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UnityWebRequestAudioModule.dll">
       <PackagePath>UnityEngine.UnityWebRequestAudioModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.427</Modified>
+      <Modified>2018-08-26T19:57:03.540</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.AudioModule.dll">
       <PackagePath>UnityEngine.AudioModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.449</Modified>
+      <Modified>2018-08-26T19:57:03.560</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.AssetBundleModule.dll">
       <PackagePath>UnityEngine.AssetBundleModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.461</Modified>
+      <Modified>2018-08-26T19:57:03.573</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.ARModule.dll">
       <PackagePath>UnityEngine.ARModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.479</Modified>
+      <Modified>2018-08-26T19:57:03.593</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.ClothModule.dll">
       <PackagePath>UnityEngine.ClothModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.493</Modified>
+      <Modified>2018-08-26T19:57:03.607</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.DirectorModule.dll">
       <PackagePath>UnityEngine.DirectorModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.506</Modified>
+      <Modified>2018-08-26T19:57:03.621</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.CrashReportingModule.dll">
       <PackagePath>UnityEngine.CrashReportingModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.518</Modified>
+      <Modified>2018-08-26T19:57:03.633</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.CoreModule.dll">
       <PackagePath>UnityEngine.CoreModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.765</Modified>
+      <Modified>2018-08-26T19:57:03.881</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.AnimationModule.dll">
       <PackagePath>UnityEngine.AnimationModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.787</Modified>
+      <Modified>2018-08-26T19:57:03.915</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.AIModule.dll">
       <PackagePath>UnityEngine.AIModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.810</Modified>
+      <Modified>2018-08-26T19:57:03.932</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.AccessibilityModule.dll">
       <PackagePath>UnityEngine.AccessibilityModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.822</Modified>
+      <Modified>2018-08-26T19:57:03.944</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.ParticlesLegacyModule.dll">
       <PackagePath>UnityEngine.ParticlesLegacyModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.840</Modified>
+      <Modified>2018-08-26T19:57:03.965</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.JSONSerializeModule.dll">
       <PackagePath>UnityEngine.JSONSerializeModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.852</Modified>
+      <Modified>2018-08-26T19:57:03.978</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.ParticleSystemModule.dll">
       <PackagePath>UnityEngine.ParticleSystemModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.878</Modified>
+      <Modified>2018-08-26T19:57:04.003</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.PhysicsModule.dll">
       <PackagePath>UnityEngine.PhysicsModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.897</Modified>
+      <Modified>2018-08-26T19:57:04.023</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.Physics2DModule.dll">
       <PackagePath>UnityEngine.Physics2DModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.919</Modified>
+      <Modified>2018-08-26T19:57:04.045</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.PerformanceReportingModule.dll">
       <PackagePath>UnityEngine.PerformanceReportingModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.932</Modified>
+      <Modified>2018-08-26T19:57:04.058</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.GridModule.dll">
       <PackagePath>UnityEngine.GridModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.944</Modified>
+      <Modified>2018-08-26T19:57:04.071</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.GameCenterModule.dll">
       <PackagePath>UnityEngine.GameCenterModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.962</Modified>
+      <Modified>2018-08-26T19:57:04.090</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.dll">
       <PackagePath>UnityEngine.dll</PackagePath>
-      <Modified>2018-08-26T17:24:24.880</Modified>
+      <Modified>2018-08-26T19:54:52.181</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.InputModule.dll">
       <PackagePath>UnityEngine.InputModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.976</Modified>
+      <Modified>2018-08-26T19:57:04.104</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.IMGUIModule.dll">
       <PackagePath>UnityEngine.IMGUIModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.004</Modified>
+      <Modified>2018-08-26T19:57:04.131</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.ImageConversionModule.dll">
       <PackagePath>UnityEngine.ImageConversionModule.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.017</Modified>
+      <Modified>2018-08-26T19:57:04.143</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.Timeline.dll">
       <PackagePath>UnityEngine.Timeline.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.055</Modified>
+      <Modified>2018-08-26T19:57:04.182</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\nunit.framework.dll">
       <PackagePath>nunit.framework.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.097</Modified>
+      <Modified>2018-08-26T19:57:04.227</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.UI.dll">
       <PackagePath>UnityEngine.UI.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.171</Modified>
+      <Modified>2018-08-26T19:57:04.297</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.SpatialTracking.dll">
       <PackagePath>UnityEngine.SpatialTracking.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.185</Modified>
+      <Modified>2018-08-26T19:57:04.312</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.HoloLens.dll">
       <PackagePath>UnityEngine.HoloLens.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.209</Modified>
+      <Modified>2018-08-26T19:57:04.334</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.StandardEvents.dll">
       <PackagePath>UnityEngine.StandardEvents.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.233</Modified>
+      <Modified>2018-08-26T19:57:04.359</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\UnityEngine.Networking.dll">
       <PackagePath>UnityEngine.Networking.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.301</Modified>
+      <Modified>2018-08-26T19:57:04.420</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\GLTFSerializationUWP.dll">
       <PackagePath>GLTFSerializationUWP.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.333</Modified>
+      <Modified>2018-08-26T19:57:04.450</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Newtonsoft.Json.dll">
       <PackagePath>Newtonsoft.Json.dll</PackagePath>
-      <Modified>2018-08-26T17:27:26.387</Modified>
+      <Modified>2018-08-26T19:57:04.503</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\Assembly-CSharp.dll">
       <PackagePath>Assembly-CSharp.dll</PackagePath>
-      <Modified>2018-08-26T17:27:25.036</Modified>
+      <Modified>2018-08-26T19:57:03.152</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\App\Unity3D\bin\x86\Release\Core\Unity3D.exe">
       <PackagePath>Unity3D.exe</PackagePath>
-      <Modified>2018-08-26T17:27:28.419</Modified>
+      <Modified>2018-08-26T19:57:06.490</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

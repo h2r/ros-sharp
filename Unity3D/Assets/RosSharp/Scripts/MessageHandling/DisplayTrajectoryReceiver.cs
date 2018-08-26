@@ -104,7 +104,8 @@ namespace RosSharp.RosBridgeClient {
                 string[] start_names = message.trajectory_start.joint_state.name;
                 float[] start_positions = message.trajectory_start.joint_state.position;
 
-                for (int i = 0; i < start_names.Length; i++) {
+                for (int i = 11; i < start_names.Length; i++) {
+                    Debug.Log(start_names[i]);
                     if (JointDict.ContainsKey(start_names[i])) {
                         JointDict[start_names[i]].Write(start_positions[i]);
                         //Debug.Log(start_names[i]);

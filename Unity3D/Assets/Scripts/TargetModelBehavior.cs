@@ -245,7 +245,7 @@ namespace RosSharp.RosBridgeClient
             //    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
             //} else // moving a green gripper
             //{
-            //    if (PrevShadowId != "") // case where we just need to update position
+            //    if (PrevShadowId != "") // case where we just need to update p osition
             //    {
 
             //        SetInterpTransform(IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[PrevShadowId], 
