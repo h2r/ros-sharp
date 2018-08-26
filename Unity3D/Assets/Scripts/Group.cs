@@ -52,7 +52,7 @@ public class Group : MonoBehaviour, IInputClickHandler
         int pointNumber = ++NumPoints;
         // make a new smart gripper
         GameObject newObj = Instantiate(LastSmartGripper);
-        newObj.GetComponent<TargetModelBehavior>().Init(GID, LastSmartGripper.GetComponent<TargetModelBehavior>().SID, null);
+        newObj.GetComponent<TargetModelBehavior>().Init(GID, LastSmartGripper.GetComponent<TargetModelBehavior>().SID, null);//, "0");
         Vector3 offset = new Vector3(0.1f, 0.0f, 0.0f);
         newObj.transform.Find("Text").GetComponent<TextMesh>().text = pointNumber.ToString();
         newObj.transform.position = newObj.transform.position + offset;
@@ -68,7 +68,7 @@ public class Group : MonoBehaviour, IInputClickHandler
 
         // change the last smart gripper
         LastSmartGripper = newObj;
-        LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+        LastSmartGripper.GetComponent<TargetModelBehavior>().SendPlanRequest("1", "");
     }
 
     public void DeleteGripper(string id)
@@ -83,24 +83,25 @@ public class Group : MonoBehaviour, IInputClickHandler
                 return;
             } else
             {
+                StagingManager.FirstGripperEver = SIDToObj[delGripper.NextId];
                 SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().PrevId = "START";
                 FirstWaypoint = SIDToObj[delGripper.NextId];
                 SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().UpdateNumbering();
-                SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+                SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().SendPlanRequest("1", "");
             }
         } else if (delGripper.NextId == "") // case where we are the tail of the list
         {
             SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().NextId = "";
-            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().SendPlanRequest("1", "");
             LastSmartGripper = SIDToObj[delGripper.PrevId];
         } else // case where we are somewhere in the middle of the list
         {
             SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().PrevId = delGripper.PrevId;
             SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().NextId = delGripper.NextId;
-            SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().SendPlanRequest("0");
-            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().SendPlanRequest("0");
+            SIDToObj[delGripper.NextId].GetComponent<TargetModelBehavior>().SendPlanRequest("0", "");
+            SIDToObj[delGripper.PrevId].GetComponent<TargetModelBehavior>().SendPlanRequest("0", "");
             FirstWaypoint.GetComponent<TargetModelBehavior>().UpdateNumbering();
-            FirstWaypoint.GetComponent<TargetModelBehavior>().SendPlanRequest("1");
+            FirstWaypoint.GetComponent<TargetModelBehavior>().SendPlanRequest("1", "");
         }
         Destroy(SIDToObj[id]);
         SIDToObj.Remove(id);
@@ -163,7 +164,7 @@ public class Group : MonoBehaviour, IInputClickHandler
         for(int i = 0; i < sourceWaypoints.Count; i++)
         {
             GameObject tp = Instantiate(sourceWaypoints[i]);
-            tp.GetComponent<TargetModelBehavior>().Init(gid, null, null);
+            tp.GetComponent<TargetModelBehavior>().Init(gid, null, null);//, sourceWaypoints[i].GetComponent<TargetModelBehavior>().RightOpen);
             ListIndex.Add(sourceWaypoints[i].GetComponent<TargetModelBehavior>().SID, i);
             targetWaypoints.Add(tp);
         }
@@ -210,7 +211,7 @@ public class Group : MonoBehaviour, IInputClickHandler
             GameObject.Find("dummy").GetComponent<Group>().SIDToObj
                 .Add(targetWaypoints[i].GetComponent<TargetModelBehavior>().SID, targetWaypoints[i]);
             //if (!targetWaypoints[i].GetComponent<TargetModelBehavior>().IsShadow) {
-            targetWaypoints[i].GetComponent<TargetModelBehavior>().SendPlanRequest("0");
+            targetWaypoints[i].GetComponent<TargetModelBehavior>().SendPlanRequest("0", "");
             //}
             if (targetWaypoints[i].GetComponent<TargetModelBehavior>().PrevId == "START")
             {

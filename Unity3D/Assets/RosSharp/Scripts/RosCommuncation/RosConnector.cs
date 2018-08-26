@@ -24,7 +24,7 @@ public class RosConnector : MonoBehaviour
     public RosSocket RosSocket { get; private set; }
     [HideInInspector]
     //public string RosBridgeServerUrl = "ws://138.16.160.222:5564";
-    public string RosBridgeServerUrl = "ws://192.168.160.211:9090";
+    public string RosBridgeServerUrl = "ws://192.168.160.160:9090";
     //#if UNITY_EDITOR
     //    public string RosBridgeServerUrl = "ws://192.168.160.193:9090";
     //#elif !UNITY_EDITOR
@@ -34,7 +34,7 @@ public class RosConnector : MonoBehaviour
     public void Awake()
     {
         //RosBridgeServerUrl = "ws://138.16.160.222:5564";
-        RosBridgeServerUrl = "ws://192.168.160.211:9090";
+        RosBridgeServerUrl = "ws://192.168.160.160:9090";
         RosSocket = new RosSocket(RosBridgeServerUrl);
         Debug.Log("Connected to RosBridge: " + RosBridgeServerUrl);
     }

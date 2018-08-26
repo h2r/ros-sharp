@@ -33,6 +33,7 @@ public class MoveitTarget : Message {
     public StandardString prev_id;
     public StandardString next_id;
     public StandardString visualize;
+    //public StandardString start_gid_sid;
     public MoveitTarget() {
         left_arm = new GeometryPose();
         right_arm = new GeometryPose();
@@ -43,6 +44,7 @@ public class MoveitTarget : Message {
         prev_id = new StandardString();
         next_id = new StandardString();
         visualize = new StandardString();
+        //start_gid_sid = new StandardString();
 
         left_open.data = "0";
         right_open.data = "0";
@@ -51,6 +53,7 @@ public class MoveitTarget : Message {
         prev_id.data = "";
         next_id.data = "";
         visualize.data = "1";
+        //start_gid_sid.data = "";
     }
 }
 

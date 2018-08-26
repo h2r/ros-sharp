@@ -14,16 +14,17 @@ namespace RosSharp.RosBridgeClient {
         public JointStateWriter[] JointStateWriters;
         public Dictionary<string, JointStateWriter> JointDict = new Dictionary<string, JointStateWriter>();
         private List<GameObject> TrailPoints;
-        
 
+        //public Boolean visualizationFinished = false;
         public Boolean loop = false;
         public Boolean trail = false;
 
         public Boolean color = false;
         public Boolean sampling = false;
         private Boolean prev_color;
+        private Boolean started = false;
 
-        private Boolean new_trajectory = false;
+        //private Boolean new_trajectory = false;
 
         public Color TrailColor = Color.magenta;
 
@@ -31,6 +32,7 @@ namespace RosSharp.RosBridgeClient {
         public Queue<MoveItDisplayTrajectory> messageQueue;
 
         private void Awake() {
+            messageQueue = new Queue<MoveItDisplayTrajectory>();
             MessageReception += ReceiveMessage;
         }
 
@@ -48,9 +50,12 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Update() {
-            if (Input.GetKeyDown("f") || new_trajectory) {
-                new_trajectory = false;
+            if (messageQueue.Count != 0 && !started)
+            {
+                started = true;
+                //new_trajectory = false;
                 DestroyTrail();
+                //visualizationFinished = false;
                 StopCoroutine("Animate");
                 StartCoroutine("Animate");
             }
@@ -64,14 +69,17 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void ReceiveMessage(object sender, MessageEventArgs e) {
+            Debug.Log("CALLED!!!!!!");
             message = (MoveItDisplayTrajectory)e.Message;
             Debug.Log(message.model_id);
-            new_trajectory = true;
+            //new_trajectory = true;
             messageQueue.Enqueue(message);
         }
 
         IEnumerator Animate() {
-            do {
+            while (messageQueue.Count != 0)
+            {
+                MoveItDisplayTrajectory message = messageQueue.Dequeue();
                 if (prev_color != color) {
                     prev_color = color;
                     DestroyTrail();
@@ -106,7 +114,7 @@ namespace RosSharp.RosBridgeClient {
                 //    samplePoints[samplePoints.Length - 1] = points.Length - 1;
                 //}
 
-                for (int i = 0; i < points.Length; i+=10)
+                for (int i = 0; i < points.Length; i += 10)
                 {
                     for (int j = 0; j < joint_names.Length; j++)
                     {
@@ -135,19 +143,20 @@ namespace RosSharp.RosBridgeClient {
                 {
                     if (JointDict.ContainsKey(joint_names[j]))
                     {
-                        JointDict[joint_names[j]].Write(points[points.Length-1].positions[j]);
+                        JointDict[joint_names[j]].Write(points[points.Length - 1].positions[j]);
                         JointDict[joint_names[j]].WriteUpdate();
                     }
                 }
 
                 if (trail)
                 {
-                    AddTrailPoint(points.Length-1);
+                    AddTrailPoint(points.Length - 1);
                 }
-
-
-            } while (loop);
+            }
+                
+            //visualizationFinished = true;
             DestroyTrail();
+            started = false;
         }
 
         void AddTrailPoint(int point_index) {

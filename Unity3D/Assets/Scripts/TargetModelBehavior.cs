@@ -126,7 +126,7 @@ namespace RosSharp.RosBridgeClient
             return geometryQuaternion;
         }
 
-        public void SendPlanRequest(string visualize)
+        public void SendPlanRequest(string visualize, string specified_start)
         {
             MoveitTarget moveitTarget = new MoveitTarget();
             moveitTarget.right_arm = UpdateMessageContents(TargetModel);
@@ -137,6 +137,7 @@ namespace RosSharp.RosBridgeClient
             moveitTarget.right_open.data = RightOpen;
             moveitTarget.left_open.data = LeftOpen;
             moveitTarget.visualize.data = visualize;
+            //moveitTarget.start_gid_sid.data = "";
             MoveItGoalPublisher.PublishPlan(moveitTarget);
         }
 
@@ -178,6 +179,7 @@ namespace RosSharp.RosBridgeClient
             {
                 eventData.Use();
                 Vector3 offset = new Vector3(0.02f, 0.0f, 0.0f);
+                Debug.Log("Going into the call we think that the gripper is open: " + RightOpen);
                 if (RightOpen == "0")
                 {
                     RightOpen = "1";
@@ -199,7 +201,7 @@ namespace RosSharp.RosBridgeClient
                 //    IdGenerator.Instance.GIDtoGroup[GID].SIDToObj[NextId].GetComponent<TargetModelBehavior>().PrevId = SID;
                 //}
                 UpdateNumbering();
-                this.SendPlanRequest("1");
+                this.SendPlanRequest("1", "");
             }
             
         }
@@ -265,12 +267,12 @@ namespace RosSharp.RosBridgeClient
 
             // update the position of the gripper
             UpdateNumbering();
-            this.SendPlanRequest("1");
+            this.SendPlanRequest("1", "");
         }
 
         void INavigationHandler.OnNavigationCanceled(NavigationEventData eventData)
         {
-            this.SendPlanRequest("1");
+            this.SendPlanRequest("1", "");
         }
     }
 }
