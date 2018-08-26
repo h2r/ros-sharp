@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 using System;
 
@@ -75,3 +76,5 @@ public class DepthRosGeometryView : MonoBehaviour {
         Graphics.DrawProcedural(MeshTopology.Points, 512 * 424, 1);
     }
 }
+
+#endif

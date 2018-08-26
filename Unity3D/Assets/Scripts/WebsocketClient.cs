@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using WebSocketSharp;
 using System;
 using System.Collections.Generic;
@@ -94,4 +95,4 @@ public class WebsocketClient : MonoBehaviour {
         return connected;
     }
 }
-
+#endif

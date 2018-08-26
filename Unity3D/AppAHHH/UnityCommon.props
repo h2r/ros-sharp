@@ -1,9 +1,0 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <UnityWSASolutionName>Unity3D</UnityWSASolutionName>
-        <UnityWSASolutionDir>C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\AppAHHH\</UnityWSASolutionDir>
-        <UnityProjectDir>C:\Users\brown\Documents\Unity\ros-sharp\Unity3D\</UnityProjectDir>
-        <UnityWSAPlayerDir>C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\</UnityWSAPlayerDir>
-        <UnityWSAToolsDir>$(UnityWSASolutionDir)Unity\Tools\</UnityWSAToolsDir>
-    </PropertyGroup>
-</Project>

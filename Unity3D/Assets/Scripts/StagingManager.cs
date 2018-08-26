@@ -16,6 +16,7 @@ public class StagingManager : MonoBehaviour {
     public List<Button> GroupButtonList;
     public Button currentGroupButton;
     public bool nextVisual = false;
+    public List<string> VisualGids;
     
     
 
@@ -53,6 +54,7 @@ public class StagingManager : MonoBehaviour {
             groupFirstWaypoint = FirstGripperEver;
         } else
         {
+            Debug.Log("Got here");
             currentGroupButton = Instantiate(FirstPoseButton);
             currentGroupButton.name = "Button";
             slotNum = GroupButtonList.Count.ToString();
@@ -106,6 +108,7 @@ public class StagingManager : MonoBehaviour {
                 gids.Add(GameObject.Find("Slot" + i.ToString()).transform.GetChild(0).GetComponent<Group>().GID);
             }
         }
+        VisualGids = gids;
         for (int i = 0; i < gids.Count; i++)
         {
             string gid = gids[i];
@@ -123,8 +126,6 @@ public class StagingManager : MonoBehaviour {
             //while (!DisplayTrajectoryReceiver.visualizationFinished);
         }
     }
-
-    void foo() { }
 
     void ExecClicked()
     {

@@ -453,6 +453,9 @@ namespace HoloToolkit.Unity.InputModule.Utilities.Interactions
                     Debug.Log("DELETERILKDSGJLKLGHKJDSGH");
                     string sid = gameObject.GetComponent<TargetModelBehavior>().SID;
                     IdGenerator.Instance.GIDtoGroup[gameObject.GetComponent<TargetModelBehavior>().GID].DeleteGripper(sid);
+                } else
+                {
+                    gameObject.GetComponent<TargetModelBehavior>().SendPlanRequest("1", "");
                 }
             }
             //Hide Bounding Box visual on release

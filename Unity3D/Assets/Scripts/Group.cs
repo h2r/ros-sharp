@@ -256,7 +256,6 @@ public class Group : MonoBehaviour, IInputClickHandler
 
     public void ManipulationEnded()
     {
-
         if (InTrainingQueue)
         {
             GameObject argMin = null;
@@ -319,6 +318,10 @@ public class Group : MonoBehaviour, IInputClickHandler
                 }
                 IdGenerator.Instance.GIDtoGroup.Remove(GID);
                 Destroy(gameObject);
+                Debug.Log("Should set button");
+                Debug.Log(GameObject.Find("Slot0").transform.GetComponentInChildren<Button>());
+                StagingManager.FirstPoseButton = GameObject.Find("Slot0").transform.GetComponentInChildren<Button>();
+                StagingManager.FirstGripperEver = GameObject.Find("Slot0").transform.GetComponentInChildren<Button>().GetComponent<Group>().FirstWaypoint;
                 StagingManager.currentGroupButton = GameObject.Find("Slot0").transform.GetComponentInChildren<Button>();
                 StagingManager.currentGroupButton.GetComponent<Group>().ShowGroup();
             }

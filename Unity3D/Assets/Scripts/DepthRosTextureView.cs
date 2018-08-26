@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 
 public class DepthRosTextureView : MonoBehaviour {
@@ -81,3 +82,4 @@ public class DepthRosTextureView : MonoBehaviour {
 	}
 
 }
+#endif

@@ -10,6 +10,7 @@ namespace RosSharp.RosBridgeClient {
 
         public override Type MessageType { get { return (typeof(MoveItDisplayTrajectory)); } }
 
+        public StagingManager StagingManager;
         public GameObject UrdfModel; // baxter
         public JointStateWriter[] JointStateWriters;
         public Dictionary<string, JointStateWriter> JointDict = new Dictionary<string, JointStateWriter>();
@@ -50,6 +51,11 @@ namespace RosSharp.RosBridgeClient {
         }
 
         private void Update() {
+            //if (!started && messageQueue.Count > 0)
+            //{
+            //    Animate();
+            //}
+
             if (messageQueue.Count != 0 && !started)
             {
                 started = true;
@@ -77,8 +83,14 @@ namespace RosSharp.RosBridgeClient {
         }
 
         IEnumerator Animate() {
+            started = true;
+            int count = 0;
             while (messageQueue.Count != 0)
             {
+                if (StagingManager.VisualGids.Count > 0) {
+                    StagingManager.ChangeCurrentGroup(IdGenerator.Instance.GIDtoGroup[StagingManager.VisualGids[count]].GroupButton);
+                }
+                count++;
                 MoveItDisplayTrajectory message = messageQueue.Dequeue();
                 if (prev_color != color) {
                     prev_color = color;
@@ -153,8 +165,9 @@ namespace RosSharp.RosBridgeClient {
                     AddTrailPoint(points.Length - 1);
                 }
             }
-                
+
             //visualizationFinished = true;
+            StagingManager.VisualGids.Clear();
             DestroyTrail();
             started = false;
         }

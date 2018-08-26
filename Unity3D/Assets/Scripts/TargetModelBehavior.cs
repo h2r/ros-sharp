@@ -137,7 +137,7 @@ namespace RosSharp.RosBridgeClient
             moveitTarget.right_open.data = RightOpen;
             moveitTarget.left_open.data = LeftOpen;
             moveitTarget.visualize.data = visualize;
-            //moveitTarget.start_gid_sid.data = "";
+            moveitTarget.start_gid_sid.data = specified_start;
             MoveItGoalPublisher.PublishPlan(moveitTarget);
         }
 
@@ -266,8 +266,8 @@ namespace RosSharp.RosBridgeClient
             //}
 
             // update the position of the gripper
-            UpdateNumbering();
-            this.SendPlanRequest("1", "");
+            //UpdateNumbering();
+            //this.SendPlanRequest("1", "");
         }
 
         void INavigationHandler.OnNavigationCanceled(NavigationEventData eventData)
