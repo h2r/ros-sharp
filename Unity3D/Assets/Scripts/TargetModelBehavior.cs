@@ -138,6 +138,8 @@ namespace RosSharp.RosBridgeClient
             moveitTarget.left_open.data = LeftOpen;
             moveitTarget.visualize.data = visualize;
             moveitTarget.start_gid_sid.data = specified_start;
+            Debug.Log(GID);
+            Debug.Log(SID);
             MoveItGoalPublisher.PublishPlan(moveitTarget);
         }
 
@@ -272,7 +274,7 @@ namespace RosSharp.RosBridgeClient
 
         void INavigationHandler.OnNavigationCanceled(NavigationEventData eventData)
         {
-            this.SendPlanRequest("1", "");
+            //this.SendPlanRequest("1", "");
         }
     }
 }

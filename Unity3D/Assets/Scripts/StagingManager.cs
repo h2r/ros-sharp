@@ -125,6 +125,8 @@ public class StagingManager : MonoBehaviour {
             Debug.Log(gid);
             //while (!DisplayTrajectoryReceiver.visualizationFinished);
         }
+        VisualButton.GetComponent<Button>().interactable = false;
+        Invoke("enableVisualizeButton", 2.0f); 
     }
 
     void ExecClicked()
@@ -132,6 +134,19 @@ public class StagingManager : MonoBehaviour {
         Debug.Log("Move");
         MoveItGoalPublisher.PublishMove(this.GetExecGroupOrder()); // move the arm
         DisplayTrajectoryReceiver.loop = false; // stop the visualization
+        ExecButton.GetComponent<Button>().interactable = false;
+        Invoke("enableExecButton", 2.0f);
+
+    }
+
+    private void enableExecButton()
+    {
+        ExecButton.GetComponent<Button>().interactable = true;
+    }
+
+    private void enableVisualizeButton()
+    {
+        VisualButton.GetComponent<Button>().interactable = true;
     }
 
     private string GetExecGroupOrder()

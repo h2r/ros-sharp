@@ -44,6 +44,7 @@ public class DepthRosGeometryView : MonoBehaviour {
         }
         try {
             depthMessage = wsc.messages[depthTopic];
+            //Debug.Log(depthMessage);
             byte[] depthImage = System.Convert.FromBase64String(depthMessage);
 
             depthTexture.LoadRawTextureData(depthImage);

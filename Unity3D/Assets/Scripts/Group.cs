@@ -309,7 +309,7 @@ public class Group : MonoBehaviour, IInputClickHandler
                     index = i.ToString();
                 }
             }
-            if (distToSlot > 0.6)
+            if (min > 0.6)
             {
                 Debug.Log("CASE WHERE I WANT TO DELETE");
                 foreach (KeyValuePair<string, GameObject> entry in SIDToObj)
@@ -325,7 +325,7 @@ public class Group : MonoBehaviour, IInputClickHandler
                 StagingManager.currentGroupButton = GameObject.Find("Slot0").transform.GetComponentInChildren<Button>();
                 StagingManager.currentGroupButton.GetComponent<Group>().ShowGroup();
             }
-            else if (argMin.transform.childCount == 0)
+            else if (argMin.transform.childCount == 0 && min < 0.2)
             {
                 gameObject.transform.parent = argMin.transform;
                 gameObject.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
